@@ -99,6 +99,18 @@ calc_trans<- function(samp_name,samp_obj){
   return(result)
   
 }
+
+calc_trans_period<- function(samp_name, daily_indexed, raw_table,freq){
+  result <- data.frame()
+  
+  for (i in 2:(length(daily_indexed))){
+    curr_day <- raw_table[paste0(index(daily_indexed)[i-1],"/",index(daily_indexed)[i])]
+    curr_day_trans <- calc_trans(paste0(samp_name,".",freq,".",i),curr_day)
+    result <- rbind(result,curr_day_trans)
+    }
+  colnames(result) <- c("sample","bottom","mid","top","total")
+  return(result)
+}
 ```
 
 
@@ -151,23 +163,145 @@ xts_6894 <- xts(six_eight_nine_four,order.by = six_eight_nine_four$DateTime)
 summary(xts_6894)
 
 daily_6894 <- to.daily(xts_6894$subzone, OHLC=F,)
-weekly_6894 <- to.weekly(xts_6894, OHLC=F)
-monthly_6894 <- to.monthly(xts_6894, OHLC=F)
+weekly_6894 <- to.weekly(xts_6894$subzone, OHLC=F)
+monthly_6894 <- to.monthly(xts_6894$subzone, OHLC=F)
+index(monthly_6894) <-as.POSIXct(index(monthly_6894))
 
 length(daily_6894)
 
-day1_6894 <- xts_6894[paste0("2020-11-16 20:39:26","/",index(daily_6894)[2])]
+six_eight_nine_four_daily <- calc_trans_period("6894",daily_6894,xts_6894,"d")
 
-tmp <- calc_trans("6894.d1", data.frame(day1_6894))
+six_eight_nine_four_weekly <- calc_trans_period("6894",weekly_6894,xts_6894,"w")
 
-#TODO turn this into a function
+six_eight_nine_four_monthly <- calc_trans_period("6894",monthly_6894,xts_6894,"m")
 
-result <- data.frame()
-for (i in 2:length(daily_6894)){
-  curr_day <- xts_6894[paste0(index(daily_6894)[i-1],"/",index(daily_6894)[i])]
-  curr_day_trans <- calc_trans(paste0("6984.d",i),curr_day)
-  result <- rbind(result,curr_day_trans)
-}
-colnames(result) <- c("sample","bottom","mid","top","total")
+write.csv(six_eight_nine_four_daily,"6894_daily.csv",row.names = F)
+write.csv(six_eight_nine_four_weekly,"6894_weekly.csv",row.names=F)
+write.csv(six_eight_nine_four_monthly,"6894_monthly.csv",row.names=F)
 ```
 
+
+```{r, generate transiton tables for 6928}
+#65530
+six_nine_two_eight <- read.csv("6928.csv")
+
+six_nine_two_eight["DateTime"] <- as.POSIXct(six_nine_two_eight$access, origin="1970-01-01", tz="GMT")
+
+unique(six_nine_two_eight$subzone)
+
+six_nine_two_eight$subzone[six_nine_two_eight$subzone == "Bottom"] <- "bottom"
+six_nine_two_eight$subzone[six_nine_two_eight$subzone == "middle"] <- "middle"
+six_nine_two_eight$subzone[six_nine_two_eight$subzone == "Top"] <- "top"
+six_nine_two_eight <-subset(six_nine_two_eight, subzone!="test")
+#65475
+unique(six_nine_two_eight$subzone)
+
+sum(is.na(six_nine_two_eight$DateTime))
+sum(is.na(six_nine_two_eight$subzone))
+
+xts_6928 <- xts(six_nine_two_eight,order.by = six_nine_two_eight$DateTime)
+
+summary(xts_6928)
+
+daily_6928 <- to.daily(xts_6928$subzone, OHLC=F,)
+weekly_6928 <- to.weekly(xts_6928$subzone, OHLC=F)
+monthly_6928 <- to.monthly(xts_6928$subzone, OHLC=F)
+index(monthly_6928) <-as.POSIXct(index(monthly_6928))
+
+length(daily_6928)
+
+six_nine_two_eight_daily <- calc_trans_period("6928",daily_6928,xts_6928,"d")
+
+six_nine_two_eight_weekly <- calc_trans_period("6928",weekly_6928,xts_6928,"w")
+
+six_nine_two_eight_monthly <- calc_trans_period("6928",monthly_6928,xts_6928,"m")
+
+write.csv(six_nine_two_eight_daily,"6928_daily.csv",row.names = F)
+write.csv(six_nine_two_eight_weekly,"6928_weekly.csv",row.names=F)
+write.csv(six_nine_two_eight_monthly,"6928_monthly.csv",row.names=F)
+
+```
+
+
+```{r, generate transition tables for 6988}
+#65524
+six_nine_eight_eight <- read.csv("6988.csv")
+
+six_nine_eight_eight["DateTime"] <- as.POSIXct(six_nine_eight_eight$access, origin="1970-01-01", tz="GMT")
+
+unique(six_nine_eight_eight$subzone)
+
+six_nine_eight_eight$subzone[six_nine_eight_eight$subzone == "Bottom"] <- "bottom"
+six_nine_eight_eight$subzone[six_nine_eight_eight$subzone == "Middle"] <- "middle"
+six_nine_eight_eight$subzone[six_nine_eight_eight$subzone == "Top"] <- "top"
+
+#65475
+unique(six_nine_eight_eight$subzone)
+
+sum(is.na(six_nine_eight_eight$DateTime))
+sum(is.na(six_nine_eight_eight$subzone))
+
+xts_6988 <- xts(six_nine_eight_eight,order.by = six_nine_eight_eight$DateTime)
+
+summary(xts_6988)
+
+daily_6988 <- to.daily(xts_6988$subzone, OHLC=F,)
+weekly_6988 <- to.weekly(xts_6988$subzone, OHLC=F)
+monthly_6988 <- to.monthly(xts_6988$subzone, OHLC=F)
+index(monthly_6988) <-as.POSIXct(index(monthly_6988))
+
+length(daily_6988)
+
+six_nine_eight_eight_daily <- calc_trans_period("6988",daily_6988,xts_6988,"d")
+
+six_nine_eight_eight_weekly <- calc_trans_period("6988",weekly_6988,xts_6988,"w")
+
+six_nine_eight_eight_monthly <- calc_trans_period("6988",monthly_6988,xts_6988,"m")
+
+write.csv(six_nine_eight_eight_daily,"6988_daily.csv",row.names = F)
+write.csv(six_nine_eight_eight_weekly,"6988_weekly.csv",row.names=F)
+write.csv(six_nine_eight_eight_monthly,"6988_monthly.csv",row.names=F)
+
+```
+
+```{r}
+#65495
+nine_zero_one_three <- read.csv("9013.csv")
+
+nine_zero_one_three["DateTime"] <- as.POSIXct(nine_zero_one_three$access, origin="1970-01-01", tz="GMT")
+
+unique(nine_zero_one_three$subzone)
+
+nine_zero_one_three$subzone[nine_zero_one_three$subzone == "Bottom"] <- "bottom"
+nine_zero_one_three$subzone[nine_zero_one_three$subzone == "Middle"] <- "middle"
+nine_zero_one_three$subzone[nine_zero_one_three$subzone == "Top"] <- "top"
+
+#65495
+unique(nine_zero_one_three$subzone)
+
+sum(is.na(nine_zero_one_three$DateTime))
+sum(is.na(nine_zero_one_three$subzone))
+
+xts_9013 <- xts(nine_zero_one_three,order.by = nine_zero_one_three$DateTime)
+
+summary(xts_9013)
+
+daily_9013 <- to.daily(xts_9013$subzone, OHLC=F,)
+weekly_9013 <- to.weekly(xts_9013$subzone, OHLC=F)
+monthly_9013 <- to.monthly(xts_9013$subzone, OHLC=F)
+index(monthly_9013) <-as.POSIXct(index(monthly_9013))
+
+length(daily_9013)
+
+nine_zero_one_three_daily <- calc_trans_period("9013",daily_9013,xts_9013,"d")
+
+nine_zero_one_three_weekly <- calc_trans_period("9013",weekly_9013,xts_9013,"w")
+
+nine_zero_one_three_monthly <- calc_trans_period("9013",monthly_9013,xts_9013,"m")
+
+write.csv(nine_zero_one_three_daily,"9013_daily.csv",row.names = F)
+write.csv(nine_zero_one_three_weekly,"9013_weekly.csv",row.names=F)
+write.csv(nine_zero_one_three_monthly,"9013_monthly.csv",row.names=F)
+
+
+```
