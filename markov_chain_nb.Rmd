@@ -69,8 +69,8 @@ calc_trans<- function(samp_name,samp_obj){
   count <- 0
   
   for (i in 2:length(samp_obj$subzone)) {
-  previous_state <- samp_obj$subzone[i-1]
-  current_state <- samp_obj$subzone[i]
+  previous_state <- as.character(samp_obj$subzone[i-1])
+  current_state <- as.character(samp_obj$subzone[i])
   
   #print(paste(previous_state,":",current_state))
   
@@ -156,9 +156,18 @@ monthly_6894 <- to.monthly(xts_6894, OHLC=F)
 
 length(daily_6894)
 
-daily_6894$DateTime[]
+day1_6894 <- xts_6894[paste0("2020-11-16 20:39:26","/",index(daily_6894)[2])]
 
-day1_6894 <- xts_6894[paste0("2020-11-16 20:39:26","/",daily_6894$DateTime[1])]
+tmp <- calc_trans("6894.d1", data.frame(day1_6894))
 
+#TODO turn this into a function
+
+result <- data.frame()
+for (i in 2:length(daily_6894)){
+  curr_day <- xts_6894[paste0(index(daily_6894)[i-1],"/",index(daily_6894)[i])]
+  curr_day_trans <- calc_trans(paste0("6984.d",i),curr_day)
+  result <- rbind(result,curr_day_trans)
+}
+colnames(result) <- c("sample","bottom","mid","top","total")
 ```
 
