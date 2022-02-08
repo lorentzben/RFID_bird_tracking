@@ -114,29 +114,6 @@ calc_trans_period<- function(samp_name, daily_indexed, raw_table,freq){
 ```
 
 
-```{r}
-six_eight_nine_four <- read.csv("6894.csv")
-
-six_eight_nine_four["DateTime"] <- as.POSIXct(six_eight_nine_four$access, origin="1970-01-01", tz="GMT")
-
-unique(six_eight_nine_four$subzone)
-
-six_eight_nine_four$subzone[six_eight_nine_four$subzone == "M"] <- "middle"
-six_eight_nine_four$subzone[six_eight_nine_four$subzone == "B"] <- "bottom"
-six_eight_nine_four$subzone[six_eight_nine_four$subzone == "T"] <- "top"
-
-plot(subset(six_eight_nine_four, DateTime >= as.POSIXct("2021-02-17 00:00",tz="GMT")& DateTime<= as.POSIXct("2021-02-18 00:00",tz="GMT"))$DateTime, as.factor(subset(six_eight_nine_four, DateTime >= as.POSIXct("2021-02-17 00:00",tz="GMT")& DateTime<= as.POSIXct("2021-02-18 00:00",tz="GMT"))$subzone))
-
-six_eight_nine_four_overall_transitions <- calc_trans("six_eight_nine_four_total",six_eight_nine_four)
-
-bottom_trans/trans
-mid_trans/trans
-top_trans/trans
-
-
-```
-
-
 ```{r, setup zoo for six eight nine four}
 library(xts)
 
