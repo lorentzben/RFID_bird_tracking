@@ -58,6 +58,26 @@ plot(test$estimate)
 ```
 
 ```{r, function to calc transitions}
+sep_bird_id <- function(samp_name, samp_id,cage_obj){
+  
+  raw_sample_tab <- subset(cage_obj, tagname==samp_id)
+  
+  xts_object <- xts(raw_sample_tab ,order.by = raw_sample_tab$DateTime)
+
+  summary(xts_object)
+
+  daily <- to.daily(xts_object$subzone, OHLC=F,)
+  weekly <- to.weekly(xts_object$subzone, OHLC=F)
+  monthly <- to.monthly(xts_object$subzone, OHLC=F)
+  index(monthly) <-as.POSIXct(index(monthly))
+  
+  
+  result <- list("name" = samp_name, "ID"=samp_id, "xts_obj"=xts_object, "daily_obj"=daily,
+                 "weekly_obj"=weekly, "monthly_obj"=monthly)
+  return(result)
+}
+
+
 #input a sample name
 #returns a vector labeled with sample name, and bottom, middle, top and total transitions
 
@@ -119,6 +139,11 @@ library(xts)
 
 six_eight_nine_four <- read.csv("6894.csv")
 
+bird_ids_6894 <- na.trim(unique(six_eight_nine_four$tagname))
+bird_ids_6894 <- sort(bird_ids_6894)
+
+six_eight_nine_four <- six_eight_nine_four[order(six_eight_nine_four$access),] 
+
 six_eight_nine_four["DateTime"] <- as.POSIXct(six_eight_nine_four$access, origin="1970-01-01", tz="GMT")
 
 unique(six_eight_nine_four$subzone)
@@ -134,6 +159,22 @@ sum(is.na(six_eight_nine_four$DateTime))
 six_eight_nine_four <- six_eight_nine_four[!is.na(six_eight_nine_four$DateTime),]
 
 sum(is.na(six_eight_nine_four$DateTime))
+
+res <- sep_bird_id(samp_name = "6894",cage_obj = six_eight_nine_four,samp_id = bird_ids_6894[1])
+
+reslist <- list()
+for(i in 1:length(bird_ids_6894)){
+  
+  res <- sep_bird_id(samp_name="6894",cage_obj =six_eight_nine_four, samp_id = bird_ids_6894[i])
+  reslist[[i]] <- res
+}
+
+for(item in reslist){
+  print(item$ID)
+  print(summary(item$xts_obj))
+}
+
+summary(res$xts_obj)
 
 xts_6894 <- xts(six_eight_nine_four,order.by = six_eight_nine_four$DateTime)
 
@@ -279,6 +320,19 @@ nine_zero_one_three_monthly <- calc_trans_period("9013",monthly_9013,xts_9013,"m
 write.csv(nine_zero_one_three_daily,"9013_daily.csv",row.names = F)
 write.csv(nine_zero_one_three_weekly,"9013_weekly.csv",row.names=F)
 write.csv(nine_zero_one_three_monthly,"9013_monthly.csv",row.names=F)
+
+
+```
+```{r, try out LDA with the Iris example}
+library(MASS)
+Iris <- data.frame(rbind(iris3[,,1], iris3[,,2], iris3[,,3]),Sp = rep(c("s","c","v"), rep(50,3)))
+train <- sample(1:150, 75)
+table(Iris$Sp[train])
+
+z <- lda(Sp ~ ., Iris, prior = c(1,1,1)/3, subset = train)
+predict(z, Iris[-train, ])$class
+
+(z1 <- update(z, . ~ . - Petal.W.))
 
 
 ```
