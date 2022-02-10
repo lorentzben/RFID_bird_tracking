@@ -184,11 +184,12 @@ for(item in reslist_6894){
   print(summary(item$xts_obj))
 }
 
-
+remove <- c("6862","6880","6881")
+bird_ids_6894_new <- bird_ids_6894 [! bird_ids_6894  %in% remove ]
 #generate list of the first 10 truncated XTS objects
 reslist2_6894 <- list()
-for(i in 1:10){
-  res <- sep_bird_id_period(samp_name="6894",cage_obj =six_eight_nine_four, samp_id = bird_ids_6894[i],cutoff = "2020-12-02 23:00:00/2021-01-22 10:00:00")
+for(i in 1:7){
+  res <- sep_bird_id_period(samp_name="6894",cage_obj =six_eight_nine_four, samp_id = bird_ids_6894_new[i],cutoff = "2020-12-02 23:00:00/2021-02-18 10:00:00")
   reslist2_6894[[i]] <- res
 }
 
@@ -206,11 +207,14 @@ for(i in 2:length(reslist2_6894)){
   big_table_6894 <- cbind(big_table_6894,current)
 }
 print(sum(is.na(big_table_6894)))
+print(head(big_table_6894))
 
+remove <- c("9059")
+bird_ids_6894_new <- bird_ids_6894 [! bird_ids_6894  %in% remove ]
 #generate list of the first 10 truncated XTS objects
 reslist3_6894 <- list()
-for(i in 11:15){
-  res <- sep_bird_id_period(samp_name="6894",cage_obj =six_eight_nine_four, samp_id = bird_ids_6894[i],cutoff = "2021-02-18 T16:00:00/2021-05-05 T23:00:00")
+for(i in 11:14){
+  res <- sep_bird_id_period(samp_name="6894",cage_obj =six_eight_nine_four, samp_id = bird_ids_6894_new[i],cutoff = "2021-02-18 T16:00:00/2021-05-05 T23:00:00")
   reslist3_6894[[i]] <- res
 }
 
@@ -288,7 +292,7 @@ bird_ids_6928_new <- bird_ids_6928 [! bird_ids_6928  %in% remove ]
 #generate list of the first 10 truncated XTS objects
 reslist2_6928 <- list()
 for(i in 1:length(bird_ids_6928_new)){
-  res <- sep_bird_id_period(samp_name="6928",cage_obj =six_nine_two_eight, samp_id = bird_ids_6928_new[i],cutoff = "2021-02-05 T16:00:00/2021-05-05 T23:00:00")
+  res <- sep_bird_id_period(samp_name="6928",cage_obj =six_nine_two_eight, samp_id = bird_ids_6928_new[i],cutoff = "2021-02-18 T16:00:00/2021-05-05 T23:00:00")
   reslist2_6928[[i]] <- res
 }
 
@@ -318,15 +322,15 @@ index(monthly_6928) <-as.POSIXct(index(monthly_6928))
 
 length(daily_6928)
 
-six_nine_two_eight_daily <- calc_trans_period("6928",daily_6928,xts_6928,"d")
+#six_nine_two_eight_daily <- calc_trans_period("6928",daily_6928,xts_6928,"d")
 
-six_nine_two_eight_weekly <- calc_trans_period("6928",weekly_6928,xts_6928,"w")
+#six_nine_two_eight_weekly <- calc_trans_period("6928",weekly_6928,xts_6928,"w")
 
-six_nine_two_eight_monthly <- calc_trans_period("6928",monthly_6928,xts_6928,"m")
+#six_nine_two_eight_monthly <- calc_trans_period("6928",monthly_6928,xts_6928,"m")
 
-write.csv(six_nine_two_eight_daily,"6928_daily.csv",row.names = F)
-write.csv(six_nine_two_eight_weekly,"6928_weekly.csv",row.names=F)
-write.csv(six_nine_two_eight_monthly,"6928_monthly.csv",row.names=F)
+#write.csv(six_nine_two_eight_daily,"6928_daily.csv",row.names = F)
+#write.csv(six_nine_two_eight_weekly,"6928_weekly.csv",row.names=F)
+#write.csv(six_nine_two_eight_monthly,"6928_monthly.csv",row.names=F)
 
 ```
 
