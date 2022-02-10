@@ -199,6 +199,28 @@ for(item in reslist2_6894){
   print(item$daily_obj)
 }
 
+#find wholly non-na daily timeset, to be able to feed into the transcalc
+big_table_6894 <- reslist2_6894[[1]]$daily_obj
+for(i in 2:length(reslist2_6894)){
+  current <- reslist2_6894[[i]]$daily_obj
+  big_table_6894 <- cbind(big_table_6894,current)
+}
+print(sum(is.na(big_table_6894)))
+
+#generate list of the first 10 truncated XTS objects
+reslist3_6894 <- list()
+for(i in 11:15){
+  res <- sep_bird_id_period(samp_name="6894",cage_obj =six_eight_nine_four, samp_id = bird_ids_6894[i],cutoff = "2021-02-18 T16:00:00/2021-05-05 T23:00:00")
+  reslist3_6894[[i]] <- res
+}
+
+#find wholly non-na daily timeset, to be able to feed into the transcalc
+big_table_2_6894 <- reslist3_6894[[11]]$daily_obj
+for(i in 12:length(reslist3_6894)){
+  current <- reslist3_6894[[i]]$daily_obj
+  big_table_2_6894 <- cbind(big_table_2_6894,current)
+}
+print(big_table_2_6894)
 
 #summary(res$xts_obj)
 
