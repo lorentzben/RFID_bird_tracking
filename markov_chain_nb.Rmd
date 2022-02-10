@@ -58,25 +58,33 @@ plot(test$estimate)
 ```
 
 ```{r, function to calc transitions}
-sep_bird_id <- function(samp_name, samp_id,cage_obj){
+sep_bird_id_xts <- function(samp_name, samp_id,cage_obj){
   
   raw_sample_tab <- subset(cage_obj, tagname==samp_id)
   
   xts_object <- xts(raw_sample_tab ,order.by = raw_sample_tab$DateTime)
+  
+  result <- list("name" = samp_name, "ID"=samp_id, "xts_obj"=xts_object)
+  return(result)
+}
 
-  summary(xts_object)
-
+sep_bird_id_period <- function(samp_name, samp_id, cage_obj, cutoff){
+  
+  raw_sample_tab <- subset(cage_obj, tagname==samp_id)
+  
+  xts_object <- xts(raw_sample_tab ,order.by = raw_sample_tab$DateTime)
+  
+  xts_object <- xts_object[cutoff]
+  
   daily <- to.daily(xts_object$subzone, OHLC=F,)
   weekly <- to.weekly(xts_object$subzone, OHLC=F)
   monthly <- to.monthly(xts_object$subzone, OHLC=F)
   index(monthly) <-as.POSIXct(index(monthly))
   
-  
   result <- list("name" = samp_name, "ID"=samp_id, "xts_obj"=xts_object, "daily_obj"=daily,
                  "weekly_obj"=weekly, "monthly_obj"=monthly)
   return(result)
 }
-
 
 #input a sample name
 #returns a vector labeled with sample name, and bottom, middle, top and total transitions
@@ -160,18 +168,35 @@ six_eight_nine_four <- six_eight_nine_four[!is.na(six_eight_nine_four$DateTime),
 
 sum(is.na(six_eight_nine_four$DateTime))
 
-res <- sep_bird_id(samp_name = "6894",cage_obj = six_eight_nine_four,samp_id = bird_ids_6894[1])
+#res <- sep_bird_id(samp_name = "6894",cage_obj = six_eight_nine_four,samp_id = bird_ids_6894[1])
 
+#generate list of XTS objects 
 reslist <- list()
 for(i in 1:length(bird_ids_6894)){
   
-  res <- sep_bird_id(samp_name="6894",cage_obj =six_eight_nine_four, samp_id = bird_ids_6894[i])
+  res <- sep_bird_id_xts(samp_name="6894",cage_obj =six_eight_nine_four, samp_id = bird_ids_6894[i])
   reslist[[i]] <- res
 }
 
+#summarize the xts objects to find a period of time that 
 for(item in reslist){
   print(item$ID)
   print(summary(item$xts_obj))
+}
+
+
+#generate list of the first 10 truncated XTS objects
+reslist2 <- list()
+for(i in 1:10){
+  res <- sep_bird_id_period(samp_name="6894",cage_obj =six_eight_nine_four, samp_id = bird_ids_6894[i],cutoff = "2020-12-02 23:00:00/2021-01-22 10:00:00")
+  reslist2[[i]] <- res
+}
+
+#summarize the xts objects to check that the truncation worked
+for(item in reslist2){
+  print(item$ID)
+  print(summary(item$xts_obj))
+  print(item$daily_obj)
 }
 
 dec_to_feb <- reslist[c(1:10)]
@@ -183,25 +208,32 @@ for(item in dec_to_feb){
   #item$monthly_obj <- to.monthly(item$xts_obj, OHLC=F)
 }
 
-summary(res$xts_obj)
+for(item in dec_to_feb){
+  print(item$ID)
+  print(summary(item$xts_obj))
+  print(summary(item$daily_obj))
+}
 
-xts_6894 <- xts(six_eight_nine_four,order.by = six_eight_nine_four$DateTime)
+#summary(res$xts_obj)
 
-summary(xts_6894)
+#xts_6894 <- xts(six_eight_nine_four,order.by = six_eight_nine_four$DateTime)
 
-daily_6894 <- to.daily(xts_6894$subzone, OHLC=F,)
-weekly_6894 <- to.weekly(xts_6894$subzone, OHLC=F)
-monthly_6894 <- to.monthly(xts_6894$subzone, OHLC=F)
-index(monthly_6894) <-as.POSIXct(index(monthly_6894))
+#summary(xts_6894)
 
-length(daily_6894)
+#daily_6894 <- to.daily(xts_6894$subzone, OHLC=F,)
+#weekly_6894 <- to.weekly(xts_6894$subzone, OHLC=F)
+#monthly_6894 <- to.monthly(xts_6894$subzone, OHLC=F)
+#index(monthly_6894) <-as.POSIXct(index(monthly_6894))
 
-six_eight_nine_four_daily <- calc_trans_period("6894",daily_6894,xts_6894,"d")
+#length(daily_6894)
 
-six_eight_nine_four_weekly <- calc_trans_period("6894",weekly_6894,xts_6894,"w")
+#six_eight_nine_four_daily <- calc_trans_period("6894",daily_6894,xts_6894,"d")
 
-six_eight_nine_four_monthly <- calc_trans_period("6894",monthly_6894,xts_6894,"m")
+#six_eight_nine_four_weekly <- calc_trans_period("6894",weekly_6894,xts_6894,"w")
 
+#six_eight_nine_four_monthly <- calc_trans_period("6894",monthly_6894,xts_6894,"m")
+
+#TODO fix these write calls once the data is concated
 write.csv(six_eight_nine_four_daily,"6894_daily.csv",row.names = F)
 write.csv(six_eight_nine_four_weekly,"6894_weekly.csv",row.names=F)
 write.csv(six_eight_nine_four_monthly,"6894_monthly.csv",row.names=F)
