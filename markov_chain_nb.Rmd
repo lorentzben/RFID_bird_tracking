@@ -311,16 +311,16 @@ for(i in 2:length(reslist2_6928)){
 }
 print(sum(is.na(big_table_6928)))
 
-xts_6928 <- xts(six_nine_two_eight,order.by = six_nine_two_eight$DateTime)
-
-summary(xts_6928)
-
-daily_6928 <- to.daily(xts_6928$subzone, OHLC=F,)
-weekly_6928 <- to.weekly(xts_6928$subzone, OHLC=F)
-monthly_6928 <- to.monthly(xts_6928$subzone, OHLC=F)
-index(monthly_6928) <-as.POSIXct(index(monthly_6928))
-
-length(daily_6928)
+# xts_6928 <- xts(six_nine_two_eight,order.by = six_nine_two_eight$DateTime)
+# 
+# summary(xts_6928)
+# 
+# daily_6928 <- to.daily(xts_6928$subzone, OHLC=F,)
+# weekly_6928 <- to.weekly(xts_6928$subzone, OHLC=F)
+# monthly_6928 <- to.monthly(xts_6928$subzone, OHLC=F)
+# index(monthly_6928) <-as.POSIXct(index(monthly_6928))
+# 
+# length(daily_6928)
 
 #six_nine_two_eight_daily <- calc_trans_period("6928",daily_6928,xts_6928,"d")
 
@@ -339,6 +339,9 @@ length(daily_6928)
 #65524
 six_nine_eight_eight <- read.csv("6988.csv")
 
+bird_ids_6988 <- unique(six_nine_eight_eight$tagname)
+bird_ids_6988 <- na.trim(sort(bird_ids_6988))
+
 six_nine_eight_eight["DateTime"] <- as.POSIXct(six_nine_eight_eight$access, origin="1970-01-01", tz="GMT")
 
 unique(six_nine_eight_eight$subzone)
@@ -353,32 +356,76 @@ unique(six_nine_eight_eight$subzone)
 sum(is.na(six_nine_eight_eight$DateTime))
 sum(is.na(six_nine_eight_eight$subzone))
 
-xts_6988 <- xts(six_nine_eight_eight,order.by = six_nine_eight_eight$DateTime)
 
-summary(xts_6988)
+#generate list of XTS objects 
+reslist_6988 <- list()
+for(i in 1:length(bird_ids_6988)){
+  
+  res <- sep_bird_id_xts(samp_name="6988",cage_obj =six_nine_eight_eight, samp_id = bird_ids_6988[i])
+  reslist_6988[[i]] <- res
+}
 
-daily_6988 <- to.daily(xts_6988$subzone, OHLC=F,)
-weekly_6988 <- to.weekly(xts_6988$subzone, OHLC=F)
-monthly_6988 <- to.monthly(xts_6988$subzone, OHLC=F)
-index(monthly_6988) <-as.POSIXct(index(monthly_6988))
+#summarize the xts objects to find a period of time that 
+for(item in reslist_6988){
+  print(item$ID)
+  print(summary(item$xts_obj))
+}
 
-length(daily_6988)
+remove <- c("6910","6914","9005")
+bird_ids_6988_new <- bird_ids_6988 [! bird_ids_6988  %in% remove ]
+#generate list of the first 10 truncated XTS objects
+reslist2_6988 <- list()
+for(i in 1:length(bird_ids_6988_new)){
+  res <- sep_bird_id_period(samp_name="6988",cage_obj =six_nine_eight_eight, samp_id = bird_ids_6988_new[i],cutoff = "2021-02-18 T16:00:00/2021-05-05 T23:00:00")
+  reslist2_6988[[i]] <- res
+}
 
-six_nine_eight_eight_daily <- calc_trans_period("6988",daily_6988,xts_6988,"d")
+#summarize the xts objects to check that the truncation worked
+for(item in reslist2_6988){
+  print(item$ID)
+  print(summary(item$xts_obj))
+  print(item$daily_obj)
+}
 
-six_nine_eight_eight_weekly <- calc_trans_period("6988",weekly_6988,xts_6988,"w")
+#find wholly non-na daily timeset, to be able to feed into the transcalc
+big_table_6988 <- reslist2_6988[[1]]$daily_obj
+for(i in 2:length(reslist2_6988)){
+  current <- reslist2_6988[[i]]$daily_obj
+  big_table_6988 <- cbind(big_table_6988,current)
+}
+print(sum(is.na(big_table_6988)))
 
-six_nine_eight_eight_monthly <- calc_trans_period("6988",monthly_6988,xts_6988,"m")
+sum(is.na(cbind(big_table_2_6894,big_table_6928,big_table_6988)))
 
-write.csv(six_nine_eight_eight_daily,"6988_daily.csv",row.names = F)
-write.csv(six_nine_eight_eight_weekly,"6988_weekly.csv",row.names=F)
-write.csv(six_nine_eight_eight_monthly,"6988_monthly.csv",row.names=F)
+# xts_6988 <- xts(six_nine_eight_eight,order.by = six_nine_eight_eight$DateTime)
+# 
+# summary(xts_6988)
+# 
+# daily_6988 <- to.daily(xts_6988$subzone, OHLC=F,)
+# weekly_6988 <- to.weekly(xts_6988$subzone, OHLC=F)
+# monthly_6988 <- to.monthly(xts_6988$subzone, OHLC=F)
+# index(monthly_6988) <-as.POSIXct(index(monthly_6988))
+# 
+# length(daily_6988)
+# 
+# six_nine_eight_eight_daily <- calc_trans_period("6988",daily_6988,xts_6988,"d")
+# 
+# six_nine_eight_eight_weekly <- calc_trans_period("6988",weekly_6988,xts_6988,"w")
+# 
+# six_nine_eight_eight_monthly <- calc_trans_period("6988",monthly_6988,xts_6988,"m")
+# 
+# write.csv(six_nine_eight_eight_daily,"6988_daily.csv",row.names = F)
+# write.csv(six_nine_eight_eight_weekly,"6988_weekly.csv",row.names=F)
+# write.csv(six_nine_eight_eight_monthly,"6988_monthly.csv",row.names=F)
 
 ```
 
 ```{r}
 #65495
 nine_zero_one_three <- read.csv("9013.csv")
+
+bird_ids_9013 <- unique(nine_zero_one_three$tagname)
+bird_ids_9013 <- na.trim(sort(bird_ids_9013))
 
 nine_zero_one_three["DateTime"] <- as.POSIXct(nine_zero_one_three$access, origin="1970-01-01", tz="GMT")
 
@@ -394,29 +441,73 @@ unique(nine_zero_one_three$subzone)
 sum(is.na(nine_zero_one_three$DateTime))
 sum(is.na(nine_zero_one_three$subzone))
 
-xts_9013 <- xts(nine_zero_one_three,order.by = nine_zero_one_three$DateTime)
 
-summary(xts_9013)
+#generate list of XTS objects 
+reslist_9013 <- list()
+for(i in 1:length(bird_ids_9013)){
+  
+  res <- sep_bird_id_xts(samp_name="9013",cage_obj =nine_zero_one_three, samp_id = bird_ids_9013[i])
+  reslist_9013[[i]] <- res
+}
 
-daily_9013 <- to.daily(xts_9013$subzone, OHLC=F,)
-weekly_9013 <- to.weekly(xts_9013$subzone, OHLC=F)
-monthly_9013 <- to.monthly(xts_9013$subzone, OHLC=F)
-index(monthly_9013) <-as.POSIXct(index(monthly_9013))
+#summarize the xts objects to find a period of time that 
+for(item in reslist_9013){
+  print(item$ID)
+  print(summary(item$xts_obj))
+}
 
-length(daily_9013)
+remove <- c("6998")
+bird_ids_9013_new <- bird_ids_9013 [! bird_ids_9013  %in% remove ]
+#generate list of the first 10 truncated XTS objects
+reslist2_9013 <- list()
+for(i in 1:length(bird_ids_9013_new)){
+  res <- sep_bird_id_period(samp_name="9013",cage_obj =nine_zero_one_three, samp_id = bird_ids_9013_new[i],cutoff = "2021-03-09 T18:00:00/2021-05-07 T17:00:00")
+  reslist2_9013[[i]] <- res
+}
 
-nine_zero_one_three_daily <- calc_trans_period("9013",daily_9013,xts_9013,"d")
+#summarize the xts objects to check that the truncation worked
+for(item in reslist2_9013){
+  print(item$ID)
+  print(summary(item$xts_obj))
+  print(item$daily_obj)
+}
 
-nine_zero_one_three_weekly <- calc_trans_period("9013",weekly_9013,xts_9013,"w")
+#find wholly non-na daily timeset, to be able to feed into the transcalc
+big_table_9013 <- reslist2_9013[[1]]$daily_obj
+for(i in 2:length(reslist2_9013)){
+  current <- reslist2_9013[[i]]$daily_obj
+  big_table_9013 <- cbind(big_table_9013,current)
+}
+print(sum(is.na(big_table_9013)))
 
-nine_zero_one_three_monthly <- calc_trans_period("9013",monthly_9013,xts_9013,"m")
-
-write.csv(nine_zero_one_three_daily,"9013_daily.csv",row.names = F)
-write.csv(nine_zero_one_three_weekly,"9013_weekly.csv",row.names=F)
-write.csv(nine_zero_one_three_monthly,"9013_monthly.csv",row.names=F)
+sum(is.na(cbind(big_table_2_6894,big_table_6928,big_table_6988)))
+# 
+# xts_9013 <- xts(nine_zero_one_three,order.by = nine_zero_one_three$DateTime)
+# 
+# summary(xts_9013)
+# 
+# daily_9013 <- to.daily(xts_9013$subzone, OHLC=F,)
+# weekly_9013 <- to.weekly(xts_9013$subzone, OHLC=F)
+# monthly_9013 <- to.monthly(xts_9013$subzone, OHLC=F)
+# index(monthly_9013) <-as.POSIXct(index(monthly_9013))
+# 
+# length(daily_9013)
+# 
+# nine_zero_one_three_daily <- calc_trans_period("9013",daily_9013,xts_9013,"d")
+# 
+# nine_zero_one_three_weekly <- calc_trans_period("9013",weekly_9013,xts_9013,"w")
+# 
+# nine_zero_one_three_monthly <- calc_trans_period("9013",monthly_9013,xts_9013,"m")
+# 
+# write.csv(nine_zero_one_three_daily,"9013_daily.csv",row.names = F)
+# write.csv(nine_zero_one_three_weekly,"9013_weekly.csv",row.names=F)
+# write.csv(nine_zero_one_three_monthly,"9013_monthly.csv",row.names=F)
 
 
 ```
+
+
+
 ```{r, try out LDA with the Iris example}
 library(MASS)
 Iris <- data.frame(rbind(iris3[,,1], iris3[,,2], iris3[,,3]),Sp = rep(c("s","c","v"), rep(50,3)))
