@@ -171,48 +171,34 @@ sum(is.na(six_eight_nine_four$DateTime))
 #res <- sep_bird_id(samp_name = "6894",cage_obj = six_eight_nine_four,samp_id = bird_ids_6894[1])
 
 #generate list of XTS objects 
-reslist <- list()
+reslist_6894 <- list()
 for(i in 1:length(bird_ids_6894)){
   
   res <- sep_bird_id_xts(samp_name="6894",cage_obj =six_eight_nine_four, samp_id = bird_ids_6894[i])
-  reslist[[i]] <- res
+  reslist_6894[[i]] <- res
 }
 
 #summarize the xts objects to find a period of time that 
-for(item in reslist){
+for(item in reslist_6894){
   print(item$ID)
   print(summary(item$xts_obj))
 }
 
 
 #generate list of the first 10 truncated XTS objects
-reslist2 <- list()
+reslist2_6894 <- list()
 for(i in 1:10){
   res <- sep_bird_id_period(samp_name="6894",cage_obj =six_eight_nine_four, samp_id = bird_ids_6894[i],cutoff = "2020-12-02 23:00:00/2021-01-22 10:00:00")
-  reslist2[[i]] <- res
+  reslist2_6894[[i]] <- res
 }
 
 #summarize the xts objects to check that the truncation worked
-for(item in reslist2){
+for(item in reslist2_6894){
   print(item$ID)
   print(summary(item$xts_obj))
   print(item$daily_obj)
 }
 
-dec_to_feb <- reslist[c(1:10)]
-
-for(item in dec_to_feb){
-  item$xts_obj <- item$xts_obj["2020-12-02 23:00:00/2021-01-22 10:00:00"]
-  #item$daily_obj <- to.daily(item$xts_obj, OHLC=F)
-  #item$weekly_obj <- to.weekly(item$xts_obj, OHLC=F)
-  #item$monthly_obj <- to.monthly(item$xts_obj, OHLC=F)
-}
-
-for(item in dec_to_feb){
-  print(item$ID)
-  print(summary(item$xts_obj))
-  print(summary(item$daily_obj))
-}
 
 #summary(res$xts_obj)
 
@@ -244,6 +230,9 @@ write.csv(six_eight_nine_four_monthly,"6894_monthly.csv",row.names=F)
 #65530
 six_nine_two_eight <- read.csv("6928.csv")
 
+bird_ids_6928 <- na.trim(unique(six_nine_two_eight$tagname))
+bird_ids_6928 <- sort(bird_ids_6928)
+
 six_nine_two_eight["DateTime"] <- as.POSIXct(six_nine_two_eight$access, origin="1970-01-01", tz="GMT")
 
 unique(six_nine_two_eight$subzone)
@@ -257,6 +246,44 @@ unique(six_nine_two_eight$subzone)
 
 sum(is.na(six_nine_two_eight$DateTime))
 sum(is.na(six_nine_two_eight$subzone))
+
+#generate list of XTS objects 
+reslist_6928 <- list()
+for(i in 1:length(bird_ids_6928)){
+  
+  res <- sep_bird_id_xts(samp_name="6928",cage_obj =six_nine_two_eight, samp_id = bird_ids_6928[i])
+  reslist_6928[[i]] <- res
+}
+
+#summarize the xts objects to find a period of time that 
+for(item in reslist_6928){
+  print(item$ID)
+  print(summary(item$xts_obj))
+}
+
+remove <- c("6941","6974","9009","9011")
+bird_ids_6928_new <- bird_ids_6928 [! bird_ids_6928  %in% remove ]
+#generate list of the first 10 truncated XTS objects
+reslist2_6928 <- list()
+for(i in 1:length(bird_ids_6928_new)){
+  res <- sep_bird_id_period(samp_name="6928",cage_obj =six_nine_two_eight, samp_id = bird_ids_6928_new[i],cutoff = "2021-02-05 T16:00:00/2021-05-05 T23:00:00")
+  reslist2_6928[[i]] <- res
+}
+
+#summarize the xts objects to check that the truncation worked
+for(item in reslist2_6928){
+  print(item$ID)
+  print(summary(item$xts_obj))
+  print(item$daily_obj)
+}
+
+#find wholly non-na daily timeset, to be able to feed into the transcalc
+big_table_6928 <- reslist2_6928[[1]]$daily_obj
+for(i in 2:length(reslist2_6928)){
+  current <- reslist2_6928[[i]]$daily_obj
+  big_table_6928 <- cbind(big_table_6928,current)
+}
+print(sum(is.na(big_table_6928)))
 
 xts_6928 <- xts(six_nine_two_eight,order.by = six_nine_two_eight$DateTime)
 
