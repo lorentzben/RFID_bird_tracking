@@ -72,7 +72,7 @@ sep_bird_id_period <- function(samp_name, samp_id, cage_obj, cutoff){
   
   raw_sample_tab <- subset(cage_obj, tagname==samp_id)
   
-  xts_object <- xts(raw_sample_tab ,order.by = raw_sample_tab$DateTime)
+  xts_object <- xts(raw_sample_tab ,order.by=raw_sample_tab$DateTime)
   
   xts_object <- xts_object[cutoff]
   
@@ -461,7 +461,7 @@ bird_ids_9013_new <- bird_ids_9013 [! bird_ids_9013  %in% remove ]
 #generate list of the first 10 truncated XTS objects
 reslist2_9013 <- list()
 for(i in 1:length(bird_ids_9013_new)){
-  res <- sep_bird_id_period(samp_name="9013",cage_obj =nine_zero_one_three, samp_id = bird_ids_9013_new[i],cutoff = "2021-03-09 T18:00:00/2021-05-07 T17:00:00")
+  res <- sep_bird_id_period(samp_name="9013",cage_obj =nine_zero_one_three, samp_id = bird_ids_9013_new[i],cutoff = "2021-03-11 T18:00:00/2021-05-07 T17:00:00")
   reslist2_9013[[i]] <- res
 }
 
@@ -538,7 +538,7 @@ write.csv(december_to_feb_monthly,"december_to_feb_monthly.csv",row.names = F)
 ```
 
 
-```{r, try to work with the 2-18 datasets}
+```{r, work with the 2-18 datasets}
 
 whole_data_sanity <- data.frame()
 whole_data_sanity <- reslist3_6894[[1]]$daily_obj
@@ -603,6 +603,89 @@ for(item in trans_reslist_feb){
 write.csv(feb_to_may_daily,"feb_to_may_daily.csv",row.names = F)
 write.csv(feb_to_may_weekly,"feb_to_may_weekly.csv",row.names = F)
 write.csv(feb_to_may_monthly,"feb_to_may_monthly.csv",row.names = F)
+```
+
+
+
+```{r, make the march dataset}
+
+whole_data_sanity <- data.frame()
+whole_data_sanity <- reslist2_9013[[1]]$daily_obj
+for(item in reslist2_9013){
+  whole_data_sanity <- cbind(whole_data_sanity,item$daily_obj)
+}
+
+raw_9005 <- reslist_6988[[11]]$xts_obj
+res_9005 <- raw_9005["2021-03-11 T18:00:00/2021-05-07 T17:00:00"]
+daily <- to.daily(res_9005$subzone, OHLC=F,)
+weekly <- to.weekly(res_9005$subzone, OHLC=F)
+monthly <- to.monthly(res_9005$subzone, OHLC=F)
+index(monthly) <-as.POSIXct(index(monthly))
+result <- list("name" ="6988", "ID"="9005", "xts_obj"=res_9005, "daily_obj"=daily,
+                 "weekly_obj"=weekly, "monthly_obj"=monthly)
+daily_9005 <- daily
+weekly_9005 <- weekly
+monthly_9005<- monthly
+whole_data_sanity <- cbind(whole_data_sanity, result$daily)
+
+raw_6941 <- reslist_6928[[8]]$xts_obj
+res_6941 <- raw_6941["2021-03-11 T18:00:00/2021-05-07 T17:00:00"]
+daily <- to.daily(res_6941$subzone, OHLC=F,)
+weekly <- to.weekly(res_6941$subzone, OHLC=F)
+monthly <- to.monthly(res_6941$subzone, OHLC=F)
+index(monthly) <-as.POSIXct(index(monthly))
+result <- list("name" ="6928", "ID"="6941", "xts_obj"=res_6941, "daily_obj"=daily,
+                 "weekly_obj"=weekly, "monthly_obj"=monthly)
+daily_6941 <- daily
+weekly_6941 <- weekly
+monthly_6941 <- monthly
+whole_data_sanity <- cbind(whole_data_sanity, result$daily)
+
+#yay the data is whole
+sum(is.na(whole_data_sanity))
+
+#calculate transition tables for the dataset in cage 9013
+trans_reslist_mar <- list()
+for(i in 1:length(reslist2_9013)){
+  daily_trans_table <- calc_trans_period(reslist2_9013[[i]]$ID,reslist2_9013[[i]]$daily_obj,reslist2_9013[[i]]$xts_obj,"d")
+  weekly_trans_table <- calc_trans_period(reslist2_9013[[i]]$ID,reslist2_9013[[i]]$weekly_obj,reslist2_9013[[i]]$xts_obj,"w")
+  monthly_trans_table <- calc_trans_period(reslist2_9013[[i]]$ID,reslist2_9013[[i]]$monthly_obj,reslist2_9013[[i]]$xts_obj,"m")
+  
+  result <- list("ID"=reslist2_9013[[i]]$ID,"daily"=daily_trans_table, "weekly"=weekly_trans_table,"monthly"=monthly_trans_table, "raw"=reslist2_9013[[i]]$xts_obj)
+  trans_reslist_mar[[i]] <- result
+}
+
+#calculate transition tables for sample 9005
+daily_trans_table <- calc_trans_period("9005",daily_9005,raw_9005,"d")
+weekly_trans_table <- calc_trans_period("9005",weekly_9005,raw_9005,"w")
+  monthly_trans_table <- calc_trans_period("9005",monthly_9005,raw_9005,"m")
+  
+result <- list("ID"="9005","daily"=daily_trans_table, "weekly"=weekly_trans_table,"monthly"=monthly_trans_table, "raw"=raw_9005)
+trans_reslist_mar[[1+length(reslist2_9013)]] <- result
+
+#calculate transition tables for sample 6941
+daily_trans_table <- calc_trans_period("6941",daily_6941,raw_6941,"d")
+weekly_trans_table <- calc_trans_period("6941",weekly_6941,raw_6941,"w")
+  monthly_trans_table <- calc_trans_period("6941",monthly_6941,raw_6941,"m")
+  
+result <- list("ID"="6941","daily"=daily_trans_table, "weekly"=weekly_trans_table,"monthly"=monthly_trans_table, "raw"=raw_6941)
+trans_reslist_mar[[length(reslist2_9013)+2]] <- result
+
+#concat all transtition tables into one large 
+mar_to_may_daily <- data.frame()
+mar_to_may_weekly <- data.frame()
+mar_to_may_monthly <- data.frame()
+for(item in trans_reslist_mar){
+  mar_to_may_daily <- rbind(mar_to_may_daily, item$daily[c("ID","bottom","mid","top","total")])
+  mar_to_may_weekly <- rbind(mar_to_may_weekly, item$weekly[c("ID","bottom","mid","top","total")])
+  mar_to_may_monthly <- rbind(mar_to_may_monthly, item$monthly[c("ID","bottom","mid","top","total")])
+}
+
+
+write.csv(mar_to_may_daily,"mar_to_may_daily.csv",row.names = F)
+write.csv(mar_to_may_weekly,"mar_to_may_weekly.csv",row.names = F)
+write.csv(mar_to_may_monthly,"mar_to_may_monthly.csv",row.names = F)
+
 ```
 
 
