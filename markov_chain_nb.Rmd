@@ -178,11 +178,11 @@ for(i in 1:length(bird_ids_6894)){
   reslist_6894[[i]] <- res
 }
 
-#summarize the xts objects to find a period of time that 
-for(item in reslist_6894){
-  print(item$ID)
-  print(summary(item$xts_obj))
-}
+# #summarize the xts objects to find a period of time that 
+# for(item in reslist_6894){
+#   print(item$ID)
+#   print(summary(item$xts_obj))
+# }
 
 remove <- c("6862","6880","6881","9023","9038","9042","9050","9059")
 bird_ids_6894_new <- bird_ids_6894 [! bird_ids_6894  %in% remove ]
@@ -193,12 +193,12 @@ for(i in 1:length(bird_ids_6894_new)){
   reslist2_6894[[i]] <- res
 }
 
-#summarize the xts objects to check that the truncation worked
-for(item in reslist2_6894){
-  print(item$ID)
-  print(summary(item$xts_obj))
-  print(item$daily_obj)
-}
+# #summarize the xts objects to check that the truncation worked
+# for(item in reslist2_6894){
+#   print(item$ID)
+#   print(summary(item$xts_obj))
+#   print(item$daily_obj)
+# }
 
 #find wholly non-na daily timeset, to be able to feed into the transcalc
 big_table_6894 <- reslist2_6894[[1]]$daily_obj
@@ -209,7 +209,7 @@ for(i in 2:length(reslist2_6894)){
 print(sum(is.na(big_table_6894)))
 print(head(big_table_6894))
 
-remove <- c("6862","6880","6881","6882","6887","6891","6892","6893","6894","6900","9059")
+remove <- c("6862","6880","6881","6882","6887","6891","6892","6893","6894","6900","9059","9023")
 bird_ids_6894_new_2 <- bird_ids_6894 [! bird_ids_6894  %in% remove ]
 #generate list of the first 10 truncated XTS objects
 reslist3_6894 <- list()
@@ -281,13 +281,13 @@ for(i in 1:length(bird_ids_6928)){
   reslist_6928[[i]] <- res
 }
 
-#summarize the xts objects to find a period of time that 
-for(item in reslist_6928){
-  print(item$ID)
-  print(summary(item$xts_obj))
-}
+# #summarize the xts objects to find a period of time that 
+# for(item in reslist_6928){
+#   print(item$ID)
+#   print(summary(item$xts_obj))
+# }
 
-remove <- c("6941","6974","9009","9011")
+remove <- c("6941","6974","9009","9011","9023")
 bird_ids_6928_new <- bird_ids_6928 [! bird_ids_6928  %in% remove ]
 #generate list of the first 10 truncated XTS objects
 reslist2_6928 <- list()
@@ -296,12 +296,12 @@ for(i in 1:length(bird_ids_6928_new)){
   reslist2_6928[[i]] <- res
 }
 
-#summarize the xts objects to check that the truncation worked
-for(item in reslist2_6928){
-  print(item$ID)
-  print(summary(item$xts_obj))
-  print(item$daily_obj)
-}
+# #summarize the xts objects to check that the truncation worked
+# for(item in reslist2_6928){
+#   print(item$ID)
+#   print(summary(item$xts_obj))
+#   print(item$daily_obj)
+# }
 
 #find wholly non-na daily timeset, to be able to feed into the transcalc
 big_table_6928 <- reslist2_6928[[1]]$daily_obj
@@ -365,11 +365,11 @@ for(i in 1:length(bird_ids_6988)){
   reslist_6988[[i]] <- res
 }
 
-#summarize the xts objects to find a period of time that 
-for(item in reslist_6988){
-  print(item$ID)
-  print(summary(item$xts_obj))
-}
+# #summarize the xts objects to find a period of time that 
+# for(item in reslist_6988){
+#   print(item$ID)
+#   print(summary(item$xts_obj))
+# }
 
 remove <- c("6910","6914","9005")
 bird_ids_6988_new <- bird_ids_6988 [! bird_ids_6988  %in% remove ]
@@ -380,12 +380,12 @@ for(i in 1:length(bird_ids_6988_new)){
   reslist2_6988[[i]] <- res
 }
 
-#summarize the xts objects to check that the truncation worked
-for(item in reslist2_6988){
-  print(item$ID)
-  print(summary(item$xts_obj))
-  print(item$daily_obj)
-}
+# #summarize the xts objects to check that the truncation worked
+# for(item in reslist2_6988){
+#   print(item$ID)
+#   print(summary(item$xts_obj))
+#   print(item$daily_obj)
+# }
 
 #find wholly non-na daily timeset, to be able to feed into the transcalc
 big_table_6988 <- reslist2_6988[[1]]$daily_obj
@@ -450,11 +450,11 @@ for(i in 1:length(bird_ids_9013)){
   reslist_9013[[i]] <- res
 }
 
-#summarize the xts objects to find a period of time that 
-for(item in reslist_9013){
-  print(item$ID)
-  print(summary(item$xts_obj))
-}
+# #summarize the xts objects to find a period of time that 
+# for(item in reslist_9013){
+#   print(item$ID)
+#   print(summary(item$xts_obj))
+# }
 
 remove <- c("6998")
 bird_ids_9013_new <- bird_ids_9013 [! bird_ids_9013  %in% remove ]
@@ -465,12 +465,12 @@ for(i in 1:length(bird_ids_9013_new)){
   reslist2_9013[[i]] <- res
 }
 
-#summarize the xts objects to check that the truncation worked
-for(item in reslist2_9013){
-  print(item$ID)
-  print(summary(item$xts_obj))
-  print(item$daily_obj)
-}
+# #summarize the xts objects to check that the truncation worked
+# for(item in reslist2_9013){
+#   print(item$ID)
+#   print(summary(item$xts_obj))
+#   print(item$daily_obj)
+# }
 
 #find wholly non-na daily timeset, to be able to feed into the transcalc
 big_table_9013 <- reslist2_9013[[1]]$daily_obj
@@ -519,15 +519,16 @@ for(i in 1:length(reslist2_6894)){
   trans_reslist_6894_dec[[i]] <- result
 }
 
-trans_reslist_6894
+trans_reslist_6894_dec
 
 december_to_feb_daily <- data.frame()
 december_to_feb_weekly <- data.frame()
 december_to_feb_monthly <- data.frame()
+#TODO select sample as opposed to ID for intra bird comparison (alpha eq)
 for(item in trans_reslist_6894_dec){
-  december_to_feb_daily <- rbind(december_to_feb, item$daily[c("ID","bottom","mid","top","total")])
-  december_to_feb_weekly <- rbind(december_to_feb, item$weekly[c("ID","bottom","mid","top","total")])
-  december_to_feb_monthly <- rbind(december_to_feb, item$monthly[c("ID","bottom","mid","top","total")])
+  december_to_feb_daily <- rbind(december_to_feb_daily, item$daily[c("ID","bottom","mid","top","total")])
+  december_to_feb_weekly <- rbind(december_to_feb_weekly, item$weekly[c("ID","bottom","mid","top","total")])
+  december_to_feb_monthly <- rbind(december_to_feb_monthly, item$monthly[c("ID","bottom","mid","top","total")])
 }
 
 write.csv(december_to_feb_daily,"december_to_feb_daily.csv",row.names = F)
@@ -593,6 +594,7 @@ for(i in 1:length(reslist2_6988)){
 feb_to_may_daily <- data.frame()
 feb_to_may_weekly <- data.frame()
 feb_to_may_monthly <- data.frame()
+#TODO select sample as opposed to ID for intra bird comparison (alpha eq)
 for(item in trans_reslist_feb){
   feb_to_may_daily <- rbind(feb_to_may_daily, item$daily[c("ID","bottom","mid","top","total")])
   feb_to_may_weekly <- rbind(feb_to_may_weekly, item$weekly[c("ID","bottom","mid","top","total")])
@@ -675,6 +677,7 @@ trans_reslist_mar[[length(reslist2_9013)+2]] <- result
 mar_to_may_daily <- data.frame()
 mar_to_may_weekly <- data.frame()
 mar_to_may_monthly <- data.frame()
+#TODO select sample as opposed to ID for intra bird comparison (alpha eq)
 for(item in trans_reslist_mar){
   mar_to_may_daily <- rbind(mar_to_may_daily, item$daily[c("ID","bottom","mid","top","total")])
   mar_to_may_weekly <- rbind(mar_to_may_weekly, item$weekly[c("ID","bottom","mid","top","total")])
@@ -702,4 +705,263 @@ predict(z, Iris[-train, ])$class
 (z1 <- update(z, . ~ . - Petal.W.))
 
 
+```
+
+```{r}
+set.seed(34716)
+library(MASS)
+# 32 classes
+length(unique(feb_to_may_daily$ID))
+# 2432 observations/days
+length(feb_to_may_daily$bottom)
+
+feb_to_may_daily_shuff <- feb_to_may_daily[sample(1:nrow(feb_to_may_daily)),]
+
+sample <- sample.int(n = nrow(feb_to_may_daily_shuff), size = floor(.70*nrow(feb_to_may_daily_shuff)), replace = F)
+train <- feb_to_may_daily[sample, ]
+test  <- feb_to_may_daily[-sample, ]
+
+# pretty even data distribution
+table(train$ID)
+
+train_df <- as.data.frame(train)
+train_df[,2:5] <- sapply(train_df[,2:5], as.numeric)
+test_df <- as.data.frame(test)
+test_df[,2:5] <- sapply(test_df[,2:5],as.numeric)
+
+#TODO make a model with just top and bottom as transition zones
+formula_two <- as.formula("ID ~ total")
+formula_three <- as.formula("ID ~ bottom + mid + top")
+formual_four <- as.formula("ID ~ bottom + mid + top + total")
+
+mod_total <- lda(formula_two, train_df)
+
+#variables are collinear
+mod_three <- lda(formula_three, train_df)
+
+#variables are collinear
+mod_all <- lda(formual_four, train_df)
+
+total_preds <- predict(mod_total, test_df)
+
+three_preds <- predict(mod_three, test_df)
+
+all_preds <- predict(mod_all, test_df)
+
+total_preds_post <- as.data.frame(total_preds$posterior)
+pred <- prediction(total_preds_post[,2],test_df$ID)
+
+```
+
+
+```{r, use Vegan to check assumptions about the data}
+library(vegan)
+library(moments)
+library(outliers)
+set.seed(34716)
+library(MASS)
+# 32 classes
+length(unique(feb_to_may_daily$ID))
+# 2432 observations/days
+length(feb_to_may_daily$bottom)
+
+feb_to_may_daily_shuff <- feb_to_may_daily[sample(1:nrow(feb_to_may_daily)),]
+
+sample <- sample.int(n = nrow(feb_to_may_daily_shuff), size = floor(.70*nrow(feb_to_may_daily_shuff)), replace = F)
+train <- feb_to_may_daily[sample, ]
+test  <- feb_to_may_daily[-sample, ]
+
+# pretty even data distribution
+table(train$ID)
+
+train_df <- as.data.frame(train)
+train_df[,2:5] <- sapply(train_df[,2:5], as.numeric)
+test_df <- as.data.frame(test)
+test_df[,2:5] <- sapply(test_df[,2:5],as.numeric)
+
+feb_to_may_daily <- as.data.frame(feb_to_may_daily)
+feb_to_may_daily[,2:5] <- sapply(feb_to_may_daily[,2:5], as.numeric)
+
+four_hle <- decostand(as.matrix(feb_to_may_daily[,2:5]),"hellinger")
+gr <- cutree(hclust(vegdist(four_hle,"euc"),"ward.D"), 2)
+
+four_pars <- as.matrix(feb_to_may_daily[,2:5])
+four_pars.d <- dist(four_pars)
+(four_HMV <- betadisper(four_pars.d, gr))
+anova(four_HMV)
+permutest(four_HMV)
+
+skewness(feb_to_may_daily[2:5])
+
+boxplot(feb_to_may_daily[2])
+boxplot(feb_to_may_daily[3])
+boxplot(feb_to_may_daily[4])
+boxplot(feb_to_may_daily[5])
+
+outliers::outlier(feb_to_may_daily[2])
+outliers::outlier(feb_to_may_daily[3])
+outliers::outlier(feb_to_may_daily[4])
+outliers::outlier(feb_to_may_daily[5])
+
+which(feb_to_may_daily[2] >= 28 | feb_to_may_daily[2] < .01 )
+
+summary(feb_to_may_daily[,2])
+```
+
+```{r, PCA pivot}
+library(REdaS)
+library(vegan)
+library(reshape)
+library(eigenprcomp)
+
+
+feb_to_may_daily <- as.data.frame(feb_to_may_daily)
+feb_to_may_daily[,2:5] <- sapply(feb_to_may_daily[,2:5], as.numeric)
+
+KMOS(feb_to_may_daily[,2:4])
+
+bart_spher(feb_to_may_daily[,2:4])
+
+plot(feb_to_may_daily[,2:4])
+
+feb_to_may_daily_pca <- rda(feb_to_may_daily[,2:4],scale=T)
+eig <- feb_to_may_daily_pca$CA$eig
+variance <- eig*100/sum(eig)
+cumvar <- cumsum(variance)
+eig.pca <- data.frame(eig = eig, variance=variance, cumvariance= cumvar)
+boot_pr_comp(as.matrix(feb_to_may_daily[,2:4]))
+
+biplot(feb_to_may_daily_pca,display = c("sites","species"),type = c("text","points")) 
+ordihull(feb_to_may_daily_pca, group=feb_to_may_daily$ID)
+
+
+#min max normalize 
+min_max_norm <- function(x){
+  (x - min(x)) /(max(x)-min(x))
+}
+
+feb_to_may_daily_norm <- as.data.frame(lapply(feb_to_may_daily[,2:4], min_max_norm))
+feb_to_may_daily_norm$ID <- feb_to_may_daily$ID
+feb_to_may_daily_norm
+
+plot(density(feb_to_may_daily_norm[,1]))
+plot(density(feb_to_may_daily_norm[,2]))
+plot(density(feb_to_may_daily_norm[,3]))
+
+feb_to_may_daily_standard <- as.data.frame(scale(feb_to_may_daily[,2:4]))
+feb_to_may_daily_standard$ID <- feb_to_may_daily$ID
+
+plot(density(feb_to_may_daily_standard[,1]))
+plot(density(feb_to_may_daily_standard[,2]))
+plot(density(feb_to_may_daily_standard[,3]))
+
+hist(feb_to_may_daily_standard[,1])
+hist(feb_to_may_daily_standard[,2])
+hist(feb_to_may_daily_standard[,3])
+
+hist(feb_to_may_daily[,2],nclass = 30)
+hist(feb_to_may_daily[,3])
+hist(feb_to_may_daily[,4])
+
+qnorm(feb_to_may_daily[,2:4])
+```
+
+
+```{r, use bestnormalize }
+library(bestNormalize)
+library(BBmisc)
+
+(arcsinh_obj <- arcsinh_x(feb_to_may_daily[,2]))
+#(boxcox_obj <- boxcox(feb_to_may_daily[,2]))
+(yeojohnson_obj <- yeojohnson(feb_to_may_daily[,2]))
+(orderNorm_obj <- orderNorm(feb_to_may_daily[,2]))
+(BNobject <- bestNormalize(feb_to_may_daily[,2]))
+
+MASS::truehist(BNobject$x.t, main="Selected Transform")
+
+dist <- vegdist(feb_to_may_daily[,2:4],method = "gower")
+clusted <- hclust(dist,method = "ward.D")
+table(cutree(clusted,2))
+
+ord <- monoMDS(dist)
+plot(ord)
+
+hist(normalize(feb_to_may_daily[,2:4],method="standardize")[,3])
+
+
+
+```
+
+
+```{r, does weekly make a difference}
+library(ggfortify) 
+
+feb_to_may_weekly <- as.data.frame(feb_to_may_weekly)
+feb_to_may_weekly[,2:5] <- sapply(feb_to_may_weekly[,2:5], as.numeric)
+
+BNobject_2 <- bestNormalize(feb_to_may_weekly[,2])
+MASS::truehist(BNobject_2$x.t)
+BNobject_3 <- bestNormalize(feb_to_may_weekly[,3])
+MASS::truehist(BNobject_3$x.t)
+BNobject_4 <- bestNormalize(feb_to_may_weekly[,4])
+MASS::truehist(BNobject_4$x.t)
+BNobject_5 <- bestNormalize(feb_to_may_weekly[,5])
+MASS::truehist(BNobject_5$x.t)
+
+
+feb_to_may_normed <- cbind(as.numeric(BNobject_2$x.t), as.numeric(BNobject_3$x.t), as.numeric(BNobject_4$x.t),as.numeric(BNobject_5$x.t),feb_to_may_weekly[,1])
+colnames(feb_to_may_normed) <- c("bottom","mid","top","total","ID")
+
+feb_to_may_normed <- as.data.frame(feb_to_may_normed)
+feb_to_may_normed[,1:4] <- sapply(feb_to_may_normed[,1:4], as.numeric)
+feb_to_may_normed
+
+gr <- cutree(hclust(vegdist(feb_to_may_normed[,1:3],"euc"),"ward.D"),2)
+
+feb_pars_d <- dist(feb_to_may_weekly[,2:4])
+(feb_MHV <- betadisper(feb_pars_d,gr))
+anova(feb_MHV)
+permutest(feb_MHV)
+
+feb_wk_pca <- prcomp(feb_to_may_normed[,1:4],scale. = F)
+
+summary(feb_wk_pca)
+
+plt <- autoplot(feb_wk_pca, data=feb_to_may_normed, color='ID')
+plt
+
+km.out<-0
+
+km.out <- kmeans(feb_to_may_normed, 2, 20)
+summary(km.out)
+
+plot(feb_to_may_normed[,c("bottom","top")], col=km.out$cluster)
+
+wss <- 0
+
+for(i in 1:15){
+  km.out <- kmeans(feb_to_may_normed[,1:4], centers = i, nstart=20)
+  wss[i] <- km.out$tot.withinss
+}
+
+
+plot(1:15, wss, type="b")
+
+hclust.complete <- hclust(dist(feb_to_may_normed),method="complete")
+plot(hclust.complete)
+
+cut.feb <- cutree(hclust.complete, k=3)
+table(km.out$cluster, cut.feb)
+
+pr.feb <- prcomp(x=feb_to_may_normed[,1:4], scale=F, center=F)
+summary(pr.feb)
+
+
+plot(pr.feb$x[,1:2],col=feb_to_may_normed$ID)
+plot(pr.feb$x[,1:2],col=km.out$cluster)
+
+km.out
+
+length(feb_to_may_normed[,"ID"])
+length(km.out$cluster)
 ```
