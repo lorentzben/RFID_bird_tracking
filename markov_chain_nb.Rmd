@@ -965,3 +965,61 @@ km.out
 length(feb_to_may_normed[,"ID"])
 length(km.out$cluster)
 ```
+
+
+```{r, does a single day or week dataset make more sense}
+tmp <- cbind(as.character(feb_to_may_daily$ID), as.numeric(feb_to_may_daily$total))
+tmp2 <- matrix(as.vector(as.numeric(tmp[,2])), nrow=32, byrow=T)
+total_totals <- rowSums(tmp2)
+max_tot <- max(total_totals)
+most_active <- unique(tmp[,1])[total_totals == max_tot]
+
+feb_to_may_daily <- data.frame()
+feb_to_may_weekly <- data.frame()
+feb_to_may_monthly <- data.frame()
+#TODO select sample as opposed to ID for intra bird comparison (alpha eq)
+for(item in trans_reslist_feb){
+  feb_to_may_daily <- rbind(feb_to_may_daily, item$daily[c("sample","bottom","mid","top","total")])
+  feb_to_may_weekly <- rbind(feb_to_may_weekly, item$weekly[c("sample","bottom","mid","top","total")])
+  feb_to_may_monthly <- rbind(feb_to_may_monthly, item$monthly[c("sample","bottom","mid","top","total")])
+}
+
+feb_to_may_daily
+
+most_active_intra_day <- feb_to_may_daily[grep(most_active,feb_to_may_daily$sample),]
+most_active_intra_day <- as.data.frame(most_active_intra_day)
+most_active_intra_day[,2:5] <- sapply(most_active_intra_day[,2:5], as.numeric)
+boxplot(most_active_intra_day[,2:5])
+hist(most_active_intra_day[,5])
+
+wss <- 0
+
+for(i in 1:15){
+  km.out <- kmeans(most_active_intra_day[,2:4], centers = i, nstart=20)
+  wss[i] <- km.out$tot.withinss
+}
+
+
+plot(1:15, wss, type="b")
+
+km.out <- kmeans(most_active_intra_day[,2:4],2, 20)
+summary(km.out)
+km.out$cluster
+
+pr.feb <- prcomp(x=most_active_intra_day[,2:4], scale=T, center=T)
+summary(pr.feb)
+
+
+plot(pr.feb$x[,1:2],label=most_active_intra_day$sample)
+plot(pr.feb$x[,1:2],col=km.out$cluster) +
+text(pr.feb$x[,1:2], labels=most_active_intra_day$sample, cex=0.9, font =.5)
+
+autoplot(pr.feb, col=km.out$cluster,data=most_active_intra_day, label=most_active_intra_day$sample)
+ggbiplot(pr.feb, labels=most_active_intra_day$sample)
+
+ggplot(pr.feb$x[,1:2], aes(x=PC1, y=PC2, color=as.character(km.out$cluster), label=as.character(most_active_intra_day$sample)))+geom_point() + geom_text(size=3,check_overlap = T)
+
+cluster_table <- data.frame(cbind(as.numeric(km.out$cluster),most_active_intra_day$sample))
+cluster_table[order(cluster_table$X1),]
+
+```
