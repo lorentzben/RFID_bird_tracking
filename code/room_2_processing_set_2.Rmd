@@ -378,8 +378,8 @@ for(item in trans_reslist_room_2){
   room2_monthly <- rbind(room2_monthly, item$monthly[c("ID","bottom","mid","top","total")])
 }
 tmp <- cbind(as.character(room2_daily$ID), as.numeric(room2_daily$total))
-#nrow=32 comes from 32 birds used
-tmp2 <- matrix(as.vector(as.numeric(tmp[,2])), nrow=10, byrow=T)
+#length(unique(room2_daily$ID)) nrow=37 comes from 37 birds used
+tmp2 <- matrix(as.vector(as.numeric(tmp[,2])), nrow=37, byrow=T)
 total_totals <- rowSums(tmp2)
 max_tot <- max(total_totals)
 most_active <- unique(tmp[,1])[total_totals == max_tot]
@@ -399,8 +399,8 @@ for(item in trans_reslist_room_2){
   room2_monthly <- rbind(room2_monthly, item$monthly[c("ID","bottom","mid","top","total")])
 }
 tmp <- cbind(as.character(room2_daily$ID), as.numeric(room2_daily$total))
-#nrow=32 comes from 32 birds used
-tmp2 <- matrix(as.vector(as.numeric(tmp[,2])), nrow=10, byrow=T)
+#length(unique(room2_daily$ID)) nrow=37 comes from 37 birds used
+tmp2 <- matrix(as.vector(as.numeric(tmp[,2])), nrow=37, byrow=T)
 total_totals <- rowSums(tmp2)
 max_tot <- min(total_totals)
 least_active <- unique(tmp[,1])[total_totals == max_tot]
