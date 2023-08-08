@@ -409,9 +409,8 @@ print(paste("Least active bird: ",least_active))
 
 # Most Active Bird
 
-## Most Active Bird #1 6877
 
-```{r most active bird analysis #1 6877}
+```{r most active bird analysis}
 set.seed(34716)
 library(scales)
 library(stringr)
@@ -429,7 +428,7 @@ for(item in trans_reslist_room_2){
 
 room2_daily
 
-most_active_intra_day <- room2_daily[grep(most_active[1],room2_daily$sample),]
+most_active_intra_day <- room2_daily[grep(most_active,room2_daily$sample),]
 most_active_intra_day <- as.data.frame(most_active_intra_day)
 most_active_intra_day[,2:5] <- sapply(most_active_intra_day[,2:5], as.numeric)
 boxplot(most_active_intra_day[,2:5])
@@ -459,12 +458,12 @@ pr.feb$x <- data.frame(pr.feb$x)
 
 p <- ggplot(pr.feb$x[,1:2], aes(x=PC1, y=PC2, color=as.character(most_active_intra_day$cluster)))+
   geom_point() +
-  labs(title=paste("Most Active Bird (",most_active[1],")"),x=paste("PC1 (",round(pr.feb.prop$importance[[2,1]]*100,2),"%)"),y=paste("PC2 (",round(pr.feb.prop$importance[[2,2]]*100,2),"%)"),color="Cluster") +
+  labs(title=paste("Most Active Bird (",most_active,")"),x=paste("PC1 (",round(pr.feb.prop$importance[[2,1]]*100,2),"%)"),y=paste("PC2 (",round(pr.feb.prop$importance[[2,2]]*100,2),"%)"),color="Cluster") +
   scale_color_discrete(name = "Days", labels= c(as.character(paste(most_active_intra_day$day[most_active_intra_day$cluster == 1],collapse=",")),as.character(paste(most_active_intra_day$day[most_active_intra_day$cluster == 2],collapse=",")),as.character(paste(most_active_intra_day$day[most_active_intra_day$cluster == 3],collapse=",")))) +
   theme_bw() + 
   theme(legend.position = "bottom", legend.direction = "vertical",legend.text = element_text(size=8))
 p
-ggsave(p, filename = "../figures/most_active_bird_pca_rm2_6877.png",device = "png",width = unit(7,"in"),height=unit(7,"in"))
+ggsave(p, filename = "../figures/most_active_bird_pca_rm2.png",device = "png",width = unit(7,"in"),height=unit(7,"in"))
 
 
 cluster_table <- data.frame(cbind(as.numeric(km.out$cluster),most_active_intra_day$sample))
@@ -478,253 +477,16 @@ most_active_grp <- data.frame(x = most_active_intra_day$day, y = c(most_active_i
  q <- ggplot(most_active_grp, aes(x,y,col=group))+
   geom_line() +
   facet_grid(factor(group,levels=c("Top","Mid","Bottom"))~ .) +
-  labs(title=paste("Most Active Bird (",most_active[1],") Transitions"), color="Legend")+
+  labs(title=paste("Most Active Bird (",most_active,") Transitions"), color="Legend")+
   scale_x_continuous(name="Days",n.breaks = 14)+
   scale_y_continuous(name="Transitions",n.breaks = 8) +
   scale_color_manual(values=c("Top"="royalblue","Mid"="tomato","Bottom" = "seagreen")) +
   theme_bw()
 q
-ggsave(q, filename = "../figures/most_active_transitions_per_day_rm2_6877.png",device="png")
+ggsave(q, filename = "../figures/most_active_transitions_per_day_rm2.png",device="png")
 ```
-
-## Most Active Bird #2 6935
-
-```{r most active bird analysis 6935}
-set.seed(34716)
-library(scales)
-library(stringr)
-library(ggplot2)
-
-room2_daily <- data.frame()
-room2_weekly <- data.frame()
-room2_monthly <- data.frame()
-
-for(item in trans_reslist_room_2){
-  room2_daily <- rbind(room2_daily, item$daily[c("sample","bottom","mid","top","total")])
-  room2_weekly <- rbind(room2_weekly, item$weekly[c("sample","bottom","mid","top","total")])
-  room2_monthly <- rbind(room2_monthly, item$monthly[c("sample","bottom","mid","top","total")])
-}
-
-room2_daily
-
-most_active_intra_day <- room2_daily[grep(most_active[2],room2_daily$sample),]
-most_active_intra_day <- as.data.frame(most_active_intra_day)
-most_active_intra_day[,2:5] <- sapply(most_active_intra_day[,2:5], as.numeric)
-boxplot(most_active_intra_day[,2:5])
-hist(most_active_intra_day[,2])
-
-wss <- 0
-
-for(i in 1:15){
-  km.out <- kmeans(most_active_intra_day[,2:4], centers = i, nstart=20)
-  wss[i] <- km.out$tot.withinss
-}
-
-
-plot(1:15, wss, type="b")
-
-km.out <- kmeans(most_active_intra_day[,2:4],2, 20)
-#km.out <- kmeans(most_active_intra_day[,2:4],3, 20)
-summary(km.out)
-table(km.out$cluster)
-
-pr.feb <- prcomp(x=most_active_intra_day[,2:4], scale=T, center=T)
-pr.feb.prop <- summary(pr.feb)
-most_active_intra_day["day"] <- as.numeric(str_split_fixed(most_active_intra_day$sample, "d.",2)[,2])
-most_active_intra_day["cluster"] <- km.out$cluster
-most_active_intra_day
-pr.feb$x <- data.frame(pr.feb$x)
-
-p <- ggplot(pr.feb$x[,1:2], aes(x=PC1, y=PC2, color=as.character(most_active_intra_day$cluster)))+
-  geom_point() +
-  labs(title=paste("Most Active Bird (",most_active[2],")"),x=paste("PC1 (",round(pr.feb.prop$importance[[2,1]]*100,2),"%)"),y=paste("PC2 (",round(pr.feb.prop$importance[[2,2]]*100,2),"%)"),color="Cluster") +
-  scale_color_discrete(name = "Days", labels= c(as.character(paste(most_active_intra_day$day[most_active_intra_day$cluster == 1],collapse=",")),as.character(paste(most_active_intra_day$day[most_active_intra_day$cluster == 2],collapse=",")),as.character(paste(most_active_intra_day$day[most_active_intra_day$cluster == 3],collapse=",")))) +
-  theme_bw() + 
-  theme(legend.position = "bottom", legend.direction = "vertical",legend.text = element_text(size=8))
-p
-ggsave(p, filename = "../figures/most_active_bird_pca_rm2_6935.png",device = "png",width = unit(7,"in"),height=unit(7,"in"))
-
-
-cluster_table <- data.frame(cbind(as.numeric(km.out$cluster),most_active_intra_day$sample))
-cluster_table[order(cluster_table$X1),]
-
-most_active_intra_day[order(most_active_intra_day$total),]
-
-
-most_active_grp <- data.frame(x = most_active_intra_day$day, y = c(most_active_intra_day$bottom, most_active_intra_day$mid, most_active_intra_day$top), group= c(rep("Bottom",nrow(most_active_intra_day)),rep("Mid",nrow(most_active_intra_day)),rep("Top",nrow(most_active_intra_day))))
-
- q <- ggplot(most_active_grp, aes(x,y,col=group))+
-  geom_line() +
-  facet_grid(factor(group,levels=c("Top","Mid","Bottom"))~ .) +
-  labs(title=paste("Most Active Bird (",most_active[2],") Transitions"), color="Legend")+
-  scale_x_continuous(name="Days",n.breaks = 14)+
-  scale_y_continuous(name="Transitions",n.breaks = 8) +
-  scale_color_manual(values=c("Top"="royalblue","Mid"="tomato","Bottom" = "seagreen")) +
-  theme_bw()
-q
-ggsave(q, filename = "../figures/most_active_transitions_per_day_rm2_6935.png",device="png")
-```
-
-## Most Active Bird #3 6971
-
-```{r most active bird analysis 6971}
-set.seed(34716)
-library(scales)
-library(stringr)
-library(ggplot2)
-
-room2_daily <- data.frame()
-room2_weekly <- data.frame()
-room2_monthly <- data.frame()
-
-for(item in trans_reslist_room_2){
-  room2_daily <- rbind(room2_daily, item$daily[c("sample","bottom","mid","top","total")])
-  room2_weekly <- rbind(room2_weekly, item$weekly[c("sample","bottom","mid","top","total")])
-  room2_monthly <- rbind(room2_monthly, item$monthly[c("sample","bottom","mid","top","total")])
-}
-
-room2_daily
-
-most_active_intra_day <- room2_daily[grep(most_active[3],room2_daily$sample),]
-most_active_intra_day <- as.data.frame(most_active_intra_day)
-most_active_intra_day[,2:5] <- sapply(most_active_intra_day[,2:5], as.numeric)
-boxplot(most_active_intra_day[,2:5])
-hist(most_active_intra_day[,2])
-
-wss <- 0
-
-for(i in 1:15){
-  km.out <- kmeans(most_active_intra_day[,2:4], centers = i, nstart=20)
-  wss[i] <- km.out$tot.withinss
-}
-
-
-plot(1:15, wss, type="b")
-
-km.out <- kmeans(most_active_intra_day[,2:4],2, 20)
-#km.out <- kmeans(most_active_intra_day[,2:4],3, 20)
-summary(km.out)
-table(km.out$cluster)
-
-pr.feb <- prcomp(x=most_active_intra_day[,2:4], scale=T, center=T)
-pr.feb.prop <- summary(pr.feb)
-most_active_intra_day["day"] <- as.numeric(str_split_fixed(most_active_intra_day$sample, "d.",2)[,2])
-most_active_intra_day["cluster"] <- km.out$cluster
-most_active_intra_day
-pr.feb$x <- data.frame(pr.feb$x)
-
-p <- ggplot(pr.feb$x[,1:2], aes(x=PC1, y=PC2, color=as.character(most_active_intra_day$cluster)))+
-  geom_point() +
-  labs(title=paste("Most Active Bird (",most_active[3],")"),x=paste("PC1 (",round(pr.feb.prop$importance[[2,1]]*100,2),"%)"),y=paste("PC2 (",round(pr.feb.prop$importance[[2,2]]*100,2),"%)"),color="Cluster") +
-  scale_color_discrete(name = "Days", labels= c(as.character(paste(most_active_intra_day$day[most_active_intra_day$cluster == 1],collapse=",")),as.character(paste(most_active_intra_day$day[most_active_intra_day$cluster == 2],collapse=",")),as.character(paste(most_active_intra_day$day[most_active_intra_day$cluster == 3],collapse=",")))) +
-  theme_bw() + 
-  theme(legend.position = "bottom", legend.direction = "vertical",legend.text = element_text(size=8))
-p
-ggsave(p, filename = "../figures/most_active_bird_pca_rm2_6971.png",device = "png",width = unit(7,"in"),height=unit(7,"in"))
-
-
-cluster_table <- data.frame(cbind(as.numeric(km.out$cluster),most_active_intra_day$sample))
-cluster_table[order(cluster_table$X1),]
-
-most_active_intra_day[order(most_active_intra_day$total),]
-
-
-most_active_grp <- data.frame(x = most_active_intra_day$day, y = c(most_active_intra_day$bottom, most_active_intra_day$mid, most_active_intra_day$top), group= c(rep("Bottom",nrow(most_active_intra_day)),rep("Mid",nrow(most_active_intra_day)),rep("Top",nrow(most_active_intra_day))))
-
- q <- ggplot(most_active_grp, aes(x,y,col=group))+
-  geom_line() +
-  facet_grid(factor(group,levels=c("Top","Mid","Bottom"))~ .) +
-  labs(title=paste("Most Active Bird (",most_active[3],") Transitions"), color="Legend")+
-  scale_x_continuous(name="Days",n.breaks = 14)+
-  scale_y_continuous(name="Transitions",n.breaks = 8) +
-  scale_color_manual(values=c("Top"="royalblue","Mid"="tomato","Bottom" = "seagreen")) +
-  theme_bw()
-q
-ggsave(q, filename = "../figures/most_active_transitions_per_day_rm2_6971.png",device="png")
-```
-
-## Most Active Bird #4 9019
-
-```{r most active bird analysis 9019}
-set.seed(34716)
-library(scales)
-library(stringr)
-library(ggplot2)
-
-room2_daily <- data.frame()
-room2_weekly <- data.frame()
-room2_monthly <- data.frame()
-
-for(item in trans_reslist_room_2){
-  room2_daily <- rbind(room2_daily, item$daily[c("sample","bottom","mid","top","total")])
-  room2_weekly <- rbind(room2_weekly, item$weekly[c("sample","bottom","mid","top","total")])
-  room2_monthly <- rbind(room2_monthly, item$monthly[c("sample","bottom","mid","top","total")])
-}
-
-room2_daily
-
-most_active_intra_day <- room2_daily[grep(most_active[4],room2_daily$sample),]
-most_active_intra_day <- as.data.frame(most_active_intra_day)
-most_active_intra_day[,2:5] <- sapply(most_active_intra_day[,2:5], as.numeric)
-boxplot(most_active_intra_day[,2:5])
-hist(most_active_intra_day[,2])
-
-wss <- 0
-
-for(i in 1:15){
-  km.out <- kmeans(most_active_intra_day[,2:4], centers = i, nstart=20)
-  wss[i] <- km.out$tot.withinss
-}
-
-
-plot(1:15, wss, type="b")
-
-km.out <- kmeans(most_active_intra_day[,2:4],2, 20)
-#km.out <- kmeans(most_active_intra_day[,2:4],3, 20)
-summary(km.out)
-table(km.out$cluster)
-
-pr.feb <- prcomp(x=most_active_intra_day[,2:4], scale=T, center=T)
-pr.feb.prop <- summary(pr.feb)
-most_active_intra_day["day"] <- as.numeric(str_split_fixed(most_active_intra_day$sample, "d.",2)[,2])
-most_active_intra_day["cluster"] <- km.out$cluster
-most_active_intra_day
-pr.feb$x <- data.frame(pr.feb$x)
-
-p <- ggplot(pr.feb$x[,1:2], aes(x=PC1, y=PC2, color=as.character(most_active_intra_day$cluster)))+
-  geom_point() +
-  labs(title=paste("Most Active Bird (",most_active[4],")"),x=paste("PC1 (",round(pr.feb.prop$importance[[2,1]]*100,2),"%)"),y=paste("PC2 (",round(pr.feb.prop$importance[[2,2]]*100,2),"%)"),color="Cluster") +
-  scale_color_discrete(name = "Days", labels= c(as.character(paste(most_active_intra_day$day[most_active_intra_day$cluster == 1],collapse=",")),as.character(paste(most_active_intra_day$day[most_active_intra_day$cluster == 2],collapse=",")),as.character(paste(most_active_intra_day$day[most_active_intra_day$cluster == 3],collapse=",")))) +
-  theme_bw() + 
-  theme(legend.position = "bottom", legend.direction = "vertical",legend.text = element_text(size=8))
-p
-ggsave(p, filename = "../figures/most_active_bird_pca_rm2_9019.png",device = "png",width = unit(7,"in"),height=unit(7,"in"))
-
-
-cluster_table <- data.frame(cbind(as.numeric(km.out$cluster),most_active_intra_day$sample))
-cluster_table[order(cluster_table$X1),]
-
-most_active_intra_day[order(most_active_intra_day$total),]
-
-
-most_active_grp <- data.frame(x = most_active_intra_day$day, y = c(most_active_intra_day$bottom, most_active_intra_day$mid, most_active_intra_day$top), group= c(rep("Bottom",nrow(most_active_intra_day)),rep("Mid",nrow(most_active_intra_day)),rep("Top",nrow(most_active_intra_day))))
-
- q <- ggplot(most_active_grp, aes(x,y,col=group))+
-  geom_line() +
-  facet_grid(factor(group,levels=c("Top","Mid","Bottom"))~ .) +
-  labs(title=paste("Most Active Bird (",most_active[4],") Transitions"), color="Legend")+
-  scale_x_continuous(name="Days",n.breaks = 14)+
-  scale_y_continuous(name="Transitions",n.breaks = 8) +
-  scale_color_manual(values=c("Top"="royalblue","Mid"="tomato","Bottom" = "seagreen")) +
-  theme_bw()
-q
-ggsave(q, filename = "../figures/most_active_transitions_per_day_rm2_9019.png",device="png")
-```
-
 # Least Active Bird
 
-# Bird #1 6908
-
 ```{r least active bird time}
 library(stringr)
 library(ggplot2)
@@ -741,7 +503,7 @@ for(item in trans_reslist_room_2){
 
 room2_daily
 
-least_active_intra_day <- room2_daily[grep(least_active[1],room2_daily$sample),]
+least_active_intra_day <- room2_daily[grep(least_active,room2_daily$sample),]
 least_active_intra_day <- as.data.frame(least_active_intra_day)
 least_active_intra_day[,2:5] <- sapply(least_active_intra_day[,2:5], as.numeric)
 boxplot(least_active_intra_day[,2:5])
@@ -774,12 +536,12 @@ least_active_intra_day
 
 p <- ggplot(pr.feb$x[,1:2], aes(x=PC1, y=PC2, color=as.character(least_active_intra_day$cluster)))+
   geom_point() + 
-  labs(title=paste("Least Active Bird (",least_active[1],")"),x=paste("PC1 (",round(pr.feb.prop$importance[[2,1]]*100,2),"%)"),y=paste("PC2 (",round(pr.feb.prop$importance[[2,2]]*100,2),"%)"),color="Cluster") +
+  labs(title=paste("Least Active Bird (",least_active,")"),x=paste("PC1 (",round(pr.feb.prop$importance[[2,1]]*100,2),"%)"),y=paste("PC2 (",round(pr.feb.prop$importance[[2,2]]*100,2),"%)"),color="Cluster") +
   scale_color_discrete(name = "Days", labels= c(as.character(paste(least_active_intra_day$day[least_active_intra_day$cluster == 1],collapse=",")),as.character(paste(least_active_intra_day$day[least_active_intra_day$cluster == 2],collapse=",")),as.character(paste(least_active_intra_day$day[least_active_intra_day$cluster == 3],collapse=",")))) +
   theme_bw() + 
   theme(legend.position = "bottom", legend.direction = "vertical",legend.text = element_text(size=8))
 p
-ggsave(p, filename = "../figures/least_active_bird_pca_rm2_6908.png",device = "png",width = unit(7.5,"in"),height=unit(7.5,"in"))
+ggsave(p, filename = "../figures/least_active_bird_pca_rm2.png",device = "png",width = unit(7.5,"in"),height=unit(7.5,"in"))
 
 cluster_table <- data.frame(cbind(as.numeric(km.out$cluster),least_active_intra_day$sample))
 cluster_table[order(cluster_table$X1),]
@@ -797,179 +559,15 @@ least_active_grp <- data.frame(x = least_active_intra_day$day, y = c(least_activ
 q <-ggplot(least_active_grp, aes(x,y,col=group))+
   geom_line() +
   facet_grid(factor(group,levels=c("Top","Mid","Bottom"))~ .) +
-  labs(title=paste("Least Active Bird (",least_active[1],") Transitions"), color="Legend")+
+  labs(title=paste("Least Active Bird (",least_active,") Transitions"), color="Legend")+
   scale_x_continuous(name="Days",n.breaks = 14)+
   scale_y_continuous(name="Transitions") +
   scale_color_manual(values=c("Top"="royalblue","Mid"="tomato","Bottom" = "seagreen")) +
   theme_bw()
 q
-ggsave(q, filename="../figures/least_active_transitions_per_day_rm2_6908.png",device="png")
+ggsave(q, filename="../figures/least_active_transitions_per_day_rm2.png",device="png")
 ```
 
-## Bird #2 6952
-
-```{r least active bird time}
-library(stringr)
-library(ggplot2)
-
-room2_daily <- data.frame()
-room2_weekly <- data.frame()
-room2_monthly <- data.frame()
-#TODO select sample as opposed to ID for intra bird comparison (alpha eq)
-for(item in trans_reslist_room_2){
-  room2_daily <- rbind(room2_daily, item$daily[c("sample","bottom","mid","top","total")])
-  room2_weekly <- rbind(room2_weekly, item$weekly[c("sample","bottom","mid","top","total")])
-  room2_monthly <- rbind(room2_monthly, item$monthly[c("sample","bottom","mid","top","total")])
-}
-
-room2_daily
-
-least_active_intra_day <- room2_daily[grep(least_active[2],room2_daily$sample),]
-least_active_intra_day <- as.data.frame(least_active_intra_day)
-least_active_intra_day[,2:5] <- sapply(least_active_intra_day[,2:5], as.numeric)
-boxplot(least_active_intra_day[,2:5])
-hist(least_active_intra_day[,4])
-
-wss <- 0
-
-for(i in 1:15){
-  km.out <- kmeans(least_active_intra_day[,2:4], centers = i, nstart=20)
-  wss[i] <- km.out$tot.withinss
-}
-
-
-plot(1:15, wss, type="b")
-
-km.out <- kmeans(least_active_intra_day[,2:4],3, 20)
-summary(km.out)
-table(km.out$cluster)
-
-pr.feb <- prcomp(x=least_active_intra_day[,2:4], scale=T, center=F)
-pr.feb.prop <- summary(pr.feb)
-
-pr.feb.prop$importance
-pr.feb$x <- data.frame(pr.feb$x)
-
-
-least_active_intra_day["day"] <- as.numeric(str_split_fixed(least_active_intra_day$sample, "d.",2)[,2])
-least_active_intra_day["cluster"] <- km.out$cluster
-least_active_intra_day
-
-p <- ggplot(pr.feb$x[,1:2], aes(x=PC1, y=PC2, color=as.character(least_active_intra_day$cluster)))+
-  geom_point() + 
-  labs(title=paste("Least Active Bird (",least_active[2],")"),x=paste("PC1 (",round(pr.feb.prop$importance[[2,1]]*100,2),"%)"),y=paste("PC2 (",round(pr.feb.prop$importance[[2,2]]*100,2),"%)"),color="Cluster") +
-  scale_color_discrete(name = "Days", labels= c(as.character(paste(least_active_intra_day$day[least_active_intra_day$cluster == 1],collapse=",")),as.character(paste(least_active_intra_day$day[least_active_intra_day$cluster == 2],collapse=",")),as.character(paste(least_active_intra_day$day[least_active_intra_day$cluster == 3],collapse=",")))) +
-  theme_bw() + 
-  theme(legend.position = "bottom", legend.direction = "vertical",legend.text = element_text(size=8))
-p
-ggsave(p, filename = "../figures/least_active_bird_pca_rm2_6952.png",device = "png",width = unit(7.5,"in"),height=unit(7.5,"in"))
-
-cluster_table <- data.frame(cbind(as.numeric(km.out$cluster),least_active_intra_day$sample))
-cluster_table[order(cluster_table$X1),]
-
-least_active_intra_day[order(least_active_intra_day$total),]
-least_active_intra_day
-
-
-
-
-least_active_grp <- data.frame(x = least_active_intra_day$day, y = c(least_active_intra_day$bottom, least_active_intra_day$mid, least_active_intra_day$top), group= c(rep("Bottom",nrow(least_active_intra_day)),rep("Mid",nrow(least_active_intra_day)),rep("Top",nrow(least_active_intra_day))))
-
-
-
-q <-ggplot(least_active_grp, aes(x,y,col=group))+
-  geom_line() +
-  facet_grid(factor(group,levels=c("Top","Mid","Bottom"))~ .) +
-  labs(title=paste("Least Active Bird (",least_active[2],") Transitions"), color="Legend")+
-  scale_x_continuous(name="Days",n.breaks = 14)+
-  scale_y_continuous(name="Transitions") +
-  scale_color_manual(values=c("Top"="royalblue","Mid"="tomato","Bottom" = "seagreen")) +
-  theme_bw()
-q
-ggsave(q, filename="../figures/least_active_transitions_per_day_rm2_6952.png",device="png")
-```
-## Bird #3 6983
-
-```{r least active bird time}
-library(stringr)
-library(ggplot2)
-
-room2_daily <- data.frame()
-room2_weekly <- data.frame()
-room2_monthly <- data.frame()
-#TODO select sample as opposed to ID for intra bird comparison (alpha eq)
-for(item in trans_reslist_room_2){
-  room2_daily <- rbind(room2_daily, item$daily[c("sample","bottom","mid","top","total")])
-  room2_weekly <- rbind(room2_weekly, item$weekly[c("sample","bottom","mid","top","total")])
-  room2_monthly <- rbind(room2_monthly, item$monthly[c("sample","bottom","mid","top","total")])
-}
-
-room2_daily
-
-least_active_intra_day <- room2_daily[grep(least_active[3],room2_daily$sample),]
-least_active_intra_day <- as.data.frame(least_active_intra_day)
-least_active_intra_day[,2:5] <- sapply(least_active_intra_day[,2:5], as.numeric)
-boxplot(least_active_intra_day[,2:5])
-hist(least_active_intra_day[,4])
-
-wss <- 0
-
-for(i in 1:15){
-  km.out <- kmeans(least_active_intra_day[,2:4], centers = i, nstart=20)
-  wss[i] <- km.out$tot.withinss
-}
-
-
-plot(1:15, wss, type="b")
-
-km.out <- kmeans(least_active_intra_day[,2:4],3, 20)
-summary(km.out)
-table(km.out$cluster)
-
-pr.feb <- prcomp(x=least_active_intra_day[,2:4], scale=T, center=F)
-pr.feb.prop <- summary(pr.feb)
-
-pr.feb.prop$importance
-pr.feb$x <- data.frame(pr.feb$x)
-
-
-least_active_intra_day["day"] <- as.numeric(str_split_fixed(least_active_intra_day$sample, "d.",2)[,2])
-least_active_intra_day["cluster"] <- km.out$cluster
-least_active_intra_day
-
-p <- ggplot(pr.feb$x[,1:2], aes(x=PC1, y=PC2, color=as.character(least_active_intra_day$cluster)))+
-  geom_point() + 
-  labs(title=paste("Least Active Bird (",least_active[3],")"),x=paste("PC1 (",round(pr.feb.prop$importance[[2,1]]*100,2),"%)"),y=paste("PC2 (",round(pr.feb.prop$importance[[2,2]]*100,2),"%)"),color="Cluster") +
-  scale_color_discrete(name = "Days", labels= c(as.character(paste(least_active_intra_day$day[least_active_intra_day$cluster == 1],collapse=",")),as.character(paste(least_active_intra_day$day[least_active_intra_day$cluster == 2],collapse=",")),as.character(paste(least_active_intra_day$day[least_active_intra_day$cluster == 3],collapse=",")))) +
-  theme_bw() + 
-  theme(legend.position = "bottom", legend.direction = "vertical",legend.text = element_text(size=8))
-p
-ggsave(p, filename = "../figures/least_active_bird_pca_rm2_6983.png",device = "png",width = unit(7.5,"in"),height=unit(7.5,"in"))
-
-cluster_table <- data.frame(cbind(as.numeric(km.out$cluster),least_active_intra_day$sample))
-cluster_table[order(cluster_table$X1),]
-
-least_active_intra_day[order(least_active_intra_day$total),]
-least_active_intra_day
-
-
-
-
-least_active_grp <- data.frame(x = least_active_intra_day$day, y = c(least_active_intra_day$bottom, least_active_intra_day$mid, least_active_intra_day$top), group= c(rep("Bottom",nrow(least_active_intra_day)),rep("Mid",nrow(least_active_intra_day)),rep("Top",nrow(least_active_intra_day))))
-
-
-
-q <-ggplot(least_active_grp, aes(x,y,col=group))+
-  geom_line() +
-  facet_grid(factor(group,levels=c("Top","Mid","Bottom"))~ .) +
-  labs(title=paste("Least Active Bird (",least_active[3],") Transitions"), color="Legend")+
-  scale_x_continuous(name="Days",n.breaks = 14)+
-  scale_y_continuous(name="Transitions") +
-  scale_color_manual(values=c("Top"="royalblue","Mid"="tomato","Bottom" = "seagreen")) +
-  theme_bw()
-q
-ggsave(q, filename="../figures/least_active_transitions_per_day_rm2_6983.png",device="png")
-```
 
 # Organize Birds By activity 
 
