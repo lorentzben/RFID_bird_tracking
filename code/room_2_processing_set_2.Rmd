@@ -1004,13 +1004,13 @@ high_act <- c()
 
 for(i in 1:length(hold[,1])){
   cur_tol <- hold[i,9]
-  if(cur_tol<=12){
+  if(cur_tol<=17){
     low_act <- c(low_act,hold[i,1])
   }
-  if((cur_tol>12) & (cur_tol<=21)){
+  if((cur_tol>17) & (cur_tol<=28)){
     med_act <- c(med_act,hold[i,1])
   }
-  if(cur_tol>21){
+  if(cur_tol>28){
     high_act <- c(high_act, hold[i,1])
   }
 }
@@ -1018,7 +1018,7 @@ for(i in 1:length(hold[,1])){
 
 cluster_table <- data.frame(qpcR:::cbind.na(low_act,med_act,high_act))
 cluster_table
-write.csv(cluster_table, "../output/organized_birds_by_activity_daily_rm2.csv",row.names = F)
+write.csv(cluster_table, "../output/organized_birds_by_activity_daily_rm2_set_2.csv",row.names = F)
 ```
 
 ## Jumpy table for the separated samples
@@ -1056,7 +1056,7 @@ q <-ggplot(low_act_grp, aes(x,y,col=group))+
 q
 print("which birds are in this plot?")
 print(low_act_bird_ids)
-ggsave(q, filename="../figures/low_active_transitions_rm2.png",device="png")
+ggsave(q, filename="../figures/low_active_transitions_rm2_set_2.png",device="png")
 ```
 
 ```{r make a jumpy table for the medium activity birds}
@@ -1092,7 +1092,7 @@ q <-ggplot(med_act_grp, aes(x,y,col=group))+
 q
 print("which birds are in this plot?")
 print(med_act_bird_ids)
-ggsave(q, filename="../figures/med_active_transitions_rm2.png",device="png")
+ggsave(q, filename="../figures/med_active_transitions_rm2_set_2.png",device="png")
 ```
 
 ```{r make a jumpy table for the high activity birds}
@@ -1128,7 +1128,7 @@ q <-ggplot(high_act_grp, aes(x,y,col=group))+
 q
 print("which birds are in this plot?")
 print(high_act_bird_ids)
-ggsave(q, filename="../figures/high_active_transitions_rm2.png",device="png")
+ggsave(q, filename="../figures/high_active_transitions_rm2_set_2.png",device="png")
 ```
 
 # How long does the bird stay in a zone?
@@ -1137,10 +1137,10 @@ ggsave(q, filename="../figures/high_active_transitions_rm2.png",device="png")
 
 trans_reslist_room2_min <- list()
 
-for(i in 1:length(reslist2_6988)){
-  minute_period <- to_minute(reslist2_6988[[i]]$xts_obj$subzone)
-  minute_trans_table <- calc_trans_period(reslist2_6988[[i]]$ID, minute_period, reslist2_6988[[i]]$xts_obj, "Hr")  
-  result <- list("ID"=reslist2_6988[[i]]$ID,"hour"=minute_trans_table, "raw"=reslist2_6988[[i]]$xts_obj)
+for(i in 1:length(reslist2_room_2)){
+  minute_period <- to_minute(reslist2_room_2[[i]]$xts_obj$subzone)
+  minute_trans_table <- calc_trans_period(reslist2_room_2[[i]]$ID, minute_period, reslist2_room_2[[i]]$xts_obj, "Hr")  
+  result <- list("ID"=reslist2_room_2[[i]]$ID,"hour"=minute_trans_table, "raw"=reslist2_room_2[[i]]$xts_obj)
   trans_reslist_room2_min[[i]] <- result
 }
 
@@ -1192,16 +1192,16 @@ hold_hour
 trans_reslist_rm_2 <- c()
 minute_reslist_room2_hr <- c()
 
-for(i in 1:length(reslist2_6988)){
-  minute_period <- to_minute(reslist2_6988[[i]]$xts_obj$subzone)
+for(i in 1:length(reslist2_room_2)){
+  minute_period <- to_minute(reslist2_room_2[[i]]$xts_obj$subzone)
   minute_reslist_room2_hr[[i]] <- minute_period
 }
 
 trans_reslist_room2_dur <- c()
 for(i in 1:length(minute_reslist_room2_hr)){
-  minute_trans_tab <- calc_trans_period_duration(reslist2_6988[[i]]$ID, minute_reslist_room2_hr[[i]],reslist2_6988[[i]]$xts_obj, "hr")
+  minute_trans_tab <- calc_trans_period_duration(reslist2_room_2[[i]]$ID, minute_reslist_room2_hr[[i]],reslist2_room_2[[i]]$xts_obj, "hr")
   #minute_trans_table <- calc_trans_period_duration(reslist2_6928[[i]]$ID, minute_period, reslist2_6928[[i]]$xts_obj, "Hr")
-  result <- list("ID"=reslist2_6988[[i]]$ID,"hour"=minute_trans_tab,"raw"=reslist2_6988[[i]]$xts_obj)
+  result <- list("ID"=reslist2_room_2[[i]]$ID,"hour"=minute_trans_tab,"raw"=reslist2_room_2[[i]]$xts_obj)
   trans_reslist_room2_dur[[i]] <- result
 }
 
