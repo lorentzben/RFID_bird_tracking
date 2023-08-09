@@ -378,148 +378,151 @@ print("how many NA's are in big_table_room_3")
 print(sum(is.na(big_table_room_3)))
 ```
 
-## Import 6928
+## Import Room 8
 
-```{r import 6928}
+```{r import Room 8}
 library(xts)
-#65530
-six_nine_two_eight <- read.csv("6928.csv")
 
-bird_ids_6928 <- na.trim(unique(six_nine_two_eight$tagname))
-bird_ids_6928 <- sort(bird_ids_6928)
+room_8 <- read.csv("../data/DK20-03-RFID-r8-febmay-080423.csv")
 
-six_nine_two_eight["DateTime"] <- as.POSIXct(six_nine_two_eight$access, origin="1970-01-01", tz="GMT")
+bird_ids_room_8 <- na.trim(unique(room_8$tagname))
+bird_ids_room_8 <- sort(bird_ids_room_8)
+
+room_8["DateTime"] <- as.POSIXct(room_8$access, origin="1970-01-01", tz="GMT")
 
 print("what makes up subzone col")
-unique(six_nine_two_eight$subzone)
+unique(room_8$subzone)
 
-six_nine_two_eight$subzone[six_nine_two_eight$subzone == "Bottom"] <- "bottom"
-six_nine_two_eight$subzone[six_nine_two_eight$subzone == "middle"] <- "middle"
-six_nine_two_eight$subzone[six_nine_two_eight$subzone == "Top"] <- "top"
-six_nine_two_eight <-subset(six_nine_two_eight, subzone!="test")
-#65475
+room_8$subzone[room_8$subzone == "Bottom"] <- "bottom"
+room_8$subzone[room_8$subzone == "middle"] <- "middle"
+room_8$subzone[room_8$subzone == "Top"] <- "top"
+room_8 <-subset(room_8, subzone!="test")
+
 print("what makes up subzone col")
-unique(six_nine_two_eight$subzone)
+unique(room_8$subzone)
 
 print("how many NA's in Datetime and Subzone")
-sum(is.na(six_nine_two_eight$DateTime))
-sum(is.na(six_nine_two_eight$subzone))
+sum(is.na(room_8$DateTime))
+sum(is.na(room_8$subzone))
 
 #generate list of XTS objects 
-reslist_6928 <- list()
-for(i in 1:length(bird_ids_6928)){
+reslist_room_8 <- list()
+for(i in 1:length(bird_ids_room_8)){
   
-  res <- sep_bird_id_xts(samp_name="6928",cage_obj =six_nine_two_eight, samp_id = bird_ids_6928[i])
-  reslist_6928[[i]] <- res
+  res <- sep_bird_id_xts(samp_name="room 8",cage_obj =room_8, samp_id = bird_ids_room_8[i])
+  reslist_room_8[[i]] <- res
 }
 
-cutoff_6928 <- data.frame()
-for(i in 1:length(reslist_6928)){
-  id <- reslist_6928[[i]]$ID
-  top <- index(head(reslist_6928[[i]]$xts_obj))[1]
-  bottom <- index(tail(reslist_6928[[i]]$xts_obj))[6]
+cutoff_room_8 <- data.frame()
+for(i in 1:length(reslist_room_8)){
+  id <- reslist_room_8[[i]]$ID
+  top <- index(head(reslist_room_8[[i]]$xts_obj))[1]
+  bottom <- index(tail(reslist_room_8[[i]]$xts_obj))[6]
   rec <- cbind(id,as.character(top),as.character(bottom))
-  cutoff_6928 <- rbind(cutoff_6928,rec)
+  cutoff_room_8 <- rbind(cutoff_room_8,rec)
   
 }
-cutoff_6928
 
-#old values
-#remove <- c("6941","6974","9009","9011","9023")
-#can remove 6936 and 6949 if needed
-#remove <- c("6941","6974", "9009","9011")
-remove <-c("9023")
-bird_ids_6928_new <- bird_ids_6928 [! bird_ids_6928  %in% remove ]
+#head
+cutoff_room_8[order(cutoff_room_8$V2),]
+#tail
+cutoff_room_8[order(cutoff_room_8$V3),]
+
+remove <-c("6949","6936","6974","9009","9011","6995")
+bird_ids_room_8_new <- bird_ids_room_8 [! bird_ids_room_8  %in% remove ]
 #generate list of the first 10 truncated XTS objects
-reslist2_6928 <- list()
-for(i in 1:length(bird_ids_6928_new)){
-  res <- sep_bird_id_period(samp_name="6928",cage_obj =six_nine_two_eight, samp_id = bird_ids_6928_new[i],cutoff = "2021-02-01 T20:00:00/2021-05-07 T15:00:00")
-  reslist2_6928[[i]] <- res
+reslist2_room_8 <- list()
+for(i in 1:length(bird_ids_room_8_new)){
+  res <- sep_bird_id_period(samp_name="room 8",cage_obj =room_8, samp_id = bird_ids_room_8_new[i],cutoff = "2021-02-04 T22:00:00/2021-05-06 T23:00:00")
+  reslist2_room_8[[i]] <- res
 }
 
 #find wholly non-na daily timeset, to be able to feed into the transcalc
-big_table_6928 <- reslist2_6928[[1]]$daily_obj
-for(i in 2:length(reslist2_6928)){
-  current <- reslist2_6928[[i]]$daily_obj
-  big_table_6928 <- cbind(big_table_6928,current)
+big_table_room_8 <- reslist2_room_8[[1]]$daily_obj
+for(i in 2:length(reslist2_room_8)){
+  current <- reslist2_room_8[[i]]$daily_obj
+  big_table_room_8 <- cbind(big_table_room_8,current)
 }
-print("how many NA's in big_table_6928")
-print(sum(is.na(big_table_6928)))
+print("how many NA's in big_table_room_8")
+print(sum(is.na(big_table_room_8)))
 ```
 
-## Import 6984
+## Import Room 11
 
-```{r import 6984}
+```{r import Room 11}
 library(xts)
 
-six_eight_nine_four <- read.csv("6894.csv")
+room_11 <- read.csv("../data/DK20-03-RFID-R11-febmay-080423.csv")
 
-bird_ids_6894 <- na.trim(unique(six_eight_nine_four$tagname))
-bird_ids_6894 <- sort(bird_ids_6894)
+bird_ids_room_11 <- na.trim(unique(room_11$tagname))
+bird_ids_room_11 <- sort(bird_ids_room_11)
 
-six_eight_nine_four <- six_eight_nine_four[order(six_eight_nine_four$access),] 
+room_11 <- room_11[order(room_11$access),] 
 
-six_eight_nine_four["DateTime"] <- as.POSIXct(six_eight_nine_four$access, origin="1970-01-01", tz="GMT")
-
-print("what composes the subzone column")
-unique(six_eight_nine_four$subzone)
-
-six_eight_nine_four$subzone[six_eight_nine_four$subzone == "M"] <- "middle"
-six_eight_nine_four$subzone[six_eight_nine_four$subzone == "B"] <- "bottom"
-six_eight_nine_four$subzone[six_eight_nine_four$subzone == "T"] <- "top"
+room_11["DateTime"] <- as.POSIXct(room_11$access, origin="1970-01-01", tz="GMT")
 
 print("what composes the subzone column")
-unique(six_eight_nine_four$subzone)
+unique(room_11$subzone)
+
+room_11$subzone[room_11$subzone == "M"] <- "middle"
+room_11$subzone[room_11$subzone == "B"] <- "bottom"
+room_11$subzone[room_11$subzone == "T"] <- "top"
+
+print("what composes the subzone column")
+unique(room_11$subzone)
 
 print("how many NA's in the DateTime col")
-sum(is.na(six_eight_nine_four$DateTime))
+sum(is.na(room_11$DateTime))
 
-six_eight_nine_four <- six_eight_nine_four[!is.na(six_eight_nine_four$DateTime),]
+room_11 <- room_11[!is.na(room_11$DateTime),]
 
 print("how many NA's in the Datetime col")
-sum(is.na(six_eight_nine_four$DateTime))
+sum(is.na(room_11$DateTime))
 
 #generate list of XTS objects 
-reslist_6894 <- list()
-for(i in 1:length(bird_ids_6894)){
+reslist_room_11 <- list()
+for(i in 1:length(bird_ids_room_11)){
   
-  res <- sep_bird_id_xts(samp_name="6894",cage_obj =six_eight_nine_four, samp_id = bird_ids_6894[i])
-  reslist_6894[[i]] <- res
+  res <- sep_bird_id_xts(samp_name="room 11",cage_obj =room_11, samp_id = bird_ids_room_11[i])
+  reslist_room_11[[i]] <- res
 }
 
-cutoff_6984 <- data.frame()
-for(i in 1:length(reslist_6894)){
-  id <- reslist_6894[[i]]$ID
-  top <- index(head(reslist_6894[[i]]$xts_obj))[1]
-  bottom <- index(tail(reslist_6894[[i]]$xts_obj))[6]
+# index 10 is an error right now, how can we fix na value
+
+cutoff_room_11 <- data.frame()
+for(i in 1:length(reslist_room_11)){
+  print(i)
+  id <- reslist_room_11[[i]]$ID
+  top <- index(head(reslist_room_11[[i]]$xts_obj))[1]
+  bottom <- index(tail(reslist_room_11[[i]]$xts_obj))[6]
   rec <- cbind(id,as.character(top),as.character(bottom))
-  cutoff_6984 <- rbind(cutoff_6984,rec)
+  cutoff_room_11 <- rbind(cutoff_room_11,rec)
   
 }
-cutoff_6984
+cutoff_room_11
 
 # old values "6862","6880","6881","9023","9038","9042","9050","9059"
 #remove <- c("9023","9038","9042","9050","9059","6862","6880","6881")
 remove <- c("9023","6862","6880","6881","6882","6887","6891","6892","6893","6894","6900")
-bird_ids_6894_new <- bird_ids_6894 [! bird_ids_6894  %in% remove ]
+bird_ids_room_11_new <- bird_ids_room_11 [! bird_ids_room_11  %in% remove ]
 #generate list of the first 10 truncated XTS objects
-reslist2_6894 <- list()
-for(i in 1:length(bird_ids_6894_new)){
-  res <- sep_bird_id_period(samp_name="6894",cage_obj =six_eight_nine_four, samp_id = bird_ids_6894_new[i], cutoff="2021-02-01 T20:00:00/2021-05-07 T15:00:00")
-  reslist2_6894[[i]] <- res
+reslist2_room_11 <- list()
+for(i in 1:length(bird_ids_room_11_new)){
+  res <- sep_bird_id_period(samp_name="room 11",cage_obj =room_11, samp_id = bird_ids_room_11_new[i], cutoff="2021-02-01 T20:00:00/2021-05-07 T15:00:00")
+  reslist2_room_11[[i]] <- res
 }
 
 
 #find wholly non-na daily timeset, to be able to feed into the transcalc
-big_table_6894 <- reslist2_6894[[1]]$daily_obj
-for(i in 2:length(reslist2_6894)){
-  current <- reslist2_6894[[i]]$daily_obj
-  big_table_6894 <- cbind(big_table_6894,current)
+big_table_room_11 <- reslist2_room_11[[1]]$daily_obj
+for(i in 2:length(reslist2_room_11)){
+  current <- reslist2_room_11[[i]]$daily_obj
+  big_table_room_11 <- cbind(big_table_room_11,current)
 }
-print("Na's in big_table_6894")
-print(sum(is.na(big_table_6894)))
-print("top of big_table_6894")
-print(head(big_table_6894))
+print("Na's in big_table_room_11")
+print(sum(is.na(big_table_room_11)))
+print("top of big_table_room_11")
+print(head(big_table_room_11))
 ```
 
 # Intra-Bird Analysis
@@ -616,13 +619,13 @@ for(item in trans_reslist_room_8){
 
 trans_reslist_room_11 <- list()
 
-for(i in 1:length(reslist2_6894)){
+for(i in 1:length(reslist2_room_11)){
   
-  daily_trans_table <- calc_trans_period(reslist2_6894[[i]]$ID,reslist2_6894[[i]]$daily_obj,reslist2_6894[[i]]$xts_obj,"d")
-  weekly_trans_table <- calc_trans_period(reslist2_6894[[i]]$ID,reslist2_6894[[i]]$weekly_obj,reslist2_6894[[i]]$xts_obj,"w")
-  monthly_trans_table <- calc_trans_period(reslist2_6894[[i]]$ID,reslist2_6894[[i]]$monthly_obj,reslist2_6894[[i]]$xts_obj,"m")
+  daily_trans_table <- calc_trans_period(reslist2_room_11[[i]]$ID,reslist2_room_11[[i]]$daily_obj,reslist2_room_11[[i]]$xts_obj,"d")
+  weekly_trans_table <- calc_trans_period(reslist2_room_11[[i]]$ID,reslist2_room_11[[i]]$weekly_obj,reslist2_room_11[[i]]$xts_obj,"w")
+  monthly_trans_table <- calc_trans_period(reslist2_room_11[[i]]$ID,reslist2_room_11[[i]]$monthly_obj,reslist2_room_11[[i]]$xts_obj,"m")
     
-  result <- list("ID"=reslist2_6894[[i]]$ID,"daily"=daily_trans_table, "weekly"=weekly_trans_table,"monthly"=monthly_trans_table, "raw"=reslist2_6894[[i]]$xts_obj)
+  result <- list("ID"=reslist2_room_11[[i]]$ID,"daily"=daily_trans_table, "weekly"=weekly_trans_table,"monthly"=monthly_trans_table, "raw"=reslist2_room_11[[i]]$xts_obj)
   trans_reslist_room_11[[i]] <- result
 }
 
