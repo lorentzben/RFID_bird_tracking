@@ -230,67 +230,73 @@ calc_trans_period_duration<- function(samp_name, daily_indexed, raw_table,freq){
 }
 ```
 
-## Import 6984
+## Import Room 11
 
-```{r import 6984}
+```{r import room 11}
 library(xts)
 
-six_eight_nine_four <- read.csv("../data/6894.csv")
+room_11 <- read.csv("../data/DK20-03-RFID-R11-febmay-080423.csv")
 
-bird_ids_6894 <- na.trim(unique(six_eight_nine_four$tagname))
-bird_ids_6894 <- sort(bird_ids_6894)
+bird_ids_room_11 <- na.trim(unique(room_11$tagname))
+bird_ids_room_11 <- sort(bird_ids_room_11)
 
-six_eight_nine_four <- six_eight_nine_four[order(six_eight_nine_four$access),] 
+room_11 <- room_11[order(room_11$access),] 
 
-six_eight_nine_four["DateTime"] <- as.POSIXct(six_eight_nine_four$access, origin="1970-01-01", tz="GMT")
-
-print("what composes the subzone column")
-unique(six_eight_nine_four$subzone)
-
-six_eight_nine_four$subzone[six_eight_nine_four$subzone == "M"] <- "middle"
-six_eight_nine_four$subzone[six_eight_nine_four$subzone == "B"] <- "bottom"
-six_eight_nine_four$subzone[six_eight_nine_four$subzone == "T"] <- "top"
+room_11["DateTime"] <- as.POSIXct(room_11$access, origin="1970-01-01", tz="GMT")
 
 print("what composes the subzone column")
-unique(six_eight_nine_four$subzone)
+unique(room_11$subzone)
+
+room_11$subzone[room_11$subzone == "M"] <- "middle"
+room_11$subzone[room_11$subzone == "B"] <- "bottom"
+room_11$subzone[room_11$subzone == "T"] <- "top"
+
+print("what composes the subzone column")
+unique(room_11$subzone)
 
 print("how many NA's in the DateTime col")
-sum(is.na(six_eight_nine_four$DateTime))
+sum(is.na(room_11$DateTime))
 
-six_eight_nine_four <- six_eight_nine_four[!is.na(six_eight_nine_four$DateTime),]
+room_11 <- room_11[!is.na(room_11$DateTime),]
 
 print("how many NA's in the Datetime col")
-sum(is.na(six_eight_nine_four$DateTime))
+sum(is.na(room_11$DateTime))
 
 #generate list of XTS objects 
-reslist_6894 <- list()
-for(i in 1:length(bird_ids_6894)){
+reslist_room_11 <- list()
+for(i in 1:length(bird_ids_room_11)){
   
-  res <- sep_bird_id_xts(samp_name="6894",cage_obj =six_eight_nine_four, samp_id = bird_ids_6894[i])
-  reslist_6894[[i]] <- res
+  res <- sep_bird_id_xts(samp_name="room 11",cage_obj =room_11, samp_id = bird_ids_room_11[i])
+  reslist_room_11[[i]] <- res
+
+  print(bird_ids_room_11[[i]])
+  print(summary(res$xts_obj$access))
  }
 
 # old values "6862","6880","6881","9023","9038","9042","9050","9059"
-remove <- c("9023","9038","9042","9050","9059","6862","6880","6881")
-bird_ids_6894_new <- bird_ids_6894 [! bird_ids_6894  %in% remove ]
+remove <- c("6862","6868","6880","6881","6882", "6884", "6885", "6887", "6888", "6889","6891", "6892", "6893", "6894", "6895", "6896", "6897", "6898","6899", "6900", "6906", "6920", "6930", "6954", "6991", "9059","9060")
+bird_ids_room_11_new <- bird_ids_room_11 [! bird_ids_room_11  %in% remove ]
 #generate list of the first 10 truncated XTS objects
-reslist2_6894 <- list()
-for(i in 1:length(bird_ids_6894_new)){
-  res <- sep_bird_id_period(samp_name="6894",cage_obj =six_eight_nine_four, samp_id = bird_ids_6894_new[i],cutoff="2020-12-02 T23:00:00/2021-02-18 T10:00:00")
-  reslist2_6894[[i]] <- res
+reslist2_room_11 <- list()
+for(i in 1:length(bird_ids_room_11_new)){
+  res <- sep_bird_id_period(samp_name="room 11",cage_obj =room_11, samp_id = bird_ids_room_11_new[i],cutoff="2021-02-18 T23:00:00/2021-05-07 T16:00:00")
+  reslist2_room_11[[i]] <- res
+  print(bird_ids_room_11_new[[i]])
+  print(summary(res$xts_obj$access))
 }
 
 
 #find wholly non-na daily timeset, to be able to feed into the transcalc
-big_table_6894 <- reslist2_6894[[1]]$daily_obj
-for(i in 2:length(reslist2_6894)){
-  current <- reslist2_6894[[i]]$daily_obj
-  big_table_6894 <- cbind(big_table_6894,current)
+big_table_room_11 <- c()
+big_table_room_11 <- reslist2_room_11[[1]]$daily_obj
+for(i in 2:length(reslist2_room_11)){
+  current <- reslist2_room_11[[i]]$daily_obj
+  big_table_room_11 <- cbind(big_table_room_11,current)
 }
-print("Na's in big_table_6894")
-print(sum(is.na(big_table_6894)))
-print("top of big_table_6894")
-print(head(big_table_6894))
+print("Na's in big_table_room_11")
+print(sum(is.na(big_table_room_11)))
+print("top of big_table_room_11")
+print(head(big_table_room_11))
 ```
 
 
@@ -299,8 +305,8 @@ print(head(big_table_6894))
 
 ```{r }
 whole_data_sanity <- data.frame()
-whole_data_sanity <- reslist2_6894[[1]]$daily_obj
-for(item in reslist2_6894){
+whole_data_sanity <- reslist2_room_11[[1]]$daily_obj
+for(item in reslist2_room_11){
   whole_data_sanity <- cbind(whole_data_sanity, item$daily_obj)
 }
 print("how many NAs appear in the full dataset")
@@ -308,13 +314,13 @@ sum(is.na(whole_data_sanity))
 
 trans_reslist_room_11 <- list()
 
-for(i in 1:length(reslist2_6894)){
+for(i in 1:length(reslist2_room_11)){
   
-  daily_trans_table <- calc_trans_period(reslist2_6894[[i]]$ID,reslist2_6894[[i]]$daily_obj,reslist2_6894[[i]]$xts_obj,"d")
-  weekly_trans_table <- calc_trans_period(reslist2_6894[[i]]$ID,reslist2_6894[[i]]$weekly_obj,reslist2_6894[[i]]$xts_obj,"w")
-  monthly_trans_table <- calc_trans_period(reslist2_6894[[i]]$ID,reslist2_6894[[i]]$monthly_obj,reslist2_6894[[i]]$xts_obj,"m")
+  daily_trans_table <- calc_trans_period(reslist2_room_11[[i]]$ID,reslist2_room_11[[i]]$daily_obj,reslist2_room_11[[i]]$xts_obj,"d")
+  weekly_trans_table <- calc_trans_period(reslist2_room_11[[i]]$ID,reslist2_room_11[[i]]$weekly_obj,reslist2_room_11[[i]]$xts_obj,"w")
+  monthly_trans_table <- calc_trans_period(reslist2_room_11[[i]]$ID,reslist2_room_11[[i]]$monthly_obj,reslist2_room_11[[i]]$xts_obj,"m")
     
-  result <- list("ID"=reslist2_6894[[i]]$ID,"daily"=daily_trans_table, "weekly"=weekly_trans_table,"monthly"=monthly_trans_table, "raw"=reslist2_6894[[i]]$xts_obj)
+  result <- list("ID"=reslist2_room_11[[i]]$ID,"daily"=daily_trans_table, "weekly"=weekly_trans_table,"monthly"=monthly_trans_table, "raw"=reslist2_room_11[[i]]$xts_obj)
   trans_reslist_room_11[[i]] <- result
 }
 
@@ -350,10 +356,10 @@ write.csv(room_11_monthly,"../output/room_11_monthly_intra.csv",row.names = F)
 
 trans_reslist_room11_min <- list()
 
-for(i in 1:length(reslist2_6894)){
-  minute_period <- to_minute(reslist2_6894[[i]]$xts_obj$subzone)
-  minute_trans_table <- calc_trans_period(reslist2_6894[[i]]$ID, minute_period, reslist2_6894[[i]]$xts_obj, "Hr")  
-  result <- list("ID"=reslist2_6894[[i]]$ID,"hour"=minute_trans_table, "raw"=reslist2_6894[[i]]$xts_obj)
+for(i in 1:length(reslist2_room_11)){
+  minute_period <- to_minute(reslist2_room_11[[i]]$xts_obj$subzone)
+  minute_trans_table <- calc_trans_period(reslist2_room_11[[i]]$ID, minute_period, reslist2_room_11[[i]]$xts_obj, "Hr")  
+  result <- list("ID"=reslist2_room_11[[i]]$ID,"hour"=minute_trans_table, "raw"=reslist2_room_11[[i]]$xts_obj)
   trans_reslist_room11_min[[i]] <- result
 }
 
@@ -386,8 +392,8 @@ for(item in trans_reslist_room_11){
   room11_monthly <- rbind(room11_monthly, item$monthly[c("ID","bottom","mid","top","total")])
 }
 tmp <- cbind(as.character(room11_daily$ID), as.numeric(room11_daily$total))
-#nrow=32 comes from 32 birds used
-tmp2 <- matrix(as.vector(as.numeric(tmp[,2])), nrow=7, byrow=T)
+#length(unique(room11_daily$ID)) nrow=36 comes from 36 birds used
+tmp2 <- matrix(as.vector(as.numeric(tmp[,2])), nrow=36, byrow=T)
 total_totals <- rowSums(tmp2)
 max_tot <- max(total_totals)
 most_active <- ""
@@ -408,8 +414,8 @@ for(item in trans_reslist_room_11){
   room11_monthly <- rbind(room11_monthly, item$monthly[c("ID","bottom","mid","top","total")])
 }
 tmp <- cbind(as.character(room11_daily$ID), as.numeric(room11_daily$total))
-#nrow=32 comes from 32 birds used
-tmp2 <- matrix(as.vector(as.numeric(tmp[,2])), nrow=7, byrow=T)
+#nrow=36 comes from 36 birds used
+tmp2 <- matrix(as.vector(as.numeric(tmp[,2])), nrow=36, byrow=T)
 total_totals <- rowSums(tmp2)
 max_tot <- min(total_totals)
 least_active <- unique(tmp[,1])[total_totals == max_tot]
@@ -423,20 +429,6 @@ set.seed(34716)
 library(scales)
 library(stringr)
 library(ggplot2)
-# feb_to_may_daily <- data.frame()
-# feb_to_may_weekly <- data.frame()
-# feb_to_may_monthly <- data.frame()
-# #TODO select sample as opposed to ID for intra bird comparison (alpha eq)
-# for(item in trans_reslist_feb){
-#   feb_to_may_daily <- rbind(feb_to_may_daily, item$daily[c("ID","bottom","mid","top","total")])
-#   feb_to_may_weekly <- rbind(feb_to_may_weekly, item$weekly[c("ID","bottom","mid","top","total")])
-#   feb_to_may_monthly <- rbind(feb_to_may_monthly, item$monthly[c("ID","bottom","mid","top","total")])
-# }
-# tmp <- cbind(as.character(feb_to_may_daily$ID), as.numeric(feb_to_may_daily$total))
-# tmp2 <- matrix(as.vector(as.numeric(tmp[,2])), nrow=32, byrow=T)
-# total_totals <- rowSums(tmp2)
-# max_tot <- max(total_totals)
-# most_active <- unique(tmp[,1])[total_totals == max_tot]
 
 room11_daily <- data.frame()
 room11_weekly <- data.frame()
@@ -485,7 +477,7 @@ p <- ggplot(pr.feb$x[,1:2], aes(x=PC1, y=PC2, color=as.character(most_active_int
   theme_bw() + 
   theme(legend.position = "bottom", legend.direction = "vertical",legend.text = element_text(size=8))
 p
-ggsave(p, filename = "../figures/most_active_bird_pca_rm11.png",device = "png",width = unit(7,"in"),height=unit(7,"in"))
+ggsave(p, filename = "../figures/most_active_bird_pca_rm11_set_2.png",device = "png",width = unit(7,"in"),height=unit(7,"in"))
 
 
 cluster_table <- data.frame(cbind(as.numeric(km.out$cluster),most_active_intra_day$sample))
@@ -506,7 +498,7 @@ most_active_grp <- data.frame(x = most_active_intra_day$day, y = c(most_active_i
   scale_color_manual(values=c("Top"="royalblue","Mid"="tomato","Bottom" = "seagreen")) +
   theme_bw()
 q
-ggsave(q, filename = "../figures/most_active_transitions_per_day_rm11.png",device="png")
+ggsave(q, filename = "../figures/most_active_transitions_per_day_rm11_set_2.png",device="png")
 ```
 
 # Least Active Bird
@@ -514,22 +506,6 @@ ggsave(q, filename = "../figures/most_active_transitions_per_day_rm11.png",devic
 ```{r least active bird time}
 library(stringr)
 library(ggplot2)
-# feb_to_may_daily <- data.frame()
-# feb_to_may_weekly <- data.frame()
-# feb_to_may_monthly <- data.frame()
-# #TODO select sample as opposed to ID for intra bird comparison (alpha eq)
-# for(item in trans_reslist_feb){
-#   feb_to_may_daily <- rbind(feb_to_may_daily, item$daily[c("ID","bottom","mid","top","total")])
-#   feb_to_may_weekly <- rbind(feb_to_may_weekly, item$weekly[c("ID","bottom","mid","top","total")])
-#   feb_to_may_monthly <- rbind(feb_to_may_monthly, item$monthly[c("ID","bottom","mid","top","total")])
-# }
-# 
-# 
-# tmp <- cbind(as.character(feb_to_may_daily$ID), as.numeric(feb_to_may_daily$total))
-# tmp2 <- matrix(as.vector(as.numeric(tmp[,2])), nrow=32, byrow=T)
-# total_totals <- rowSums(tmp2)
-# min_tot <- min(total_totals)
-# least_active <- unique(tmp[,1])[total_totals == min_tot]
 
 room11_daily <- data.frame()
 room11_weekly <- data.frame()
@@ -581,7 +557,7 @@ p <- ggplot(pr.feb$x[,1:2], aes(x=PC1, y=PC2, color=as.character(least_active_in
   theme_bw() + 
   theme(legend.position = "bottom", legend.direction = "vertical",legend.text = element_text(size=8))
 p
-ggsave(p, filename = "../figures/least_active_bird_pca_rm11.png",device = "png",width = unit(7.5,"in"),height=unit(7.5,"in"))
+ggsave(p, filename = "../figures/least_active_bird_pca_rm11_set_2.png",device = "png",width = unit(7.5,"in"),height=unit(7.5,"in"))
 
 cluster_table <- data.frame(cbind(as.numeric(km.out$cluster),least_active_intra_day$sample))
 cluster_table[order(cluster_table$X1),]
@@ -605,7 +581,7 @@ q <-ggplot(least_active_grp, aes(x,y,col=group))+
   scale_color_manual(values=c("Top"="royalblue","Mid"="tomato","Bottom" = "seagreen")) +
   theme_bw()
 q
-ggsave(q, filename="../figures/least_active_transitions_per_day_rm11.png",device="png")
+ggsave(q, filename="../figures/least_active_transitions_per_day_rm11_set_2.png",device="png")
 ```
 
 # Organize Birds By activity 
@@ -641,13 +617,13 @@ high_act <- c()
 
 for(i in 1:length(hold[,1])){
   cur_tol <- hold[i,9]
-  if(cur_tol<=11){
+  if(cur_tol<=14){
     low_act <- c(low_act,hold[i,1])
   }
-  if((cur_tol>11) & (cur_tol<=16)){
+  if((cur_tol>14) & (cur_tol<=37)){
     med_act <- c(med_act,hold[i,1])
   }
-  if(cur_tol>16){
+  if(cur_tol>37){
     high_act <- c(high_act, hold[i,1])
   }
 }
@@ -693,7 +669,7 @@ q <-ggplot(low_act_grp, aes(x,y,col=group))+
 q
 print("which birds are in this plot?")
 print(low_act_bird_ids)
-ggsave(q, filename="../figures/low_active_transitions_rm11.png",device="png")
+ggsave(q, filename="../figures/low_active_transitions_rm11_set_2.png",device="png")
 ```
 
 
@@ -730,7 +706,7 @@ q <-ggplot(med_act_grp, aes(x,y,col=group))+
 q
 print("which birds are in this plot?")
 print(med_act_bird_ids)
-ggsave(q, filename="../figures/med_active_transitions_rm11.png",device="png")
+ggsave(q, filename="../figures/med_active_transitions_rm11_set_2.png",device="png")
 ```
 
 ```{r make a jumpy table for the high activity birds}
@@ -766,7 +742,7 @@ q <-ggplot(high_act_grp, aes(x,y,col=group))+
 q
 print("which birds are in this plot?")
 print(high_act_bird_ids)
-ggsave(q, filename="../figures/high_active_transitions_rm11.png",device="png")
+ggsave(q, filename="../figures/high_active_transitions_rm11_set_2.png",device="png")
 ```
 
 # How long does the bird stay in a zone?
@@ -775,10 +751,10 @@ ggsave(q, filename="../figures/high_active_transitions_rm11.png",device="png")
 
 trans_reslist_room11_min <- list()
 
-for(i in 1:length(reslist2_6894)){
-  minute_period <- to_minute(reslist2_6894[[i]]$xts_obj$subzone)
-  minute_trans_table <- calc_trans_period(reslist2_6894[[i]]$ID, minute_period, reslist2_6894[[i]]$xts_obj, "Hr")  
-  result <- list("ID"=reslist2_6894[[i]]$ID,"hour"=minute_trans_table, "raw"=reslist2_6894[[i]]$xts_obj)
+for(i in 1:length(reslist2_room_11)){
+  minute_period <- to_minute(reslist2_room_11[[i]]$xts_obj$subzone)
+  minute_trans_table <- calc_trans_period(reslist2_room_11[[i]]$ID, minute_period, reslist2_room_11[[i]]$xts_obj, "Hr")  
+  result <- list("ID"=reslist2_room_11[[i]]$ID,"hour"=minute_trans_table, "raw"=reslist2_room_11[[i]]$xts_obj)
   trans_reslist_room11_min[[i]] <- result
 }
 
@@ -830,16 +806,16 @@ hold_hour
 trans_reslist_rm_11 <- c()
 minute_reslist_room11_hr <- c()
 
-for(i in 1:length(reslist2_6894)){
-  minute_period <- to_minute(reslist2_6894[[i]]$xts_obj$subzone)
+for(i in 1:length(reslist2_room_11)){
+  minute_period <- to_minute(reslist2_room_11[[i]]$xts_obj$subzone)
   minute_reslist_room11_hr[[i]] <- minute_period
 }
 
 trans_reslist_room11_dur <- c()
 for(i in 1:length(minute_reslist_room11_hr)){
-  minute_trans_tab <- calc_trans_period_duration(reslist2_6894[[i]]$ID, minute_reslist_room11_hr[[i]],reslist2_6894[[i]]$xts_obj, "hr")
+  minute_trans_tab <- calc_trans_period_duration(reslist2_room_11[[i]]$ID, minute_reslist_room11_hr[[i]],reslist2_room_11[[i]]$xts_obj, "hr")
   #minute_trans_table <- calc_trans_period_duration(reslist2_6928[[i]]$ID, minute_period, reslist2_6928[[i]]$xts_obj, "Hr")
-  result <- list("ID"=reslist2_6894[[i]]$ID,"hour"=minute_trans_tab,"raw"=reslist2_6894[[i]]$xts_obj)
+  result <- list("ID"=reslist2_room_11[[i]]$ID,"hour"=minute_trans_tab,"raw"=reslist2_room_11[[i]]$xts_obj)
   trans_reslist_room11_dur[[i]] <- result
 }
 
@@ -896,6 +872,6 @@ z <-ggplot(duration_day_grp, aes(x,y,col=group))+
 z
 
 
-ggsave(q, filename="../figures/duration_transitions_rm11.png",device="png")
-ggsave(z, filename="../figures/duration_transitions_day_rm11.png",device="png")
+ggsave(q, filename="../figures/duration_transitions_rm11_set_2.png",device="png")
+ggsave(z, filename="../figures/duration_transitions_day_rm11_set_2.png",device="png")
 ```
