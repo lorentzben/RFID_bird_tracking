@@ -694,7 +694,7 @@ med_act_grp <- data.frame(x = med_act_agg_tab$day, y = c(med_act_agg_tab$bottom,
 q <-ggplot(med_act_grp, aes(x,y,col=group))+
   geom_line() +
   facet_grid(factor(group,levels=c("Top","Mid","Bottom"))~ .) +
-  labs(title="Medium Activity Birds Transitions in Room 2", color="Legend")+
+  labs(title="Medium Activity Birds Transitions in Room 3", color="Legend")+
   scale_x_continuous(name="Days",n.breaks = 14)+
   scale_y_continuous(name="Transitions") +
   scale_color_manual(values=c("Top"="royalblue","Mid"="tomato","Bottom" = "seagreen")) +

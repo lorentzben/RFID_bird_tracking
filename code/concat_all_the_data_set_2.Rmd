@@ -1651,7 +1651,7 @@ for (j in 1:length(least_active))
 
   p <- ggplot(pr.feb$x[,1:2], aes(x=PC1, y=PC2, color=as.character(least_active_intra_day$cluster)))+
     geom_point() + 
-    labs(title=paste("Least Active Bird (",least_active[i],")"),x=paste("PC1 (",round(pr.feb.prop$importance[[2,1]]*100,2),"%)"),y=paste("PC2 (",round(pr.feb.prop$importance[[2,2]]*100,2),"%)"),color="Cluster") +
+    labs(title=paste("Least Active Bird (",least_active[j],")"),x=paste("PC1 (",round(pr.feb.prop$importance[[2,1]]*100,2),"%)"),y=paste("PC2 (",round(pr.feb.prop$importance[[2,2]]*100,2),"%)"),color="Cluster") +
     scale_color_discrete(name = "Weeks", labels= c(as.character(paste(least_active_intra_day$week[least_active_intra_day$cluster == 1],collapse=",")),as.character(paste(least_active_intra_day$week[least_active_intra_day$cluster == 2],collapse=",")),as.character(paste(least_active_intra_day$week[least_active_intra_day$cluster == 3],collapse=",")))) +
     theme_bw() + 
     theme(legend.position = "bottom", legend.direction = "vertical",legend.text = element_text(size=8))
@@ -1673,7 +1673,7 @@ for (j in 1:length(least_active))
   q <-ggplot(least_active_grp, aes(x,y,col=group))+
     geom_line() +
     facet_grid(factor(group,levels=c("Top","Mid","Bottom"))~ .) +
-    labs(title=paste("Least Active Bird (",least_active[i],") Transitions"), color="Legend")+
+    labs(title=paste("Least Active Bird (",least_active[j],") Transitions"), color="Legend")+
     scale_x_date(name="Weeks",breaks = seq(min(least_active_grp$x),max(least_active_grp$x),by="week"),labels = as.numeric(format(seq(min(least_active_grp$x),max(least_active_grp$x),by="week"),"%U"))+23)+
     scale_y_continuous(name="Transitions Into",n.breaks = 8,limits = c(0,70)) +
     scale_color_manual(values=c("Top"="royalblue","Mid"="tomato","Bottom" = "seagreen")) +
