@@ -1772,7 +1772,7 @@ q <-ggplot(low_act_grp, aes(x,y,col=group))+
 q
 print("which birds are in this plot?")
 print(low_act_bird_ids)
-ggsave(q, filename="low_active_transitions_no_rm3.png",device="png")
+ggsave(q, filename="../figures/low_active_transitions_no_rm3_set_2.png",device="png")
 ```
 
 ```{r make a jumpy table for the medium activity birds}
@@ -1808,7 +1808,7 @@ q <-ggplot(med_act_grp, aes(x,y,col=group))+
 q
 print("which birds are in this plot?")
 print(med_act_bird_ids)
-ggsave(q, filename="med_active_transitions_no_rm3.png",device="png")
+ggsave(q, filename="../figures/med_active_transitions_no_rm3_set_2.png",device="png")
 ```
 
 ```{r make a jumpy table for the high activity birds}
@@ -1844,7 +1844,7 @@ q <-ggplot(high_act_grp, aes(x,y,col=group))+
 q
 print("which birds are in this plot?")
 print(high_act_bird_ids)
-ggsave(q, filename="high_active_transitions_no_rm3.png",device="png")
+ggsave(q, filename="../figures/high_active_transitions_no_rm3_set_2.png",device="png")
 ```
 
 # How long does the bird stay in a zone?
@@ -2023,8 +2023,8 @@ z <-ggplot(duration_day_grp, aes(x,y,col=group))+
 z
 
 
-ggsave(q, filename="duration_transitions_rm2.png",device="png")
-ggsave(z, filename="duration_transitions_day_rm2.png",device="png")
+ggsave(q, filename="../figures/duration_transitions_rm2.png",device="png")
+ggsave(z, filename="../figures/duration_transitions_day_rm2.png",device="png")
 ```
 
 ```{r}
