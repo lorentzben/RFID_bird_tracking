@@ -674,11 +674,11 @@ for(item in trans_reslist_room_2){
   weekly <- rbind(weekly, item$weekly[c("ID","bottom","mid","top","total")])
   monthly <- rbind(monthly, item$monthly[c("ID","bottom","mid","top","total")])
 }
-#for(item in trans_reslist_room_3){
-#  daily <- rbind(daily, item$daily[c("ID","bottom","mid","top","total")])
-#  weekly <- rbind(weekly, item$weekly[c("ID","bottom","mid","top","total")])
-#  monthly <- rbind(monthly, item$monthly[c("ID","bottom","mid","top","total")])
-#}
+for(item in trans_reslist_room_3){
+  daily <- rbind(daily, item$daily[c("ID","bottom","mid","top","total")])
+  weekly <- rbind(weekly, item$weekly[c("ID","bottom","mid","top","total")])
+  monthly <- rbind(monthly, item$monthly[c("ID","bottom","mid","top","total")])
+}
 for(item in trans_reslist_room_8){
   daily <- rbind(daily, item$daily[c("ID","bottom","mid","top","total")])
   weekly <- rbind(weekly, item$weekly[c("ID","bottom","mid","top","total")])
@@ -716,11 +716,11 @@ for(item in trans_reslist_room_2){
   weekly <- rbind(weekly, item$weekly[c("ID","bottom","mid","top","total")])
   monthly <- rbind(monthly, item$monthly[c("ID","bottom","mid","top","total")])
 }
-#for(item in trans_reslist_room_3){
-#  daily <- rbind(daily, item$daily[c("ID","bottom","mid","top","total")])
-#  weekly <- rbind(weekly, item$weekly[c("ID","bottom","mid","top","total")])
-#  monthly <- rbind(monthly, item$monthly[c("ID","bottom","mid","top","total")])
-#}
+for(item in trans_reslist_room_3){
+  daily <- rbind(daily, item$daily[c("ID","bottom","mid","top","total")])
+  weekly <- rbind(weekly, item$weekly[c("ID","bottom","mid","top","total")])
+  monthly <- rbind(monthly, item$monthly[c("ID","bottom","mid","top","total")])
+}
 for(item in trans_reslist_room_8){
   daily <- rbind(daily, item$daily[c("ID","bottom","mid","top","total")])
   weekly <- rbind(weekly, item$weekly[c("ID","bottom","mid","top","total")])
@@ -992,6 +992,44 @@ for(i in 1:length(hold[,1])){
 cluster_table <- data.frame(qpcR:::cbind.na(low_act,med_act,high_act))
 cluster_table
 write.csv(cluster_table, "../output/organized_birds_by_activity_daily_all_rooms.csv",row.names = F)
+```
+
+```{r make a better csv table for all rooms}
+
+# find which room each ID is in:
+updated_table <- data.frame()
+
+all_selected_ids <- c(low_act,med_act,high_act)
+new_row <- ""
+activity <- ""
+room <- ""
+
+for(id in all_selected_ids){
+  #find out which activity level id is in 
+  if(id %in% low_act){
+      activity <- "low"
+  } else if( id %in% med_act){
+      activity <- "medium"
+  } else { 
+      activity <- "high"
+  }
+  #find out which room id is in 
+  if(id %in% bird_ids_room_2){
+      room <- "2"
+  } else if(id %in% bird_ids_room_3 ){
+      room <- "3"
+  } else if( id %in% bird_ids_room_8 ){
+      room <- "8"
+  } else if( id %in% bird_ids_room_11 ) { 
+      room <- "11"
+  }
+  #add row to updated table
+  new_row <- c(room, id, activity)
+  updated_table <- rbind(updated_table, new_row)
+}
+
+colnames(updated_table) <- c("Room", "Bird ID", "Activity Level")
+write.csv(updated_table, "../output/organized_birds_by_activity_daily_all_rooms_nice_table.csv",row.names = F)
 ```
 
 ## Jumpy table for the separated samples
@@ -1737,6 +1775,44 @@ cluster_table
 write.csv(cluster_table, "../output/organized_birds_by_activity_daily_no_rm_3.csv",row.names = F)
 ```
 
+```{r make a better csv table for all rooms except 3}
+
+# find which room each ID is in:
+updated_table <- data.frame()
+
+all_selected_ids <- c(low_act,med_act,high_act)
+new_row <- ""
+activity <- ""
+room <- ""
+
+for(id in all_selected_ids){
+  #find out which activity level id is in 
+  if(id %in% low_act){
+      activity <- "low"
+  } else if( id %in% med_act){
+      activity <- "medium"
+  } else { 
+      activity <- "high"
+  }
+  #find out which room id is in 
+  if(id %in% bird_ids_room_2){
+      room <- "2"
+  } else if(id %in% bird_ids_room_3 ){
+      room <- "3"
+  } else if( id %in% bird_ids_room_8 ){
+      room <- "8"
+  } else if( id %in% bird_ids_room_11 ) { 
+      room <- "11"
+  }
+  #add row to updated table
+  new_row <- c(room, id, activity)
+  updated_table <- rbind(updated_table, new_row)
+}
+
+colnames(updated_table) <- c("Room", "Bird ID", "Activity Level")
+write.csv(updated_table, "../output/organized_birds_by_activity_daily_no_rm_3_nice_table.csv",row.names = F)
+```
+
 ## Jumpy table for the separated samples
 
 ```{r make a jumpy table for the low activity birds}
@@ -2027,9 +2103,3 @@ ggsave(q, filename="../figures/duration_transitions_rm2.png",device="png")
 ggsave(z, filename="../figures/duration_transitions_day_rm2.png",device="png")
 ```
 
-```{r}
-
-for (i in 1:length(trans_reslists)){
-  write.csv(trans_reslists[[i]]$daily, paste0("transition_tabs/",trans_reslists[[i]]$ID,"_daily.csv"),row.names = F)
-  write.csv(trans_reslists[[i]]$raw, paste0("transition_tabs/",trans_reslists[[i]]$ID,"_raw.csv"), row.names = F)
-}
