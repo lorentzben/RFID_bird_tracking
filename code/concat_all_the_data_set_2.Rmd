@@ -654,7 +654,26 @@ for(item in trans_reslist_room_11){
   #print(item)
 }
 
-
+# w <- 0
+# for(item in trans_reslist_room_2){
+#   w <- w +1
+#   print(w)
+# }
+# w <- 0
+# for(item in trans_reslist_room_3){
+#   w <- w +1
+#   print(w)
+# }
+# w <- 0
+# for(item in trans_reslist_room_8){
+#   w <- w +1
+#   print(w)
+# }
+# w <- 0
+# for(item in trans_reslist_room_11){
+#   w <- w +1
+#   print(w)
+# }
 #write.csv(room_2_daily,"room_2_daily_intra.csv",row.names = F)
 #write.csv(room_2_weekly,"room_2_weekly_intra.csv",row.names = F)
 #write.csv(room_2_monthly,"room_2_monthly_intra.csv",row.names = F)
@@ -674,22 +693,28 @@ for(item in trans_reslist_room_2){
   weekly <- rbind(weekly, item$weekly[c("ID","bottom","mid","top","total")])
   monthly <- rbind(monthly, item$monthly[c("ID","bottom","mid","top","total")])
 }
+length(unique(daily$ID))
 for(item in trans_reslist_room_3){
   daily <- rbind(daily, item$daily[c("ID","bottom","mid","top","total")])
   weekly <- rbind(weekly, item$weekly[c("ID","bottom","mid","top","total")])
   monthly <- rbind(monthly, item$monthly[c("ID","bottom","mid","top","total")])
 }
+length(unique(daily$ID))
 for(item in trans_reslist_room_8){
   daily <- rbind(daily, item$daily[c("ID","bottom","mid","top","total")])
   weekly <- rbind(weekly, item$weekly[c("ID","bottom","mid","top","total")])
   monthly <- rbind(monthly, item$monthly[c("ID","bottom","mid","top","total")])
 }
+length(unique(daily$ID))
 for(item in trans_reslist_room_11){
   daily <- rbind(daily, item$daily[c("ID","bottom","mid","top","total")])
   weekly <- rbind(weekly, item$weekly[c("ID","bottom","mid","top","total")])
   monthly <- rbind(monthly, item$monthly[c("ID","bottom","mid","top","total")])
 }
+length(unique(daily$ID))
 
+tmp <- ""
+tmp_df <- ""
 tmp <- cbind(as.character(daily$ID), as.numeric(daily$total))
 tmp_df <- data.frame(as.numeric(tmp[,1]), as.numeric(tmp[,2]))
 colnames(tmp_df) <- c("ID","total")
@@ -731,6 +756,10 @@ for(item in trans_reslist_room_11){
   weekly <- rbind(weekly, item$weekly[c("ID","bottom","mid","top","total")])
   monthly <- rbind(monthly, item$monthly[c("ID","bottom","mid","top","total")])
 }
+
+tmp  <- ""
+tmp_df <- ""
+
 tmp <- cbind(as.character(daily$ID), as.numeric(daily$total))
 tmp_df <- data.frame(as.numeric(tmp[,1]), as.numeric(tmp[,2]))
 colnames(tmp_df) <- c("ID","total")
@@ -946,8 +975,8 @@ ggsave(q, filename="../figures/least_active_transitions_per_day_all_rooms.png",d
 ```{r evaluate transition clolumn sum on the daily data}
 library(qpcR)
 
-#trans_reslists <- c(trans_reslist_room_2,trans_reslist_room_3,trans_reslist_room_8,trans_reslist_room_11)
-trans_reslists <- c(trans_reslist_room_2,trans_reslist_room_8,trans_reslist_room_11)
+trans_reslists <- c(trans_reslist_room_2,trans_reslist_room_3,trans_reslist_room_8,trans_reslist_room_11)
+#trans_reslists <- c(trans_reslist_room_2,trans_reslist_room_8,trans_reslist_room_11)
 daily_colsum <- data.frame()
 
 #each item is one transition list for an intra bird sample
@@ -975,6 +1004,7 @@ low_act <- c()
 med_act <- c()
 high_act <- c()
 
+#TODO Check these values
 for(i in 1:length(hold[,1])){
   cur_tol <- hold[i,9]
   if(cur_tol<=11){
