@@ -1007,13 +1007,13 @@ high_act <- c()
 #TODO Check these values
 for(i in 1:length(hold[,1])){
   cur_tol <- hold[i,9]
-  if(cur_tol<=11){
+  if(cur_tol<=14){
     low_act <- c(low_act,hold[i,1])
   }
-  if((cur_tol>11) & (cur_tol<=31)){
+  if((cur_tol>14) & (cur_tol<=45)){
     med_act <- c(med_act,hold[i,1])
   }
-  if(cur_tol>31){
+  if(cur_tol>45){
     high_act <- c(high_act, hold[i,1])
   }
 }
