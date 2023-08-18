@@ -219,6 +219,43 @@ calc_trans_period_duration<- function(samp_name, daily_indexed, raw_table,freq,d
 }
 ```
 
+```{r calculate duration spent in each zone}
+
+calc_zone_duration <- function(samp_name, id, samp_obj){
+  bottom_time <- 0
+  mid_time <- 0 
+  top_time <- 0
+
+  current_zone <- ""
+  current_datetime <- ""
+  next_datetime <- ""
+
+  for(i in 1:(length(index(samp_obj))-1)){
+
+    current_zone <- as.character(samp_obj[i]$subzone)
+
+    #this is measured in seconds
+    sec_in_zone_i <- as.numeric(index(samp_obj[i+1]$accessdate)) - as.numeric(index(samp_obj[i]$accessdate))
+
+    if(current_zone == "bottom"){
+      bottom_time <- bottom_time + sec_in_zone_i
+      sec_in_zone_i <- 0
+    } else if(current_zone == "middle"){
+      mid_time <- mid_time + sec_in_zone_i
+      sec_in_zone_i <- 0
+    } else if(current_zone == "top"){
+      top_time <- top_time + sec_in_zone_i
+      sec_in_zone_i <- 0
+    }
+
+  }
+
+  return(c(samp_name, id, bottom_time, mid_time, top_time))
+
+}
+
+```
+
 ## Import Room 2
 
 ```{r generate transition tables for room 2}
