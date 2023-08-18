@@ -250,7 +250,7 @@ calc_zone_duration <- function(samp_name, id, samp_obj){
 
   }
 
-  return(c(samp_name, id, bottom_time, mid_time, top_time))
+  return(c(samp_name, id, as.numeric(bottom_time), as.numeric(mid_time), as.numeric(top_time)))
 
 }
 
@@ -1389,6 +1389,52 @@ ggsave(q, filename="../figures/duration_transitions_rm2.png",device="png")
 ggsave(z, filename="../figures/duration_transitions_day_rm2.png",device="png")
 ```
 
+
+# Zone Occupying Table for all rooms
+
+```{r make a zone occupation table with all rooms}
+library(dplyr)
+
+all_room_zone_table <- data.frame()
+result <- ""
+
+for(item in trans_reslist_room_2){
+  result <- calc_zone_duration("room 2", item$ID, item$raw)
+  all_room_zone_table <- rbind(all_room_zone_table, result)
+}
+for(item in trans_reslist_room_3){
+  result <- calc_zone_duration("room 3", item$ID, item$raw)
+  all_room_zone_table <- rbind(all_room_zone_table, result)
+}
+for(item in trans_reslist_room_8){
+  result <- calc_zone_duration("room 8", item$ID, item$raw)
+  all_room_zone_table <- rbind(all_room_zone_table, result)
+}
+for(item in trans_reslist_room_11){
+  result <- calc_zone_duration("room 11", item$ID, item$raw)
+  all_room_zone_table <- rbind(all_room_zone_table, result)
+}
+
+# change the resultant times to numerics as opposed to chars
+all_room_zone_table[,3:5] <- sapply(all_room_zone_table[,3:5],function(x) as.numeric(as.character(x)))
+all_room_zone_table[,3:5] <- (all_room_zone_table[,3:5])/60
+# calculate the number of days observed
+all_room_zone_table["days_observed"]<- round((rowSums(all_room_zone_table[,3:5])/60)/24)
+colnames(all_room_zone_table) <-  c("Room","ID", "Time in Bottom","Time in Middle", "Time in Top","Days Observed")
+
+
+write.csv(all_room_zone_table, "../output/zone_time_per_id_all_rooms.csv", row.names=F)
+
+ave_time_per_room <- aggregate(cbind(all_room_zone_table$"Time in Bottom",all_room_zone_table$"Time in Middle",all_room_zone_table$"Time in Top"),list(all_room_zone_table$Room),mean)
+
+colnames(ave_time_per_room) <- c("Room", "Average Time in Bottom", "Average Time in Middle", "Average Time in Top")
+
+write.csv(ave_time_per_room, "../output/zone_time_per_room_all_rooms.csv", row.names=F)
+
+
+```
+
+
 # Intra-Bird Analysis For Longer Series
 
 ```{r re-generate reslists2 for each room}
@@ -2170,3 +2216,40 @@ ggsave(q, filename="../figures/duration_transitions_rm2.png",device="png")
 ggsave(z, filename="../figures/duration_transitions_day_rm2.png",device="png")
 ```
 
+# Zone Occupying Table No Room 3
+
+```{r make a zone occupation table without Room 3}
+library(dplyr)
+
+no_room_3_zone_table <- data.frame()
+result <- ""
+
+for(item in trans_reslist_room_2){
+  result <- calc_zone_duration("room 2", item$ID, item$raw)
+  no_room_3_zone_table <- rbind(no_room_3_zone_table, result)
+}
+for(item in trans_reslist_room_8){
+  result <- calc_zone_duration("room 8", item$ID, item$raw)
+  no_room_3_zone_table <- rbind(no_room_3_zone_table, result)
+}
+for(item in trans_reslist_room_11){
+  result <- calc_zone_duration("room 11", item$ID, item$raw)
+  no_room_3_zone_table <- rbind(no_room_3_zone_table, result)
+}
+
+# change the resultant times to numerics as opposed to chars
+no_room_3_zone_table[,3:5] <- sapply(no_room_3_zone_table[,3:5],function(x) as.numeric(as.character(x)))
+no_room_3_zone_table[,3:5] <- (no_room_3_zone_table[,3:5])/60
+# calculate the number of days observed
+no_room_3_zone_table["days_observed"]<- round((rowSums(no_room_3_zone_table[,3:5])/60)/24)
+colnames(no_room_3_zone_table) <-  c("Room","ID", "Time in Bottom","Time in Middle", "Time in Top","Days Observed")
+
+
+write.csv(no_room_3_zone_table, "../output/zone_time_per_id_no_3.csv", row.names=F)
+
+ave_time_per_room_no_3 <- aggregate(cbind(no_room_3_zone_table$"Time in Bottom",no_room_3_zone_table$"Time in Middle",no_room_3_zone_table$"Time in Top"),list(no_room_3_zone_table$Room),mean)
+
+colnames(ave_time_per_room_no_3) <- c("Room", "Average Time in Bottom", "Average Time in Middle", "Average Time in Top")
+
+write.csv(ave_time_per_room_no_3, "../output/zone_time_per_room_no_3.csv", row.names=F)
+```
