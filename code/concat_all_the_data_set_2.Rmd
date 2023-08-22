@@ -1163,7 +1163,7 @@ combo_table <- rbind(low_act_grp, med_act_grp, high_act_grp)
 q <-ggplot(combo_table, aes(x,y,col=activity))+
   geom_line(aes(col=activity)) +
   facet_grid(factor(group,levels=c("Top","Mid","Bottom"))~ .) +
-  labs(title=paste0("Activity Birds Transitions no Room 3 (n=",length(unique(daily$ID)),")"), color="Activity Level")+
+  labs(title=paste0("Activity Birds Transitions (n=",length(unique(daily$ID)),")"), color="Activity Level")+
   scale_x_date(name="Weeks",breaks = seq(min(combo_table$x),max(combo_table$x),by="week"),labels = as.numeric(format(seq(min(combo_table$x),max(combo_table$x),by="week"),"%U"))+23)+
   scale_y_continuous(name="Average Transitions Into",n.breaks = 8,limits = c(0,30)) +
   scale_color_manual(values=c("Low"="royalblue","Medium"="tomato","High" = "seagreen")) +
