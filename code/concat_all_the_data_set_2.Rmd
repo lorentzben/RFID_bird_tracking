@@ -1118,26 +1118,6 @@ low_act_bird_frame["day"] <- as.character(str_split_fixed(low_act_bird_frame$sam
 low_act_agg_tab <- aggregate(low_act_bird_frame[,3:6],by = list(low_act_bird_frame$day), FUN = mean)
 colnames(low_act_agg_tab) <- c("day","bottom","mid","top","total")
 
-# plot the low activity birds
-low_act_grp <- data.frame(x = as.Date(low_act_agg_tab$day), y = c(low_act_agg_tab$bottom, low_act_agg_tab$mid, low_act_agg_tab$top), group= c(rep("Bottom",nrow(low_act_agg_tab)),rep("Mid",nrow(low_act_agg_tab)),rep("Top",nrow(low_act_agg_tab))))
-
-
-
-q <-ggplot(low_act_grp, aes(x,y,col=group))+
-  geom_line() +
-  facet_grid(factor(group,levels=c("Top","Mid","Bottom"))~ .) +
-  labs(title=paste0("Low Activity Birds Transitions (",round((length(low_act_bird_ids)/length(unique(daily$ID)))*100,2),"%; n=",length(unique(daily$ID)),")"), color="Legend")+
-  scale_x_date(name="Weeks",breaks = seq(min(low_act_grp$x),max(low_act_grp$x),by="week"),labels = as.numeric(format(seq(min(low_act_grp$x),max(low_act_grp$x),by="week"),"%U"))+23)+
-  scale_y_continuous(name="Average Transitions Into",n.breaks = 8,limits = c(0,65)) +
-  scale_color_manual(values=c("Top"="royalblue","Mid"="tomato","Bottom" = "seagreen")) +
-  theme_bw()
-q
-print("which birds are in this plot?")
-print(low_act_bird_ids)
-ggsave(q, filename="../figures/low_active_transitions_all_rooms.png",device="png")
-```
-
-```{r make a jumpy table for the medium activity birds}
 # Aggregate the medium activity birds
 med_act_bird_ids <- na.trim(cluster_table$med_act)
 
@@ -1154,26 +1134,6 @@ med_act_bird_frame["day"] <- as.character(str_split_fixed(med_act_bird_frame$sam
 med_act_agg_tab <- aggregate(med_act_bird_frame[,3:6],by = list(med_act_bird_frame$day), FUN = mean)
 colnames(med_act_agg_tab) <- c("day","bottom","mid","top","total")
 
-# plot the low activity birds
-med_act_grp <- data.frame(x = as.Date(med_act_agg_tab$day), y = c(med_act_agg_tab$bottom, med_act_agg_tab$mid, med_act_agg_tab$top), group= c(rep("Bottom",nrow(med_act_agg_tab)),rep("Mid",nrow(med_act_agg_tab)),rep("Top",nrow(med_act_agg_tab))))
-
-
-
-q <-ggplot(med_act_grp, aes(x,y,col=group))+
-  geom_line() +
-  facet_grid(factor(group,levels=c("Top","Mid","Bottom"))~ .) +
-  labs(title=paste0("Medium Activity Birds Transitions (",round((length(med_act_bird_ids)/length(unique(daily$ID)))*100,2),"%; n=",length(unique(daily$ID)),")"), color="Legend")+
-  scale_x_date(name="Weeks",breaks = seq(min(med_act_grp$x),max(med_act_grp$x),by="week"),labels = as.numeric(format(seq(min(med_act_grp$x),max(med_act_grp$x),by="week"),"%U"))+23)+
-  scale_y_continuous(name="Average Transitions Into",n.breaks = 8,limits = c(0,65)) +
-  scale_color_manual(values=c("Top"="royalblue","Mid"="tomato","Bottom" = "seagreen")) +
-  theme_bw()
-q
-print("which birds are in this plot?")
-print(med_act_bird_ids)
-ggsave(q, filename="../figures/med_active_transitions_all_rooms.png",device="png")
-```
-
-```{r make a jumpy table for the high activity birds}
 # Aggregate the high activity birds
 high_act_bird_ids <- na.trim(cluster_table$high_act)
 
@@ -1191,204 +1151,25 @@ high_act_agg_tab <- aggregate(high_act_bird_frame[,3:6],by = list(high_act_bird_
 colnames(high_act_agg_tab) <- c("day","bottom","mid","top","total")
 
 # plot the low activity birds
-high_act_grp <- data.frame(x = as.Date(high_act_agg_tab$day), y = c(high_act_agg_tab$bottom, high_act_agg_tab$mid, high_act_agg_tab$top), group= c(rep("Bottom",nrow(high_act_agg_tab)),rep("Mid",nrow(high_act_agg_tab)),rep("Top",nrow(high_act_agg_tab))))
+low_act_grp <- data.frame(x = as.Date(low_act_agg_tab$day), y = c(low_act_agg_tab$bottom, low_act_agg_tab$mid, low_act_agg_tab$top), group= c(rep("Bottom",nrow(low_act_agg_tab)),rep("Mid",nrow(low_act_agg_tab)),rep("Top",nrow(low_act_agg_tab))), activity=c(rep('Low',nrow(low_act_agg_tab)*3)))
 
-
-
-q <-ggplot(high_act_grp, aes(x,y,col=group))+
-  geom_line() +
-  facet_grid(factor(group,levels=c("Top","Mid","Bottom"))~ .) +
-  labs(title=paste0("High Activity Birds Transitions (",round((length(high_act_bird_ids)/length(unique(daily$ID)))*100,2),"%; n=",length(unique(daily$ID)),")"), color="Legend")+
-  scale_x_date(name="Weeks",breaks = seq(min(high_act_grp$x),max(high_act_grp$x),by="week"),labels = as.numeric(format(seq(min(high_act_grp$x),max(high_act_grp$x),by="week"),"%U"))+23)+
-  scale_y_continuous(name="Average Transitions Into",n.breaks = 8,limits = c(0,65)) +
-  scale_color_manual(values=c("Top"="royalblue","Mid"="tomato","Bottom" = "seagreen")) +
-  theme_bw()
-q
-print("which birds are in this plot?")
-print(high_act_bird_ids)
-ggsave(q, filename="../figures/high_active_transitions_all_rooms.png",device="png")
-```
-
-# How long does the bird stay in a zone?
-
-```{r how long does the bird stay in the zone}
-
-trans_reslist_room2_min <- list()
-
-for(i in 1:length(reslist2_room_2)){
-  minute_period <- to_minute(reslist2_room_2[[i]]$xts_obj$subzone)
-  minute_trans_table <- calc_trans_period(reslist2_room_2[[i]]$ID, minute_period, reslist2_room_2[[i]]$xts_obj, "Hr",0)  
-  result <- list("ID"=reslist2_room_2[[i]]$ID,"hour"=minute_trans_table, "raw"=reslist2_room_2[[i]]$xts_obj)
-  trans_reslist_room2_min[[i]] <- result
-}
-
-room2_hour <- data.frame()
-
-for(item in trans_reslist_room2_min){
-  room2_hour <- rbind(room2_hour, item$hour[c("sample","bottom","mid","top","total")])
-}
-
-trans_reslist_room3_min <- list()
-
-for(i in 1:length(reslist2_room_3)){
-  minute_period <- to_minute(reslist2_room_3[[i]]$xts_obj$subzone)
-  minute_trans_table <- calc_trans_period(reslist2_room_3[[i]]$ID, minute_period, reslist2_room_3[[i]]$xts_obj, "Hr",0)  
-  result <- list("ID"=reslist2_room_3[[i]]$ID,"hour"=minute_trans_table, "raw"=reslist2_room_3[[i]]$xts_obj)
-  trans_reslist_room3_min[[i]] <- result
-}
-
-room3_hour <- data.frame()
-
-for(item in trans_reslist_room3_min){
-  room3_hour <- rbind(room3_hour, item$hour[c("sample","bottom","mid","top","total")])
-}
-
-
-
-trans_reslist_room8_min <- list()
-
-for(i in 1:length(reslist2_room_8)){
-  minute_period <- to_minute(reslist2_room_8[[i]]$xts_obj$subzone)
-  minute_trans_table <- calc_trans_period(reslist2_room_8[[i]]$ID, minute_period, reslist2_room_8[[i]]$xts_obj, "Hr",0)  
-  result <- list("ID"=reslist2_room_8[[i]]$ID,"hour"=minute_trans_table, "raw"=reslist2_room_8[[i]]$xts_obj)
-  trans_reslist_room8_min[[i]] <- result
-}
-
-room8_hour <- data.frame()
-
-for(item in trans_reslist_room8_min){
-  room8_hour <- rbind(room8_hour, item$hour[c("sample","bottom","mid","top","total")])
-}
-
-trans_reslist_room11_min <- list()
-
-for(i in 1:length(reslist2_room_2)){
-  minute_period <- to_minute(reslist2_room_2[[i]]$xts_obj$subzone)
-  minute_trans_table <- calc_trans_period(reslist2_room_2[[i]]$ID, minute_period, reslist2_room_2[[i]]$xts_obj, "Hr",0)  
-  result <- list("ID"=reslist2_room_2[[i]]$ID,"hour"=minute_trans_table, "raw"=reslist2_room_2[[i]]$xts_obj)
-  trans_reslist_room11_min[[i]] <- result
-}
-
-room11_hour <- data.frame()
-
-for(item in trans_reslist_room11_min){
-  room11_hour <- rbind(room11_hour, item$hour[c("sample","bottom","mid","top","total")])
-}
-
-
-
-# check to make sure only one bird is selected
-print("check that the id and RFID tag are unique for each item entry")
-#this is following up with the issues of the intra-bird comparisons
-for(item in trans_reslist_room2_min){
-  print(paste(unique(item$raw$tagnumber)," ",unique(item$raw$tagname)))
-  #print(item)
-}
-
-room2_hourly <- data.frame()
-
-#each item is one transition list for an intra bird sample
-#we want to sum up the columns for each day and compare bird to bird
-
-room2_hourly_colsum_min <- data.frame()
-
-for(i in 1:length(trans_reslist_room2_min)){
-  res <- colSums(sapply(trans_reslist_room2_min[[i]]$hour[,2:6], as.numeric))
-  res[1] <- res[1]/length(trans_reslist_room2_min[[i]]$hour$ID)
-  res[6] <- round(res[2]/length(trans_reslist_room2_min[[i]]$hour$bottom),0)
-  res[7] <- round(res[3]/length(trans_reslist_room2_min[[i]]$hour$mid),0)
-  res[8] <- round(res[4]/length(trans_reslist_room2_min[[i]]$hour$top),0)
-  res[9] <- round(res[5]/length(trans_reslist_room2_min[[i]]$hour$total),0)
-  room2_hourly_colsum_min <- rbind(room2_hourly_colsum_min,res)
-}
-
-colnames(room2_hourly_colsum_min) <- c("ID","bottom","mid","top","total","bottom_A","mid_A","top_a","total_A")
-room2_hourly_colsum_min
-hold_hour <- room2_hourly_colsum_min[order(room2_hourly_colsum_min$total,decreasing = T),]
-
-summary(hold_hour[,6:9])
-boxplot(hold_hour[,6:9])
-
-hold_hour
-
-```
-
-
-```{r calculate duration traslist}
-
-trans_reslist_rm_2 <- c()
-minute_reslist_room2_hr <- c()
-
-for(i in 1:length(reslist2_room_2)){
-  minute_period <- to_minute(reslist2_room_2[[i]]$xts_obj$subzone)
-  minute_reslist_room2_hr[[i]] <- minute_period
-}
-
-trans_reslist_room2_dur <- c()
-for(i in 1:length(minute_reslist_room2_hr)){
-  minute_trans_tab <- calc_trans_period_duration(reslist2_room_2[[i]]$ID, minute_reslist_room2_hr[[i]],reslist2_room_2[[i]]$xts_obj, "hr",0)
-  #minute_trans_table <- calc_trans_period_duration(reslist2_room_8[[i]]$ID, minute_period, reslist2_room_8[[i]]$xts_obj, "Hr")
-  result <- list("ID"=reslist2_room_2[[i]]$ID,"hour"=minute_trans_tab,"raw"=reslist2_room_2[[i]]$xts_obj)
-  trans_reslist_room2_dur[[i]] <- result
-}
-
-#trans_reslist_feb_dur
-```
-
-
-
-```{r make a jumpy table that looks at duration}
-
-#which bird is this?
-
-trans_reslist_room2_dur[[1]]$ID
-
-# Aggregate the high activity birds
-example_duration <- na.trim(trans_reslist_room2_dur[[1]]$hour)
-
-#make a table of the samples
-duration_frame <- data.frame(example_duration)
-
-duration_frame[,3:9] <- sapply(duration_frame[,3:9], as.numeric)
-duration_frame["hour"] <- as.numeric(str_split_fixed(duration_frame$sample, "hr.",2)[,2])
-duration_frame["day"] <- as.integer((duration_frame$hour/24)+2)
-duration_agg_tab_hr <- aggregate(duration_frame[,7:9],by = list(duration_frame$hour), FUN = sum)
-colnames(duration_agg_tab_hr) <- c("hour","bottom","mid","top")
-
-duration_agg_tab_day <- aggregate(duration_frame[,7:9],by = list(duration_frame$day), FUN = sum)
-colnames(duration_agg_tab_day) <- c("day","bottom","mid","top")
+med_act_grp <- data.frame(x = as.Date(med_act_agg_tab$day), y = c(med_act_agg_tab$bottom, med_act_agg_tab$mid, med_act_agg_tab$top), group= c(rep("Bottom",nrow(med_act_agg_tab)),rep("Mid",nrow(med_act_agg_tab)),rep("Top",nrow(med_act_agg_tab))), activity=c(rep('Medium',nrow(low_act_agg_tab)*3)))
 
 # plot the low activity birds
-duration_hr_grp <- data.frame(x = duration_agg_tab_hr$hour, y = c(duration_agg_tab_hr$bottom, duration_agg_tab_hr$mid, duration_agg_tab_hr$top), group= c(rep("Bottom",nrow(duration_agg_tab_hr)),rep("Mid",nrow(duration_agg_tab_hr)),rep("Top",nrow(duration_agg_tab_hr))))
+high_act_grp <- data.frame(x = as.Date(high_act_agg_tab$day), y = c(high_act_agg_tab$bottom, high_act_agg_tab$mid, high_act_agg_tab$top), group= c(rep("Bottom",nrow(high_act_agg_tab)),rep("Mid",nrow(high_act_agg_tab)),rep("Top",nrow(high_act_agg_tab))), activity=c(rep('High',nrow(low_act_agg_tab)*3)))
 
-duration_day_grp <- data.frame(x = duration_agg_tab_day$day, y = c(duration_agg_tab_day$bottom, duration_agg_tab_day$mid, duration_agg_tab_day$top), group= c(rep("Bottom",nrow(duration_agg_tab_day)),rep("Mid",nrow(duration_agg_tab_day)),rep("Top",nrow(duration_agg_tab_day))))
+combo_table <- rbind(low_act_grp, med_act_grp, high_act_grp)
 
-
-q <-ggplot(duration_hr_grp, aes(x,y,col=group))+
-  geom_line() +
+q <-ggplot(combo_table, aes(x,y,col=activity))+
+  geom_line(aes(col=activity)) +
   facet_grid(factor(group,levels=c("Top","Mid","Bottom"))~ .) +
-  labs(title="Example Birds Transition Duration in Room 2", color="Legend")+
-  scale_x_continuous(name="Hours",n.breaks = 100)+
-  scale_y_continuous(name="Seconds Spent in Zone") +
-  scale_color_manual(values=c("Top"="royalblue","Mid"="tomato","Bottom" = "seagreen")) +
+  labs(title=paste0("Activity Birds Transitions no Room 3 (n=",length(unique(daily$ID)),")"), color="Activity Level")+
+  scale_x_date(name="Weeks",breaks = seq(min(combo_table$x),max(combo_table$x),by="week"),labels = as.numeric(format(seq(min(combo_table$x),max(combo_table$x),by="week"),"%U"))+23)+
+  scale_y_continuous(name="Average Transitions Into",n.breaks = 8,limits = c(0,30)) +
+  scale_color_manual(values=c("Low"="royalblue","Medium"="tomato","High" = "seagreen")) +
   theme_bw()
-q
-
-z <-ggplot(duration_day_grp, aes(x,y,col=group))+
-  geom_line() +
-  facet_grid(factor(group,levels=c("Top","Mid","Bottom"))~ .) +
-  labs(title="Example Birds Transition Duration in Room 2", color="Legend")+
-  scale_x_continuous(name="Days",n.breaks = 14)+
-  scale_y_continuous(name="Seconds Spent in Zone") +
-  scale_color_manual(values=c("Top"="royalblue","Mid"="tomato","Bottom" = "seagreen")) +
-  theme_bw()
-z
-
-
-ggsave(q, filename="../figures/duration_transitions_rm2.png",device="png")
-ggsave(z, filename="../figures/duration_transitions_day_rm2.png",device="png")
+  ggsave(q, filename="../figures/active_transitions_all_rooms_set_2.png",device="png")
 ```
-
 
 # Zone Occupying Table for all rooms
 
@@ -1945,26 +1726,6 @@ low_act_bird_frame["day"] <- as.character(str_split_fixed(low_act_bird_frame$sam
 low_act_agg_tab <- aggregate(low_act_bird_frame[,3:6],by = list(low_act_bird_frame$day), FUN = mean)
 colnames(low_act_agg_tab) <- c("day","bottom","mid","top","total")
 
-# plot the low activity birds
-low_act_grp <- data.frame(x = as.Date(low_act_agg_tab$day), y = c(low_act_agg_tab$bottom, low_act_agg_tab$mid, low_act_agg_tab$top), group= c(rep("Bottom",nrow(low_act_agg_tab)),rep("Mid",nrow(low_act_agg_tab)),rep("Top",nrow(low_act_agg_tab))))
-
-
-
-q <-ggplot(low_act_grp, aes(x,y,col=group))+
-  geom_line() +
-  facet_grid(factor(group,levels=c("Top","Mid","Bottom"))~ .) +
-  labs(title=paste0("Low Activity Birds Transitions (",round((length(low_act_bird_ids)/length(unique(daily$ID)))*100,2),"%; n=",length(unique(daily$ID)),")"), color="Legend")+
-  scale_x_date(name="Weeks",breaks = seq(min(low_act_grp$x),max(low_act_grp$x),by="week"),labels = as.numeric(format(seq(min(low_act_grp$x),max(low_act_grp$x),by="week"),"%U"))+23)+
-  scale_y_continuous(name="Average Transitions Into",n.breaks = 8,limits = c(0,30)) +
-  scale_color_manual(values=c("Top"="royalblue","Mid"="tomato","Bottom" = "seagreen")) +
-  theme_bw()
-q
-print("which birds are in this plot?")
-print(low_act_bird_ids)
-ggsave(q, filename="../figures/low_active_transitions_no_rm3_set_2.png",device="png")
-```
-
-```{r make a jumpy table for the medium activity birds}
 # Aggregate the medium activity birds
 med_act_bird_ids <- na.trim(cluster_table$med_act)
 
@@ -1981,26 +1742,6 @@ med_act_bird_frame["day"] <- as.character(str_split_fixed(med_act_bird_frame$sam
 med_act_agg_tab <- aggregate(med_act_bird_frame[,3:6],by = list(med_act_bird_frame$day), FUN = mean)
 colnames(med_act_agg_tab) <- c("day","bottom","mid","top","total")
 
-# plot the low activity birds
-med_act_grp <- data.frame(x = as.Date(med_act_agg_tab$day), y = c(med_act_agg_tab$bottom, med_act_agg_tab$mid, med_act_agg_tab$top), group= c(rep("Bottom",nrow(med_act_agg_tab)),rep("Mid",nrow(med_act_agg_tab)),rep("Top",nrow(med_act_agg_tab))))
-
-
-
-q <-ggplot(med_act_grp, aes(x,y,col=group))+
-  geom_line() +
-  facet_grid(factor(group,levels=c("Top","Mid","Bottom"))~ .) +
-  labs(title=paste0("Medium Activity Birds Transitions (",round((length(med_act_bird_ids)/length(unique(daily$ID)))*100,2),"%; n=",length(unique(daily$ID)),")"), color="Legend")+
-  scale_x_date(name="Weeks",breaks = seq(min(med_act_grp$x),max(med_act_grp$x),by="week"),labels = as.numeric(format(seq(min(med_act_grp$x),max(med_act_grp$x),by="week"),"%U"))+23)+
-  scale_y_continuous(name="Average Transitions Into",n.breaks = 8,limits = c(0,30)) +
-  scale_color_manual(values=c("Top"="royalblue","Mid"="tomato","Bottom" = "seagreen")) +
-  theme_bw()
-q
-print("which birds are in this plot?")
-print(med_act_bird_ids)
-ggsave(q, filename="../figures/med_active_transitions_no_rm3_set_2.png",device="png")
-```
-
-```{r make a jumpy table for the high activity birds}
 # Aggregate the high activity birds
 high_act_bird_ids <- na.trim(cluster_table$high_act)
 
@@ -2018,202 +1759,25 @@ high_act_agg_tab <- aggregate(high_act_bird_frame[,3:6],by = list(high_act_bird_
 colnames(high_act_agg_tab) <- c("day","bottom","mid","top","total")
 
 # plot the low activity birds
-high_act_grp <- data.frame(x = as.Date(high_act_agg_tab$day), y = c(high_act_agg_tab$bottom, high_act_agg_tab$mid, high_act_agg_tab$top), group= c(rep("Bottom",nrow(high_act_agg_tab)),rep("Mid",nrow(high_act_agg_tab)),rep("Top",nrow(high_act_agg_tab))))
+low_act_grp <- data.frame(x = as.Date(low_act_agg_tab$day), y = c(low_act_agg_tab$bottom, low_act_agg_tab$mid, low_act_agg_tab$top), group= c(rep("Bottom",nrow(low_act_agg_tab)),rep("Mid",nrow(low_act_agg_tab)),rep("Top",nrow(low_act_agg_tab))), activity=c(rep('Low',nrow(low_act_agg_tab)*3)))
 
-
-
-q <-ggplot(high_act_grp, aes(x,y,col=group))+
-  geom_line() +
-  facet_grid(factor(group,levels=c("Top","Mid","Bottom"))~ .) +
-  labs(title=paste0("High Activity Birds Transitions (",round((length(high_act_bird_ids)/length(unique(daily$ID)))*100,2),"%; n=",length(unique(daily$ID)),")"), color="Legend")+
-  scale_x_date(name="Weeks",breaks = seq(min(high_act_grp$x),max(high_act_grp$x),by="week"),labels = as.numeric(format(seq(min(high_act_grp$x),max(high_act_grp$x),by="week"),"%U"))+23)+
-  scale_y_continuous(name="Average Transitions Into",n.breaks = 8,limits = c(0,30)) +
-  scale_color_manual(values=c("Top"="royalblue","Mid"="tomato","Bottom" = "seagreen")) +
-  theme_bw()
-q
-print("which birds are in this plot?")
-print(high_act_bird_ids)
-ggsave(q, filename="../figures/high_active_transitions_no_rm3_set_2.png",device="png")
-```
-
-# How long does the bird stay in a zone?
-
-```{r how long does the bird stay in the zone}
-
-trans_reslist_room2_min <- list()
-
-for(i in 1:length(reslist2_room_2)){
-  minute_period <- to_minute(reslist2_room_2[[i]]$xts_obj$subzone)
-  minute_trans_table <- calc_trans_period(reslist2_room_2[[i]]$ID, minute_period, reslist2_room_2[[i]]$xts_obj, "Hr",0)  
-  result <- list("ID"=reslist2_room_2[[i]]$ID,"hour"=minute_trans_table, "raw"=reslist2_room_2[[i]]$xts_obj)
-  trans_reslist_room2_min[[i]] <- result
-}
-
-room2_hour <- data.frame()
-
-for(item in trans_reslist_room2_min){
-  room2_hour <- rbind(room2_hour, item$hour[c("sample","bottom","mid","top","total")])
-}
-
-trans_reslist_room3_min <- list()
-
-for(i in 1:length(reslist2_room_3)){
-  minute_period <- to_minute(reslist2_room_3[[i]]$xts_obj$subzone)
-  minute_trans_table <- calc_trans_period(reslist2_room_3[[i]]$ID, minute_period, reslist2_room_3[[i]]$xts_obj, "Hr",0)  
-  result <- list("ID"=reslist2_room_3[[i]]$ID,"hour"=minute_trans_table, "raw"=reslist2_room_3[[i]]$xts_obj)
-  trans_reslist_room3_min[[i]] <- result
-}
-
-room3_hour <- data.frame()
-
-for(item in trans_reslist_room3_min){
-  room3_hour <- rbind(room3_hour, item$hour[c("sample","bottom","mid","top","total")])
-}
-
-
-
-trans_reslist_room8_min <- list()
-
-for(i in 1:length(reslist2_room_8)){
-  minute_period <- to_minute(reslist2_room_8[[i]]$xts_obj$subzone)
-  minute_trans_table <- calc_trans_period(reslist2_room_8[[i]]$ID, minute_period, reslist2_room_8[[i]]$xts_obj, "Hr",0)  
-  result <- list("ID"=reslist2_room_8[[i]]$ID,"hour"=minute_trans_table, "raw"=reslist2_room_8[[i]]$xts_obj)
-  trans_reslist_room8_min[[i]] <- result
-}
-
-room8_hour <- data.frame()
-
-for(item in trans_reslist_room8_min){
-  room8_hour <- rbind(room8_hour, item$hour[c("sample","bottom","mid","top","total")])
-}
-
-trans_reslist_room11_min <- list()
-
-for(i in 1:length(reslist2_room_2)){
-  minute_period <- to_minute(reslist2_room_2[[i]]$xts_obj$subzone)
-  minute_trans_table <- calc_trans_period(reslist2_room_2[[i]]$ID, minute_period, reslist2_room_2[[i]]$xts_obj, "Hr",0)  
-  result <- list("ID"=reslist2_room_2[[i]]$ID,"hour"=minute_trans_table, "raw"=reslist2_room_2[[i]]$xts_obj)
-  trans_reslist_room11_min[[i]] <- result
-}
-
-room11_hour <- data.frame()
-
-for(item in trans_reslist_room11_min){
-  room11_hour <- rbind(room11_hour, item$hour[c("sample","bottom","mid","top","total")])
-}
-
-
-
-# check to make sure only one bird is selected
-print("check that the id and RFID tag are unique for each item entry")
-#this is following up with the issues of the intra-bird comparisons
-for(item in trans_reslist_room2_min){
-  print(paste(unique(item$raw$tagnumber)," ",unique(item$raw$tagname)))
-  #print(item)
-}
-
-room2_hourly <- data.frame()
-
-#each item is one transition list for an intra bird sample
-#we want to sum up the columns for each day and compare bird to bird
-
-room2_hourly_colsum_min <- data.frame()
-
-for(i in 1:length(trans_reslist_room2_min)){
-  res <- colSums(sapply(trans_reslist_room2_min[[i]]$hour[,2:6], as.numeric))
-  res[1] <- res[1]/length(trans_reslist_room2_min[[i]]$hour$ID)
-  res[6] <- round(res[2]/length(trans_reslist_room2_min[[i]]$hour$bottom),0)
-  res[7] <- round(res[3]/length(trans_reslist_room2_min[[i]]$hour$mid),0)
-  res[8] <- round(res[4]/length(trans_reslist_room2_min[[i]]$hour$top),0)
-  res[9] <- round(res[5]/length(trans_reslist_room2_min[[i]]$hour$total),0)
-  room2_hourly_colsum_min <- rbind(room2_hourly_colsum_min,res)
-}
-
-colnames(room2_hourly_colsum_min) <- c("ID","bottom","mid","top","total","bottom_A","mid_A","top_a","total_A")
-room2_hourly_colsum_min
-hold_hour <- room2_hourly_colsum_min[order(room2_hourly_colsum_min$total,decreasing = T),]
-
-summary(hold_hour[,6:9])
-boxplot(hold_hour[,6:9])
-
-hold_hour
-
-```
-
-
-```{r calculate duration traslist}
-
-trans_reslist_rm_2 <- c()
-minute_reslist_room2_hr <- c()
-
-for(i in 1:length(reslist2_room_2)){
-  minute_period <- to_minute(reslist2_room_2[[i]]$xts_obj$subzone)
-  minute_reslist_room2_hr[[i]] <- minute_period
-}
-
-trans_reslist_room2_dur <- c()
-for(i in 1:length(minute_reslist_room2_hr)){
-  minute_trans_tab <- calc_trans_period_duration(reslist2_room_2[[i]]$ID, minute_reslist_room2_hr[[i]],reslist2_room_2[[i]]$xts_obj, "hr",0)
-  #minute_trans_table <- calc_trans_period_duration(reslist2_room_8[[i]]$ID, minute_period, reslist2_room_8[[i]]$xts_obj, "Hr")
-  result <- list("ID"=reslist2_room_2[[i]]$ID,"hour"=minute_trans_tab,"raw"=reslist2_room_2[[i]]$xts_obj)
-  trans_reslist_room2_dur[[i]] <- result
-}
-
-#trans_reslist_feb_dur
-```
-
-
-
-```{r make a jumpy table that looks at duration}
-
-#which bird is this?
-
-trans_reslist_room2_dur[[1]]$ID
-
-# Aggregate the high activity birds
-example_duration <- na.trim(trans_reslist_room2_dur[[1]]$hour)
-
-#make a table of the samples
-duration_frame <- data.frame(example_duration)
-
-duration_frame[,3:9] <- sapply(duration_frame[,3:9], as.numeric)
-duration_frame["hour"] <- as.numeric(str_split_fixed(duration_frame$sample, "hr.",2)[,2])
-duration_frame["day"] <- as.integer((duration_frame$hour/24)+2)
-duration_agg_tab_hr <- aggregate(duration_frame[,7:9],by = list(duration_frame$hour), FUN = sum)
-colnames(duration_agg_tab_hr) <- c("hour","bottom","mid","top")
-
-duration_agg_tab_day <- aggregate(duration_frame[,7:9],by = list(duration_frame$day), FUN = sum)
-colnames(duration_agg_tab_day) <- c("day","bottom","mid","top")
+med_act_grp <- data.frame(x = as.Date(med_act_agg_tab$day), y = c(med_act_agg_tab$bottom, med_act_agg_tab$mid, med_act_agg_tab$top), group= c(rep("Bottom",nrow(med_act_agg_tab)),rep("Mid",nrow(med_act_agg_tab)),rep("Top",nrow(med_act_agg_tab))), activity=c(rep('Medium',nrow(low_act_agg_tab)*3)))
 
 # plot the low activity birds
-duration_hr_grp <- data.frame(x = duration_agg_tab_hr$hour, y = c(duration_agg_tab_hr$bottom, duration_agg_tab_hr$mid, duration_agg_tab_hr$top), group= c(rep("Bottom",nrow(duration_agg_tab_hr)),rep("Mid",nrow(duration_agg_tab_hr)),rep("Top",nrow(duration_agg_tab_hr))))
+high_act_grp <- data.frame(x = as.Date(high_act_agg_tab$day), y = c(high_act_agg_tab$bottom, high_act_agg_tab$mid, high_act_agg_tab$top), group= c(rep("Bottom",nrow(high_act_agg_tab)),rep("Mid",nrow(high_act_agg_tab)),rep("Top",nrow(high_act_agg_tab))), activity=c(rep('High',nrow(low_act_agg_tab)*3)))
 
-duration_day_grp <- data.frame(x = duration_agg_tab_day$day, y = c(duration_agg_tab_day$bottom, duration_agg_tab_day$mid, duration_agg_tab_day$top), group= c(rep("Bottom",nrow(duration_agg_tab_day)),rep("Mid",nrow(duration_agg_tab_day)),rep("Top",nrow(duration_agg_tab_day))))
+combo_table <- rbind(low_act_grp, med_act_grp, high_act_grp)
 
-
-q <-ggplot(duration_hr_grp, aes(x,y,col=group))+
-  geom_line() +
+q <-ggplot(combo_table, aes(x,y,col=activity))+
+  geom_line(aes(col=activity)) +
   facet_grid(factor(group,levels=c("Top","Mid","Bottom"))~ .) +
-  labs(title="Example Birds Transition Duration in Room 2", color="Legend")+
-  scale_x_continuous(name="Hours",n.breaks = 100)+
-  scale_y_continuous(name="Seconds Spent in Zone") +
-  scale_color_manual(values=c("Top"="royalblue","Mid"="tomato","Bottom" = "seagreen")) +
+  labs(title=paste0("Activity Birds Transitions no Room 3 (n=",length(unique(daily$ID)),")"), color="Activity Level")+
+  scale_x_date(name="Weeks",breaks = seq(min(combo_table$x),max(combo_table$x),by="week"),labels = as.numeric(format(seq(min(combo_table$x),max(combo_table$x),by="week"),"%U"))+23)+
+  scale_y_continuous(name="Average Transitions Into",n.breaks = 8,limits = c(0,30)) +
+  scale_color_manual(values=c("Low"="royalblue","Medium"="tomato","High" = "seagreen")) +
   theme_bw()
-q
+  ggsave(q, filename="../figures/active_transitions_no_rm3_set_2.png",device="png")
 
-z <-ggplot(duration_day_grp, aes(x,y,col=group))+
-  geom_line() +
-  facet_grid(factor(group,levels=c("Top","Mid","Bottom"))~ .) +
-  labs(title="Example Birds Transition Duration in Room 2", color="Legend")+
-  scale_x_continuous(name="Days",n.breaks = 14)+
-  scale_y_continuous(name="Seconds Spent in Zone") +
-  scale_color_manual(values=c("Top"="royalblue","Mid"="tomato","Bottom" = "seagreen")) +
-  theme_bw()
-z
-
-
-ggsave(q, filename="../figures/duration_transitions_rm2.png",device="png")
-ggsave(z, filename="../figures/duration_transitions_day_rm2.png",device="png")
 ```
 
 # Zone Occupying Table No Room 3
