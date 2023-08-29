@@ -334,8 +334,9 @@ print(sum(is.na(big_table_room_2)))
 
 ```{r import room 3}
 library(xts)
+library(tidyverse)
 
-room_3 <- read.csv("../data/DK20-03-RFID-R3-febmay-080423.csv")
+room_3 <- read.csv("../data/DK20-03-RFID-R3-febmay-080423.csv") %>% na.exclude()
 
 bird_ids_room_3 <- unique(room_3$tagname)
 bird_ids_room_3 <- na.trim(sort(bird_ids_room_3))
@@ -720,7 +721,7 @@ for(item in trans_reslist_room_11){
 
 ## Determine which bird is the most active in the Whole Dataset
 
-```{r who is the most active?}
+```{r who is the most active in whole dataset?}
 daily <- data.frame()
 weekly <- data.frame()
 monthly <- data.frame()
@@ -768,7 +769,7 @@ print(paste("Most active bird: ",most_active))
 
 ## Determine which bird is the least active in the Room 2 Dataset
 
-```{r who is the least active?}
+```{r who is the least active in whole dataset?}
 daily <- data.frame()
 weekly <- data.frame()
 monthly <- data.frame()
@@ -813,7 +814,7 @@ print(paste("Least active bird: ",least_active))
 
 # Most Active Bird
 
-```{r most active bird analysis}
+```{r most active bird analysis all rooms}
 set.seed(34716)
 library(scales)
 library(stringr)
@@ -914,7 +915,7 @@ ggsave(q, filename = paste0("../figures/",as.character(most_active[j]),"_most_ac
 
 # Least Active Bird
 
-```{r least active bird time}
+```{r least active bird time all rooms}
 library(stringr)
 library(ggplot2)
 
@@ -951,13 +952,13 @@ hist(least_active_intra_day[,5])
 
 wss <- 0
 
-for(i in 1:15){
+for(i in 1:10){
   km.out <- kmeans(least_active_intra_day[,3:5], centers = i, nstart=20)
   wss[i] <- km.out$tot.withinss
 }
 
 
-plot(1:15, wss, type="b")
+plot(1:10, wss, type="b")
 
 km.out <- kmeans(least_active_intra_day[,3:5],3, 20)
 summary(km.out)
@@ -1009,7 +1010,7 @@ ggsave(q, filename="../figures/least_active_transitions_per_day_all_rooms.png",d
 
 # Organize Birds By activity 
 
-```{r evaluate transition clolumn sum on the daily data}
+```{r evaluate transition cloumn sum on the daily data all rooms}
 library(qpcR)
 
 trans_reslists <- c(trans_reslist_room_2,trans_reslist_room_3,trans_reslist_room_8,trans_reslist_room_11)
@@ -1101,7 +1102,7 @@ write.csv(updated_table, "../output/organized_birds_by_activity_daily_all_rooms_
 
 ## Jumpy table for the separated samples
 
-```{r make a jumpy table for the low activity birds}
+```{r make a jumpy table for the low activity birds all rooms}
 # Aggregate the low activity birds
 low_act_bird_ids <- na.trim(cluster_table$low_act)
 
@@ -1349,9 +1350,9 @@ for(item in trans_reslist_room_11){
 ```
 
 
-## Determine which bird is the most active in the Whole Dataset
+## Determine which bird is the most active in the Whole Dataset without room 3
 
-```{r who is the most active?}
+```{r who is the most active without room 3?}
 daily <- data.frame()
 weekly <- data.frame()
 monthly <- data.frame()
@@ -1372,6 +1373,8 @@ for(item in trans_reslist_room_11){
   weekly <- rbind(weekly, item$weekly[c("ID","bottom","mid","top","total")])
   monthly <- rbind(monthly, item$monthly[c("ID","bottom","mid","top","total")])
 }
+length(unique(daily$ID))
+unique(daily$ID)
 
 tmp <- cbind(as.character(daily$ID), as.numeric(daily$total))
 tmp_df <- data.frame(as.numeric(tmp[,1]), as.numeric(tmp[,2]))
@@ -1389,7 +1392,7 @@ print(paste("Most active bird: ",most_active))
 
 ## Determine which bird is the least active in the Room 2 Dataset
 
-```{r who is the least active?}
+```{r who is the least active without room 3?}
 daily <- data.frame()
 weekly <- data.frame()
 monthly <- data.frame()
@@ -1426,7 +1429,7 @@ print(paste("Least active bird: ",least_active))
 
 # Most Active Bird
 
-```{r most active bird analysis}
+```{r most active bird analysis no room 3}
 set.seed(34716)
 library(scales)
 library(stringr)
@@ -1522,7 +1525,7 @@ ggsave(q, filename = paste0("../figures/",as.character(most_active[j]),"_most_ac
 
 # Least Active Bird
 
-```{r least active bird time}
+```{r least active bird time no room 3}
 library(stringr)
 library(ggplot2)
 
@@ -1618,7 +1621,7 @@ for (j in 1:length(least_active))
 
 # Organize Birds By activity 
 
-```{r evaluate transition clolumn sum on the daily data}
+```{r evaluate transition cloumn sum on the daily data no room 3}
 library(qpcR)
 
 #trans_reslists <- c(trans_reslist_room_2,trans_reslist_room_3,trans_reslist_room_8,trans_reslist_room_11)
@@ -1709,7 +1712,7 @@ write.csv(updated_table, "../output/organized_birds_by_activity_daily_no_rm_3_ni
 
 ## Jumpy table for the separated samples
 
-```{r make a jumpy table for the low activity birds}
+```{r make a jumpy table for the low activity birds no room 3}
 # Aggregate the low activity birds
 low_act_bird_ids <- na.trim(cluster_table$low_act)
 
