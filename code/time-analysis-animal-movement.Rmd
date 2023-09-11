@@ -449,7 +449,7 @@ library(lubridate)
 library(tidyverse)
 library(tidyr)
 library(dplyr)
-
+library(tsibble)
 
 
 room_2 <- read.csv("../data/DK20-03-RFID-R2-febmay-080423.csv")
@@ -476,12 +476,41 @@ sum(is.na(room_2$subzone))
 
 room_2$accessdate <- dmy_hms(room_2$accessdate)
 
+# find the five number summary to determine the median interval in seconds of each reading to determine the proper sampling interval
+# mean of the median times for room 2 is 9 minutes so move up to 10 minutes
+# mean of the mean times for room 2 is 38 minutes so move down to every 30 minutes
+room_2_summary <- room_2 |> nest(data = - tagname) |> 
+ na.exclude() |>
+ mutate(id_dupes = map(data ,~identify_duplicate_records(.x))) |>
+ mutate(cleaned = map(id_dupes, ~.x[! .x$duplicate == 1,])) |>
+ mutate(tsibble = map(cleaned, ~tsibble(datetime = ymd_hms(.x$accessdate), value = .x$subzone, index = datetime) )) |>
+ mutate(intervals_s = map(tsibble, ~ as.numeric(difftime(.x$datetime[1:(length(.x$datetime)-1)], .x$datetime[2:length(.x$datetime)],units='secs') ))) |>
+ mutate(summary = map(intervals_s, ~summary(.x))) |>
+ mutate(median = map(summary, ~.x[3])) |>
+ mutate(mean = map(summary, ~.x[4])) |>
+ unnest(c(median,mean))
+
+# 
 room_2_struct <- room_2 |> nest(data = - tagname) |> 
  na.exclude() |>
  mutate(id_dupes = map(data ,~identify_duplicate_records(.x))) |>
  mutate(cleaned = map(id_dupes, ~.x[! .x$duplicate == 1,])) |>
- mutate(infilled = map(cleaned, ~infill_time(.x)))
+ # How long does it take to infill one dataframe? is it too long?
+ mutate(tsibble = map(cleaned, ~tsibble(datetime = ymd_hms(.x$accessdate), value = .x$subzone, index = datetime) ))
+ 
+attr(room_2_struct$tsibble, 'interval') <- new_interval(minute = 10)
+#TODO need to set the start time for each series to a nice 
 
+ room_2_regular <- room_2_struct |>
+ mutate(perSec = map(tsibble, ~ fill_gaps(.x))) |>
+ mutate(summary = map(tsibble, ~summary(.x))) |>
+ unnest(summary)
+
+
+room_2_struct <- room_2_struct |>
+  mutate(sampled = map(perSec, ~ na.locf(.x)))
+
+#tmp <- tsibble(datetime = ymd_hms(room_2_struct$cleaned[[1]]$accessdate), value = room_2_struct$cleaned[[1]]$subzone, index = datetime) %>% fill_gaps() %>% na.locf() %>% fill_gaps() %>% na.locf()
   
   
 
