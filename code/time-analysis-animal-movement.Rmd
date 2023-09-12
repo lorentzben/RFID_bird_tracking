@@ -9,351 +9,6 @@ output:
 
 
 # Data Preprocessing
-## Function to find the most frequent zone (average wont quite work)
-
-```{r find most frequent zone}
-MaxTable <- function(x){
-     dd <- unique(x)
-     dd[which.max(tabulate(match(x,dd)))]
-}
-
-```
-
-## My to minute function
-
-```{r my to minute}
-to_minute <- function(xts_object){
-  ep_min <- endpoints(na.omit(xts_object), on="minutes",k=60)
-  ave_min <- period.apply(na.omit(xts_object), INDEX=ep_min, FUN=MaxTable)
-  #this removes the time to allow cbinding
-  ave_min <- to.minutes(ave_min,OHLC=F,indexAt="startof")
-  return(ave_min)
-}
-```
-
-## My to daily function
-
-```{r my to daily}
- to_daily <- function(xts_object){
-   ep_day <- endpoints(na.omit(xts_object), on="minutes",k=1440)
-   ave_day <- period.apply(na.omit(xts_object), INDEX=ep_day, FUN=MaxTable)
-   #this removes the time to allow cbinding
-   ave_day <- to.daily(ave_day,OHLC=F,indexAt="startof")
-   return(ave_day)
- }
-```
-
-## My to weekly function
-
-```{r my to weekly}
-to_weekly <- function(xts_object){
-  ep_week <- endpoints(na.omit(xts_object), on="minutes",k=10080)
-  ave_week <- period.apply(na.omit(xts_object), INDEX=ep_week, FUN=MaxTable)
-  #this removes the time to allow cbinding
-  ave_week <- to.weekly(ave_week,OHLC=F,indexAt="startof")
-  return(ave_week)
-}
-```
-
-## My to monthly function
-
-```{r my to monthly}
-to_monthly <- function(xts_object){
-  ep_month <- endpoints(na.omit(xts_object), on="minutes",k=43800)
-  ave_month <- period.apply(na.omit(xts_object), INDEX=ep_month, FUN=MaxTable)
-  #this removes the time to allow cbinding
-  ave_month <- to.monthly(ave_month,OHLC=F,indexAt="startof")
-  return(ave_month)
-}
-```
-
-
-## Function to Calculate Transitions
-
-```{r function to calc transitions}
-#I don't know when we use this data yet, will be useful when making transition tables for the whole dataset 
-sep_bird_id_xts <- function(samp_name, samp_id,cage_obj){
-  
-  raw_sample_tab <- subset(cage_obj, tagname==samp_id)
-  
-  xts_object <- xts(raw_sample_tab ,order.by = raw_sample_tab$DateTime)
-  
-  result <- list("name" = samp_name, "ID"=samp_id, "xts_obj"=xts_object)
-  return(result)
-}
-
-sep_bird_id_period <- function(samp_name, samp_id, cage_obj, cutoff){
-  
-  raw_sample_tab <- subset(cage_obj, tagname==samp_id)
-  
-  xts_object <- xts(raw_sample_tab ,order.by=raw_sample_tab$DateTime)
-  
-  xts_object <- xts_object[cutoff]
-  
-  daily <- to_daily(xts_object$subzone)#, OHLC=F)
-  weekly <- to_weekly(xts_object$subzone)#, OHLC=F)
-  monthly <- to_monthly(xts_object$subzone)#, OHLC=F)
-  index(monthly) <-as.POSIXct(index(monthly))
-  
-  result <- list("name" = samp_name, "ID"=samp_id, "xts_obj"=xts_object, "daily_obj"=daily,
-                 "weekly_obj"=weekly, "monthly_obj"=monthly)
-  return(result)
-}
-
-#input a sample name
-#returns a vector labeled with sample name, and bottom, middle, top and total transitions
-
-calc_trans<- function(samp_name,samp_obj, id){
-  bottom_trans <-0
-  mid_trans<-0
-  top_trans<-0
-  trans<-0
-  count <- 0
-  
-  for (i in 2:length(samp_obj$subzone)) {
-  previous_state <- as.character(samp_obj$subzone[i-1])
-  current_state <- as.character(samp_obj$subzone[i])
-  
-  #print(paste(previous_state,":",current_state))
-  
-  
-  if (previous_state == current_state) {
-    count <- count+1
-  }
-  else{
-    
-    if((current_state == "bottom") || (current_state == "Bottom")){
-      bottom_trans <- bottom_trans+1
-      trans<- trans+1
-    }
-    if (current_state=="middle" || current_state == "Middle") {
-      mid_trans <- mid_trans+1
-      trans <- trans+1
-    }
-    if(current_state =="top" || current_state=="Top"){
-      top_trans <- top_trans+1
-      trans <- trans+1
-    }
-  }
-  }
-  
-  result <- c(samp_name,id,bottom_trans,mid_trans,top_trans,trans)
-  return(result)
-  
-}
-
-calc_trans_period<- function(samp_name, daily_indexed, raw_table,freq, day_offset){
-  result <- data.frame()
-  
-  for (i in 2:(length(daily_indexed))){
-    curr_day <- raw_table[paste0(index(daily_indexed)[i-1],"/",index(daily_indexed)[i])]
-    curr_day_trans <- calc_trans(paste0(samp_name,".",index(daily_indexed)[i-1]),curr_day, samp_name)
-    result <- rbind(result,curr_day_trans)
-    }
-  colnames(result) <- c("sample","ID","bottom","mid","top","total")
-  return(result)
-}
-```
-
-```{r my calc trans duration function}
-
-calc_trans_duration<- function(samp_name,samp_obj, id){
-  bottom_trans <-0
-  mid_trans<-0
-  top_trans<-0
-  trans<-0
-  count <- 0
-  bottom_time <- 0 
-  mid_time <- 0
-  top_time <- 0
-  
-  for (i in 2:length(samp_obj$subzone)) {
-  previous_state <- as.character(samp_obj$subzone[i-1])
-  current_state <- as.character(samp_obj$subzone[i])
-  previous_time <- index(samp_obj[i-1])
-  current_time <- index(samp_obj[i])
-  
-  #print(paste(previous_state,":",current_state))
-  
-  
-  if (previous_state == current_state) {
-    count <- count+1
-  }
-  else{
-    
-    if((previous_state == "bottom") || (previous_state == "Bottom")){
-      bottom_trans <- bottom_trans+1
-      trans<- trans+1
-      bottom_time <- bottom_time + difftime(current_time, previous_time,units="secs")
-    }
-    if (previous_state=="middle" || previous_state == "Middle") {
-      mid_trans <- mid_trans+1
-      trans <- trans+1
-      mid_time <- mid_time + difftime(current_time, previous_time, units="secs")
-    }
-    if(previous_state =="top" || previous_state=="Top"){
-      top_trans <- top_trans+1
-      trans <- trans+1
-      top_time <- top_time + difftime(current_time,previous_time,units="secs")
-    }
-  }
-  }
-  
-  result <- c(samp_name,id,bottom_trans,mid_trans,top_trans,trans,bottom_time,mid_time,top_time)
-  #colnames(result) <- c("sample_name","ID","bottom_trans","middle_trans","top_trans","total_trans","bottom_sec","mid_sec","top_sec")
-  return(result)
-  
-}
-
-calc_trans_period_duration<- function(samp_name, daily_indexed, raw_table,freq,day_offset ){
-  result <- data.frame()
-  
-  for (i in 2:(length(daily_indexed))){
-    curr_day <- raw_table[paste0(index(daily_indexed)[i-1],"/",index(daily_indexed)[i])]
-    curr_day_trans <- calc_trans_duration(paste0(samp_name,".",freq,".",(i+day_offset)),curr_day, samp_name)
-    result <- rbind(result,curr_day_trans)
-    }
-  colnames(result) <- c("sample_name","ID","bottom_trans","middle_trans","top_trans","total_trans","bottom_sec","mid_sec","top_sec")
-  return(result)
-}
-```
-
-```{r calculate duration spent in each zone}
-
-calc_zone_duration <- function(samp_name, id, samp_obj){
-  bottom_time <- 0
-  mid_time <- 0 
-  top_time <- 0
-
-  current_zone <- ""
-  current_datetime <- ""
-  next_datetime <- ""
-
-  for(i in 1:(length(index(samp_obj))-1)){
-
-    current_zone <- as.character(samp_obj[i]$subzone)
-
-    #this is measured in seconds
-    sec_in_zone_i <- as.numeric(index(samp_obj[i+1]$accessdate)) - as.numeric(index(samp_obj[i]$accessdate))
-
-    if(current_zone == "bottom"){
-      bottom_time <- bottom_time + sec_in_zone_i
-      sec_in_zone_i <- 0
-    } else if(current_zone == "middle"){
-      mid_time <- mid_time + sec_in_zone_i
-      sec_in_zone_i <- 0
-    } else if(current_zone == "top"){
-      top_time <- top_time + sec_in_zone_i
-      sec_in_zone_i <- 0
-    }
-
-  }
-
-  return(c(samp_name, id, as.numeric(bottom_time), as.numeric(mid_time), as.numeric(top_time)))
-
-}
-
-```
-
-
-```{r calculate time in zone for each day of study}
-  
-  calc_zone_duration_daily <- function(bird_id, bird_trans){
-
-    end_of_series <- as.POSIXct(bird_trans$access)
-    first_day <- as.POSIXct(bird_trans$access[1,])
-    last_day <- as.POSIXct(bird_trans$access[end_of_series,])
-    series <- seq(as.Date(first_day,format="%Y-%m-%d"), as.Date(last_day,format="%Y-%m-%d"), by="days")
-
-    daily_sum_table <- data.frame()
-
-    for(i in 1:length(series)){
-
-      one_day <- subset(bird_trans, format(bird_trans$access, "%Y-%M-%D") > format(bird_trans$access[i], "%Y-%M-%D") & format(bird_trans$access, "%Y-%M-%D") < bird_trans$access[i+1])
-
-      daily_sum_table <- rbind(daily_sum_table,calc_zone_duration(format(bird_trans$access[i], "%Y-%M-%D"), bird_id, one_day))
-    }
-
-    return(bird_id, daily_sum_table)
-  }
-```
-
-```{r calculate duration spent in each zone}
-
-calc_zone_duration <- function(samp_obj){
-  bottom_time <- 0
-  mid_time <- 0 
-  top_time <- 0
-
-  current_zone <- ""
-  current_datetime <- ""
-  next_datetime <- ""
-
-  for(i in 1:(length(index(samp_obj))-1)){
-
-    current_zone <- as.character(samp_obj$subzone[i])
-
-    #this is measured in seconds
-    min_in_zone_i <- as.numeric(samp_obj$accessdate[i] - samp_obj$accessdate[i+1])
-
-    if(current_zone == "bottom"){
-      bottom_time <- bottom_time + min_in_zone_i
-      min_in_zone_i <- 0
-    } else if(current_zone == "middle"){
-      mid_time <- mid_time + min_in_zone_i
-      min_in_zone_i <- 0
-    } else if(current_zone == "top"){
-      top_time <- top_time + min_in_zone_i
-      min_in_zone_i <- 0
-    }
-
-  }
-
-  return(c(as.numeric(bottom_time), as.numeric(mid_time), as.numeric(top_time)))
-
-}
-
-```
-
-
-```{r calculate time in zone for each day of study}
-  
-  calc_zone_duration_daily <- function(bird_trans){
-
-    first_day <- as.Date(head(bird_trans$accessdate,n=1))
-    last_day <- as.Date(tail(bird_trans$accessdate,n=1))
-
-    if(first_day < last_day){
-      series <- seq(first_day,last_day, by="days")
-    } else if(last_day< first_day) {
-      series <- seq(last_day,first_day, by="days")
-    } else {
-      print("error")
-      exit(1)
-    }
-    
-
-    daily_sum_table <- data.frame()
-
-    for(i in 1:length(series)){
-
-      one_day <- subset(bird_trans,( as.Date(bird_trans$accessdate) >= as.Date(series[i])))
-      one_day <- subset(one_day, one_day$accessdate < as.Date(series[i+1]))
-
-      one_day_min <- calc_zone_duration(one_day)
-
-
-      daily_sum_table <- rbind(series[i], one_day_min)
-    }
-
-    return(daily_sum_table)
-  }
-```
-
-
-for(i in 1:length(record)-1){
-  print(paste(record[i,]$subzone," : ", record[i+1,]$subzone))
-}
 
 ```{r function to clean data from duplicate reads}
 identify_duplicate_records <- function(records){
@@ -385,34 +40,6 @@ identify_duplicate_records <- function(records){
 
 ```
 
-
-```{r infill time to 1 second observations}
-infill_time <- function(incomplete_time){
-
-  complete_table <- data.frame()
-
-  for(i in 2:length(incomplete_time$accessdate)){
-
-    primary <- incomplete_time[i-1,]
-    secondary <- incomplete_time[i,]
-
-    primary_time <- ymd_hms(primary$accessdate)
-    primary_zone <- primary$subzone
-
-    secondary_time <- ymd_hms(secondary$accessdate)
-    secondary_zone <- secondary$subzone
-
-    if(! difftime(secondary_time, primary_time, units="secs") == 1){
-      infill_time <- seq(primary_time,secondary_time-1, by='secs')
-      infill_zone <- rep(primary_zone, length(infill_time))
-      new_data <- cbind(infill_time, infill_zone)
-    }
-    complete_table <- rbind(complete_table, new_data)
-  }
-  return(complete_table)
-}
-```
-
 ```{r from Keni's data}
 # from Analyis.R generated by Keni
  getTimeBudget <- function(data,selectedIDs) {
@@ -438,6 +65,20 @@ infill_time <- function(incomplete_time){
   return(TBS)
   
 }
+```
+
+```{r nice start function}
+
+nice_start <- function(dataframe, units, interval_min){
+  requireNamespace("lubridate")
+  dataframe[1,1]$datetime <- round_date(ymd_hms(dataframe[1,1]$datetime), unit=units)
+  attr(dataframe, 'interval') <- new_interval(min=interval_min)
+  # remove duplicate entries 
+  #dataframe <- dataframe[!duplicates(dataframe)]
+
+  return(dataframe)
+}
+
 ```
 
 ## Import Room 2
@@ -486,25 +127,41 @@ room_2_summary <- room_2 |> nest(data = - tagname) |>
  mutate(tsibble = map(cleaned, ~tsibble(datetime = ymd_hms(.x$accessdate), value = .x$subzone, index = datetime) )) |>
  mutate(intervals_s = map(tsibble, ~ as.numeric(difftime(.x$datetime[1:(length(.x$datetime)-1)], .x$datetime[2:length(.x$datetime)],units='secs') ))) |>
  mutate(summary = map(intervals_s, ~summary(.x))) |>
+ mutate(minimum = map(summary, ~abs(.x[6]))) |>
  mutate(median = map(summary, ~.x[3])) |>
  mutate(mean = map(summary, ~.x[4])) |>
- unnest(c(median,mean))
+ unnest(c(minimum, median,mean))
+
+# Time in minutes of average duration between transitions
+(mean(room_2_summary$median)/60)
+(mean(room_2_summary$mean)/60)
+(min(room_2_summary$minimum))
+
+# when is a nice time to start the study?
+
+# No Room 3 2021-02-18 T23:30:00/2021-05-06 T23:00:00
+# All Rooms 2021-03-09 T20:00:00/2021-05-06 T23:00:00
 
 # 
 room_2_struct <- room_2 |> nest(data = - tagname) |> 
  na.exclude() |>
  mutate(id_dupes = map(data ,~identify_duplicate_records(.x))) |>
  mutate(cleaned = map(id_dupes, ~.x[! .x$duplicate == 1,])) |>
- # How long does it take to infill one dataframe? is it too long?
  mutate(tsibble = map(cleaned, ~tsibble(datetime = ymd_hms(.x$accessdate), value = .x$subzone, index = datetime) ))
  
 attr(room_2_struct$tsibble, 'interval') <- new_interval(minute = 10)
-#TODO need to set the start time for each series to a nice 
+#TODO need to set the start time for each series to a nice time
 
- room_2_regular <- room_2_struct |>
- mutate(perSec = map(tsibble, ~ fill_gaps(.x))) |>
- mutate(summary = map(tsibble, ~summary(.x))) |>
- unnest(summary)
+
+# round the first entry to the nearest 10 minute interval to provide a nice sampling interval, then interpolate the rest of the intervals
+room_2_regular <- room_2_struct |>
+ mutate(near_5 = map(tsibble, ~ nice_start(.x, "5 seconds",5/60))) |>
+ mutate(perSec = map(near_5, ~ fill_gaps(.x))) |>
+ mutate(sampled = map(perSec, ~ na.locf(.x))) |>
+ unnest(sampled)
+
+# are we able to then round the table after to remove the entries off the sampling timeperiod?
+
 
 
 room_2_struct <- room_2_struct |>
