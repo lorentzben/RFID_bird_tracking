@@ -253,12 +253,12 @@ room_2_all_room_time_budget <- room_2_interval |>
 
 room_2_all_room_time_budget |>
  select(c(tagname, Interval.1., Interval.2., X1, X2, X3)) |> 
- write.csv(row.names=F, '../output/room_2_all_room_time_budget.csv')
+ write.csv(row.names=F, '../output/all_rooms/room_2_all_room_time_budget.csv')
 
 room_2_interval |> 
  unnest(interval) |>
  select(c(tagname, t1,t2,zone)) |> 
- write.csv(row.names=F,'../output/room_2_all_room_interval_tab.csv')
+ write.csv(row.names=F,'../output/all_rooms/room_2_all_room_interval_tab.csv')
 
 
 for(i in 1:length(room_2_struct$tagname)){
@@ -272,7 +272,7 @@ for(i in 1:length(room_2_struct$tagname)){
 
     current_tsibble$tagname <- rep(current_tag, length(current_tsibble$datetime))
 
-    write.csv(current_tsibble, paste0("../intermediate/room_2_tsibble_",current_tag,".csv"),row.names=F)
+    write.csv(current_tsibble, paste0("../intermediate/all_rooms/room_2_tsibble_",current_tag,".csv"),row.names=F)
 }
 
  ```
