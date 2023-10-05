@@ -85,6 +85,12 @@ getTimeBudgetAbs <- function(data) {
   
 }
 
+getDailyTimeBudgetProp <- function(data){
+  
+  Interval <- c(ymd_hms(as.POSIXct.numeric(as.numeric(head(data,n=1)$t1),origin=origin)),ymd_hms(as.POSIXct.numeric(as.numeric(tail(data,n=1)$t2),origin=origin)))
+
+}
+
 timeToIntervals <- function(data){
   requireNamespace("dplyr")
 
@@ -220,10 +226,10 @@ room_2_struct <- room_2 |> nest(data = - tagname) |>
 
 ```{r all room analysis}
 
-# All Rooms 2021-03-09 T20:00:00/2021-05-06 T23:00:00
+# No Room 3 2021-02-18 T23:30:00/2021-05-06 T23:00:00
 
 room_2_all_analysis <- room_2_struct |>
- mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-03-09 20:00:00", "2021-05-06 23:00:00")))
+ mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-18 T23:30:00", "2021-05-06 T23:00:00")))
 
 (room_2_boundries <- data.frame(room_2_summary$tagname, room_2_summary$first_rec, room_2_summary$last_rec))
 
@@ -274,5 +280,83 @@ for(i in 1:length(room_2_struct$tagname)){
 
     write.csv(current_tsibble, paste0("../intermediate/all_rooms/room_2_tsibble_",current_tag,".csv"),row.names=F)
 }
+
+ ```
+
+ ### All Room Daily Time Budget Analysis
+
+ ```{r all room daily time budget}
+
+ room_2_all_room_time_budget <- room_2_interval |>
+  mutate(tb = map(interval, ~ getTimeBudgetProp(.x))) |>
+  unnest(tb) 
+
+ ```
+
+ # No Room 3 Time Budget Analysis
+
+```{r no room 3 analysis}
+gc()
+# All Rooms 2021-03-09 T20:00:00/2021-05-06 T23:00:00
+
+room_2_no_3 <- room_2_struct |>
+ mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-03-09 20:00:00", "2021-05-06 23:00:00")))
+
+(room_2_boundries <- data.frame(room_2_summary$tagname, room_2_summary$first_rec, room_2_summary$last_rec))
+
+
+room_2_no_3 <- room_2_no_3 |>
+ filter(!is.na(slicedTsibble)) |> 
+ filter(!(tagname %in% c("6910","6966","6914")))
+  
+# # Previous Method that is too memory Intesive
+# interpolate the rest of the intervals
+# room_2_no_3_regular <- room_2_no_3 |>
+#  select(c(tagname, slicedTsibble)) |>
+#  mutate(near_5 = map(slicedTsibble, ~ nice_start(.x, "5 seconds",5/60))) |>
+#  mutate(perSec = map(near_5, ~ fill_gaps(.x)))|>
+#  mutate(sampled = map(perSec, ~ na.locf(.x))) 
+
+# room_2_no_3_interval <- room_2_no_3_regular |>
+#   mutate(interval = map(sampled, ~timeToIntervals(.x))) 
+
+# room_2_no_3_time_budget <- room_2_no_3_interval |>
+#   mutate(tb = map(interval, ~ getTimeBudgetProp(.x))) |>
+#   unnest(tb) 
+
+room_2_no_3_time_budget <- room_2_no_3 |>
+ select(c(tagname, slicedTsibble)) |>
+ mutate(near_5 = map(slicedTsibble, ~ nice_start(.x, "5 seconds",5/60))) |> 
+ mutate(interval = map(near_5, ~timeToIntervals(.x))) |>
+ mutate(tb = map(interval, ~ getTimeBudgetProp(.x))) |>
+ unnest(tb)
+
+room_2_dupes <- room_2_no_3_time_budget |>
+  select(tagname, near_5) |> 
+  mutate(duplicates = map(near_5, ~duplicates(.x)))
+
+
+room_2_no_3_time_budget |>
+ select(c(tagname, Interval.1., Interval.2., X1, X2, X3)) |> 
+ write.csv(row.names=F, '../output/no_room_3/room_2_no_room_3_time_budget.csv')
+
+room_2_no_3_time_budget |> 
+ unnest(interval) |>
+ select(c(tagname, t1,t2,zone)) |> 
+ write.csv(row.names=F,'../output/no_room_3/room_2_no_room_3_interval_tab.csv')
+
+ ```
+
+```{r check assumptions about two processes, eval=FALSE}
+
+room_2_no_3_time_budget$tagname == room_2_no_3_time_budget_skip_second$tagname
+
+room_2_no_3_time_budget$Interval.1. == room_2_no_3_time_budget_skip_second$Interval.1.
+
+room_2_no_3_time_budget$Interval.2. == room_2_no_3_time_budget_skip_second$Interval.2.
+
+room_2_no_3_time_budget$X1 == room_2_no_3_time_budget_skip_second$X1
+room_2_no_3_time_budget$X2 == room_2_no_3_time_budget_skip_second$X2
+room_2_no_3_time_budget$X3 == room_2_no_3_time_budget_skip_second$X3
 
  ```
