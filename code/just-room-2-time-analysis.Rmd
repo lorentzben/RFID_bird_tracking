@@ -86,8 +86,50 @@ getTimeBudgetAbs <- function(data) {
 }
 
 getDailyTimeBudgetProp <- function(data){
-  
+
+  #TODO set interval start to be at 5am for day start and then 10pm for days end
+  # Night start at 10pm and start at 5am next day 
   Interval <- c(ymd_hms(as.POSIXct.numeric(as.numeric(head(data,n=1)$t1),origin=origin)),ymd_hms(as.POSIXct.numeric(as.numeric(tail(data,n=1)$t2),origin=origin)))
+
+  days_observed <- seq(date(Interval[1]),date(Interval[2]), by='day')
+
+  data$parsed_start <- ymd_hms(as.POSIXct.numeric(as.numeric(data$t1),origin=origin))
+  data$parsed_end <- ymd_hms(as.POSIXct.numeric(as.numeric(data$t2),origin=origin))
+
+  day_int$parsed_start <- ymd_hms(as.POSIXct.numeric(as.numeric(day_int$t1),origin=origin))
+  day_int$parsed_end <- ymd_hms(as.POSIXct.numeric(as.numeric(day_int$t2),origin=origin))
+
+  day_records
+
+  night_records 
+  diff_day <- 0 
+  data$diff_day <- rep(0, length(data$t1))
+  modified_record_table <- data.frame()
+  for(i in 1:length(data$t1)){
+    curr_rec <- data[i,]
+    rec_start <- ymd_hms(as.POSIXct.numeric(as.numeric(curr_rec$t1),origin=origin))
+    rec_end <- ymd_hms(as.POSIXct.numeric(as.numeric(curr_rec$t2),origin=origin))
+
+    rec_start_date <- format(ymd_hms(as.POSIXct.numeric(as.numeric(curr_rec$t1),origin=origin)),"%Y-%m-%d")
+    rec_end_date <- format(ymd_hms(as.POSIXct.numeric(as.numeric(curr_rec$t2),origin=origin)), "%Y-%m-%d")
+
+    if(rec_end_date != rec_start_date){
+      # need to make a new record
+
+      if(format(ymd_hms(as.POSIXct.numeric(as.numeric(rec_start),origin=origin)),"%H:%M") < "05:00"){
+        # need to truncate it at 5am AND update previous record TODO
+      } elif(format(ymd_hms(as.POSIXct.numeric(as.numeric(rec_end),origin=origin)),"%H:%M") > "21:59") {
+        # need to truncate the record to 21:59 and save zone for next record
+  
+      }
+    } 
+    
+
+    # if(cross_dateline){
+
+    # } elif( format(ymd_hms(as.POSIXct.numeric(as.numeric(curr_rec$t1),origin=origin)), "%H:%M")){
+    # }
+  }
 
 }
 
@@ -98,17 +140,18 @@ timeToIntervals <- function(data){
 
   first_entry <- head(data,n=1)
   transition_into <- data[which(data$value != dplyr::lag(data$value)),]
+  transition_from <- data[which(data$value != dplyr::lag(data$value))-1,]
   last_entry <- tail(data,n=1)
 
 
-  new_row <- cbind(ymd_hms(first_entry$datetime),ymd_hms(transition_into[1,]$datetime),as.character(first_entry$value))
+  new_row <- cbind(ymd_hms(first_entry$datetime),ymd_hms(transition_into[1,]$datetime),NA, as.character(first_entry$value))
   interval_table <- rbind(interval_table, new_row)
 
   for(i in 2:length(transition_into$value)-1){
-    new_row <- cbind(ymd_hms(transition_into[i,]$datetime), ymd_hms(transition_into[i+1,]$datetime),as.character(transition_into[i,2]))
+    new_row <- cbind(ymd_hms(transition_into[i,]$datetime), ymd_hms(transition_into[i+1,]$datetime),as.character(transition_from[i,2]),as.character(transition_into[i,2]))
     interval_table <- rbind(interval_table, new_row)
   }
-  colnames(interval_table) <- c("t1","t2","zone")
+  colnames(interval_table) <- c("t1","t2","from_zone","to_zone")
   interval_table[length(interval_table$t2),]$t2 <- last_entry$datetime
 
   return(interval_table)
