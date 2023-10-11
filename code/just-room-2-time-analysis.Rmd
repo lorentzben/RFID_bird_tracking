@@ -49,15 +49,15 @@ getTimeBudgetProp <- function(data) {
   colnames(TBS) = columns
 
   # store inteval as minutes
-  TBStag<- data.frame(t = (as.numeric(data$t2) - as.numeric(data$t1)) / 60, zone=data$zone)
+  TBStag<- data.frame(t = (as.numeric(data$t2) - as.numeric(data$t1)) / 60, zone=data$to_zone)
 
   Interval <- c(ymd_hms(as.POSIXct.numeric(as.numeric(head(data,n=1)$t1),origin=origin)),ymd_hms(as.POSIXct.numeric(as.numeric(tail(data,n=1)$t2),origin=origin)))
 
-  TBbot<-sum(TBStag[which(TBStag$zone == "bottom"),]$t)/sum(TBStag$t)
+  TBbot<-sum(TBStag[which(TBStag$to_zone == "bottom"),]$t)/sum(TBStag$t)
     
-  TBmid<-sum(TBStag[which(TBStag$zone == "middle"),]$t)/sum(TBStag$t)
+  TBmid<-sum(TBStag[which(TBStag$to_zone == "middle"),]$t)/sum(TBStag$t)
      
-  TBtop<-sum(TBStag[which(TBStag$zone == "top"),]$t)/sum(TBStag$t)
+  TBtop<-sum(TBStag[which(TBStag$to_zone == "top"),]$t)/sum(TBStag$t)
      
   TBS<-matrix(c(TBbot,TBmid,TBtop),ncol=3)
      
@@ -73,11 +73,11 @@ getTimeBudgetAbs <- function(data) {
   # store inteval as minutes
   TBStag<- data.frame(t = (as.numeric(data$t2) - as.numeric(data$t1)) / 60, zone=data$zone)
 
-  TBbot<-sum(TBStag[which(TBStag$zone == "bottom"),]$t)
+  TBbot<-sum(TBStag[which(TBStag$to_zone == "bottom"),]$t)
     
-  TBmid<-sum(TBStag[which(TBStag$zone == "middle"),]$t)
+  TBmid<-sum(TBStag[which(TBStag$to_zone == "middle"),]$t)
      
-  TBtop<-sum(TBStag[which(TBStag$zone == "top"),]$t)
+  TBtop<-sum(TBStag[which(TBStag$to_zone == "top"),]$t)
 
   TBS<-matrix(c(TBbot,TBmid,TBtop),ncol=3)
      
@@ -133,6 +133,7 @@ getDailyTimeBudgetProp <- function(data){
 }
 
 nestedTimeToIntervals <- function(data){
+  #TODO decide how to return this and/or make a special time budget function that nests the data before it calculates the budget.
   tmp <- data |> 
   nest(by_day = -c(date,dos,wos)) |>
   mutate(daily_int = map(by_day, ~timeToIntervals(.x))) |>
