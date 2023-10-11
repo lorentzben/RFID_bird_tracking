@@ -90,6 +90,20 @@ getDayRecords <- function(data, start, end){
 
   day <- data[data$day == TRUE,]
 
+  day$date <- format(day$datetime, "%Y/%m/%d")
+
+  date_to_day <- cbind(unique(day$date),1:length(unique(day$date)))
+
+  colnames(date_to_day) <- c('datetime','dos')
+
+  day$dos <- with(date_to_day, dos[match(day$datetime, datetime)])
+
+  #day <- merge(day,date_to_day,by='datetime')
+
+  day$dos <- format(day$datetime, "%Y/%m/%d")
+
+  day$wos <- 
+
   return(day)
 }
 
