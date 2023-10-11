@@ -86,12 +86,20 @@ getTimeBudgetAbs <- function(data) {
 }
 
 getDayRecords <- function(data, start, end){
-  data$day <- (format(data$datetime, "%H:%M") > start & format(data$datetime, "%H:%M") < end)
+  data$day <- (format(data$datetime, "%H:%M") >= start & format(data$datetime, "%H:%M") < end)
+
+  day <- data[data$day == TRUE,]
+
+  return(day)
 }
 
 getNightRecords <- function(data, start, end){
-  data$night <- (format(data$datetime, "%H:%M") > start)
-  data$night <- (format(data$datetime, "%H:%M") < end)
+
+  data$day <- (format(data$datetime, "%H:%M") >= start & format(data$datetime, "%H:%M") < end)
+
+  night <- data[data$day != TRUE,]
+
+  return(night)
 }
 
 getDailyTimeBudgetProp <- function(data){
@@ -339,15 +347,11 @@ for(i in 1:length(room_2_struct$tagname)){
 
  ```{r all room daily time budget}
 
-# Make day and night "raw data" table
+# Make day and night "raw data" tables
 
 room_2_all_room_day <- room_2_interval |>
-  mutate(day = map(sampled, ~ getDayRecords(.x,"05:00","21:59"))) |>
-  mutate(night = map(sampled ~ getNightRecords(.x,"22:00","4:59"))) 
-
-room_2_all_room_night <- room_2_interval |>
-  mutate(tb = map(interval, ~ getTimeBudgetProp(.x))) |>
-  unnest(tb) 
+  mutate(day = map(sampled, ~ getDayRecords(.x,"05:00","22:00"))) |>
+  mutate(night = map(sampled, ~ getNightRecords(.x,"05:00","22:00"))) 
 
 # Turn day and night tables into daily interval tables
 
