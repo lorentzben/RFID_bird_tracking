@@ -85,24 +85,22 @@ getTimeBudgetAbs <- function(data) {
   
 }
 
-getDayRecords <- function(data, start, end){
+getDayRecords <- function(data, start, end, study_start){
   data$day <- (format(data$datetime, "%H:%M") >= start & format(data$datetime, "%H:%M") < end)
 
   day <- data[data$day == TRUE,]
 
   day$date <- format(day$datetime, "%Y/%m/%d")
 
-  date_to_day <- cbind(unique(day$date),1:length(unique(day$date)))
+  date_to_day <- data.frame(cbind(unique(day$date),1:length(unique(day$date))))
 
   colnames(date_to_day) <- c('datetime','dos')
 
-  day$dos <- with(date_to_day, dos[match(day$datetime, datetime)])
+  day$dos <- as.numeric(date_to_day[match(format(day$datetime, "%Y/%m/%d"), date_to_day$datetime),2])
 
-  #day <- merge(day,date_to_day,by='datetime')
+  week_offset <- as.numeric(format(day$datetime, "%-V")[1])
 
-  day$dos <- format(day$datetime, "%Y/%m/%d")
-
-  day$wos <- 
+  day$wos <- (as.numeric(format(day$datetime, "%-V"))-week_offset)+1
 
   return(day)
 }
@@ -112,6 +110,18 @@ getNightRecords <- function(data, start, end){
   data$day <- (format(data$datetime, "%H:%M") >= start & format(data$datetime, "%H:%M") < end)
 
   night <- data[data$day != TRUE,]
+
+  night$date <- format(night$datetime, "%Y/%m/%d")
+
+  date_to_day <- data.frame(cbind(unique(night$date),1:length(unique(night$date))))
+
+  colnames(date_to_day) <- c('datetime','dos')
+
+  night$dos <- as.numeric(date_to_day[match(format(night$datetime, "%Y/%m/%d"), date_to_day$datetime),2])
+
+  week_offset <- as.numeric(format(night$datetime, "%-V")[1])
+
+  night$wos <- (as.numeric(format(night$datetime, "%-V"))-week_offset)+1
 
   return(night)
 }
@@ -364,7 +374,7 @@ for(i in 1:length(room_2_struct$tagname)){
 # Make day and night "raw data" tables
 
 room_2_all_room_day <- room_2_interval |>
-  mutate(day = map(sampled, ~ getDayRecords(.x,"05:00","22:00"))) |>
+  mutate(day = map(sampled, ~ getDayRecords(.x,"05:00","22:00",))) |>
   mutate(night = map(sampled, ~ getNightRecords(.x,"05:00","22:00"))) 
 
 # Turn day and night tables into daily interval tables
