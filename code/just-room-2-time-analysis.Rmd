@@ -136,9 +136,10 @@ nestedTimeToIntervals <- function(data){
   #TODO decide how to return this and/or make a special time budget function that nests the data before it calculates the budget.
   tmp <- data |> 
   nest(by_day = -c(date,dos,wos)) |>
-  mutate(daily_int = map(by_day, ~timeToIntervals(.x))) |>
-  unnest(daily_int)
+  mutate(daily_int = map(by_day, ~timeToIntervals(.x))) #|>
+  #unnest(daily_int)
 
+  return(tmp)
 }
 
 timeToIntervals <- function(data){
