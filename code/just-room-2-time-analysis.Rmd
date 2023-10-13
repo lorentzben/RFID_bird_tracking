@@ -437,4 +437,29 @@ room_2_no_3_time_budget$X1 == room_2_no_3_time_budget_skip_second$X1
 room_2_no_3_time_budget$X2 == room_2_no_3_time_budget_skip_second$X2
 room_2_no_3_time_budget$X3 == room_2_no_3_time_budget_skip_second$X3
 
- ```
+```
+
+```{r test the time to intervals function }
+library(testthat)
+zero_case <- timeToIntervals(room_2_all_room_day$day_int[[1]]$by_day[[27]])
+# case 0 transitions
+expect_that(
+  "Case of transition",
+  {
+    expect_equal(timeToIntervals(room_2_all_room_day$day_int[[1]]$by_day[[27]]), )
+  }
+)
+# case 1 transition
+
+# case 2 transitions
+
+# case 3 transitions
+
+# case 4 transitions
+
+# case start and end are the same
+
+# case start and end are different
+
+
+```
