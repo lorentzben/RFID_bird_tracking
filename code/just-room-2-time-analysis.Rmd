@@ -153,14 +153,33 @@ timeToIntervals <- function(data){
   last_entry <- tail(data,n=1)
 
   if(length(transition_into$datetime) == 0){
+
     new_row <- cbind(ymd_hms(first_entry$datetime),ymd_hms(last_entry$datetime),NA, as.character(first_entry$value))
     interval_table <- rbind(interval_table, new_row)
     colnames(interval_table) <- c("t1","t2","from_zone","to_zone")
+
   } else if( length(transition_into$value) == 1){
+
+    new_row <- cbind(ymd_hms(first_entry$datetime),ymd_hms(transition_into[1,]$datetime),NA, as.character(first_entry$value))
+    interval_table <- rbind(interval_table, new_row)
+    
+    new_row <- cbind(ymd_hms(transition_into[1,]$datetime), ymd_hms(last_entry[1,]$datetime),as.character(transition_from[1,2]),as.character(transition_into[1,2]))
+    interval_table <- rbind(interval_table, new_row)
+    colnames(interval_table) <- c("t1","t2","from_zone","to_zone")
 
   } else if(length(transition_into$value) == 2){
 
+    new_row <- cbind(ymd_hms(first_entry$datetime),ymd_hms(transition_into[1,]$datetime),NA, as.character(first_entry$value))
+    interval_table <- rbind(interval_table, new_row)
+    
+    new_row <- cbind(ymd_hms(transition_into[1,]$datetime), ymd_hms(transition_into[2,]$datetime),as.character(transition_from[1,2]),as.character(transition_into[1,2]))
+    interval_table <- rbind(interval_table, new_row)
+    new_row <- cbind(ymd_hms(transition_into[2,]$datetime), ymd_hms(last_entry$datetime),as.character(transition_from[2,2]),as.character(last_entry[,2]))
+    interval_table <- rbind(interval_table, new_row)
+    colnames(interval_table) <- c("t1","t2","from_zone","to_zone")
+
   } else if(length(transition_into$value) > 2) {
+
     new_row <- cbind(ymd_hms(first_entry$datetime),ymd_hms(transition_into[1,]$datetime),NA, as.character(first_entry$value))
     interval_table <- rbind(interval_table, new_row)
 
@@ -168,14 +187,15 @@ timeToIntervals <- function(data){
       new_row <- cbind(ymd_hms(transition_into[i,]$datetime), ymd_hms(transition_into[i+1,]$datetime),as.character(transition_from[i,2]),as.character(transition_into[i,2]))
       interval_table <- rbind(interval_table, new_row)
     }
+
     colnames(interval_table) <- c("t1","t2","from_zone","to_zone")
     interval_table[length(interval_table$t2),]$t2 <- last_entry$datetime
+
   } else {
-    new_row <- cbind(ymd_hms(first_entry$datetime),ymd_hms(transition_from$datetime),NA, as.character(first_entry$value))
-    interval_table <- rbind(interval_table, new_row)
-    new_row <- cbind(ymd_hms(transition_from$datetime),ymd_hms(last_entry$datetime),as.character(transition_from$value), as.character(transition_into$value))
-    interval_table <- rbind(interval_table, new_row)
-    colnames(interval_table) <- c("t1","t2","from_zone","to_zone")
+
+    print("this shouldn't happen")
+    exit(0)
+
   }
 
   return(interval_table)
@@ -445,29 +465,58 @@ room_2_no_3_time_budget$X3 == room_2_no_3_time_budget_skip_second$X3
 
 ```{r test the time to intervals function }
 library(testthat)
+
 zero_case <- timeToIntervals(room_2_all_room_day$day_int[[1]]$by_day[[27]][1:10,])
+
 one_case <- timeToIntervals(room_2_all_room_day$day_int[[2]]$by_day[[14]])
+
 two_data <- bind_rows(room_2_all_room_day$day_int[[9]]$by_day[[31]][2705:2709,], room_2_all_room_day$day_int[[9]]$by_day[[31]][2725:2726,])
 two_case <- timeToIntervals(two_data)
-three_case <- timeToIntervals()
+
+three_data <- bind_rows(room_2_all_room_day$day_int[[9]]$by_day[[31]][2705:2709,], room_2_all_room_day$day_int[[9]]$by_day[[31]][2725:2726,],room_2_all_room_day$day_int[[9]]$by_day[[31]][4400:4444,])
+three_case <- timeToIntervals(three_data)
+
+four_data <- bind_rows(room_2_all_room_day$day_int[[9]]$by_day[[31]][2705:2709,], room_2_all_room_day$day_int[[9]]$by_day[[31]][2725:2726,],room_2_all_room_day$day_int[[9]]$by_day[[31]][4400:4444,],room_2_all_room_day$day_int[[9]]$by_day[[31]][7960:7966,])
+
+four_case <- timeToIntervals(four_data)
 
 zero_trans_res <- expect_equal(dim(timeToIntervals(room_2_all_room_day$day_int[[1]]$by_day[[27]][100:200,])),dim(zero_case),label="case 0 trans")
 
 one_trans_res <- expect_equal(dim(timeToIntervals(room_2_all_room_day$day_int[[14]]$by_day[[10]])), dim(one_case), label="case 1 trans")
 
-# case 0 transitions
+two_trans_res <- expect_equal(dim(timeToIntervals(room_2_all_room_day$day_int[[1]]$by_day[[2]])), dim(two_case), label="case 2 trans")
 
-# case 1 transition
+three_trans_res <- expect_equal(dim(timeToIntervals(room_2_all_room_day$day_int[[3]]$by_day[[13]])), dim(three_case), label="case 3 trans")
 
-# case 2 transitions
+four_trans_res <- expect_equal(dim(timeToIntervals(room_2_all_room_day$day_int[[19]]$by_day[[12]])), dim(four_case), label="case 4 trans")
 
-# case 3 transitions
+```
 
-# case 4 transitions
+```{r test the time budget function }
+library(testthat)
 
-# case start and end are the same
+zero_case <- timeToIntervals(room_2_all_room_day$day_int[[1]]$by_day[[27]][1:10,])
 
-# case start and end are different
+one_case <- timeToIntervals(room_2_all_room_day$day_int[[2]]$by_day[[14]])
 
+two_data <- bind_rows(room_2_all_room_day$day_int[[9]]$by_day[[31]][2705:2709,], room_2_all_room_day$day_int[[9]]$by_day[[31]][2725:2726,])
+two_case <- timeToIntervals(two_data)
+
+three_data <- bind_rows(room_2_all_room_day$day_int[[9]]$by_day[[31]][2705:2709,], room_2_all_room_day$day_int[[9]]$by_day[[31]][2725:2726,],room_2_all_room_day$day_int[[9]]$by_day[[31]][4400:4444,])
+three_case <- timeToIntervals(three_data)
+
+four_data <- bind_rows(room_2_all_room_day$day_int[[9]]$by_day[[31]][2705:2709,], room_2_all_room_day$day_int[[9]]$by_day[[31]][2725:2726,],room_2_all_room_day$day_int[[9]]$by_day[[31]][4400:4444,],room_2_all_room_day$day_int[[9]]$by_day[[31]][7960:7966,])
+
+four_case <- timeToIntervals(four_data)
+
+zero_trans_res <- expect_equal(dim(timeToIntervals(room_2_all_room_day$day_int[[1]]$by_day[[27]][100:200,])),dim(zero_case),label="case 0 trans")
+
+one_trans_res <- expect_equal(dim(timeToIntervals(room_2_all_room_day$day_int[[14]]$by_day[[10]])), dim(one_case), label="case 1 trans")
+
+two_trans_res <- expect_equal(dim(timeToIntervals(room_2_all_room_day$day_int[[1]]$by_day[[2]])), dim(two_case), label="case 2 trans")
+
+three_trans_res <- expect_equal(dim(timeToIntervals(room_2_all_room_day$day_int[[3]]$by_day[[13]])), dim(three_case), label="case 3 trans")
+
+four_trans_res <- expect_equal(dim(timeToIntervals(room_2_all_room_day$day_int[[19]]$by_day[[12]])), dim(four_case), label="case 4 trans")
 
 ```
