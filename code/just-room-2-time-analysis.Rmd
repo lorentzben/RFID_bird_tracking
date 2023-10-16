@@ -117,7 +117,13 @@ getNightRecords <- function(data, start, end){
 
   colnames(date_to_day) <- c('datetime','dos')
 
-  night$dos <- as.numeric(date_to_day[match(format(night$datetime, "%Y/%m/%d"), date_to_day$datetime),2])
+  #night$dos <- as.numeric(date_to_day[match(format(night$datetime, "%Y/%m/%d"), date_to_day$datetime),2])
+
+  night$dos <- ifelse(hour(night$datetime) %in% c(0,1,2,3,4,5),as.numeric(date_to_day[match(format(night$datetime, "%Y/%m/%d"), date_to_day$datetime),2])-1, as.numeric(date_to_day[match(format(night$datetime, "%Y/%m/%d"), date_to_day$datetime),2]))
+
+
+  #night$dos <- as.numeric(date_to_day[match(format(night$datetime, "%Y/%m/%d"), date_to_day$datetime),2])
+
 
   week_offset <- as.numeric(format(night$datetime, "%-V")[1])
 
@@ -134,8 +140,9 @@ getDailyTimeBudgetProp <- function(data){
 
 nestedTimeToIntervals <- function(data){
   #TODO decide how to return this and/or make a special time budget function that nests the data before it calculates the budget.
+  # I'm going to remove date as the nesting function
   tmp <- data |> 
-  nest(by_day = -c(date,dos,wos)) |>
+  nest(by_day = -c(dos)) |>
   mutate(daily_int = map(by_day, ~timeToIntervals(.x))) #|>
   #unnest(daily_int)
 
@@ -202,6 +209,28 @@ timeToIntervals <- function(data){
 
 }
 
+getTimeBudgetPropDayNight <- function(data) {
+  columns = c("interval","Bottom","Middle","Top") 
+  TBS = data.frame(matrix(nrow = 0, ncol = length(columns))) 
+  colnames(TBS) = columns
+
+  # store inteval as minutes
+  TBStag<- data.frame(t = (as.numeric(data$t2) - as.numeric(data$t1)) / 60, zone=data$to_zone)
+
+  Interval <- c(ymd_hms(as.POSIXct.numeric(as.numeric(head(data,n=1)$t1),origin=origin)),ymd_hms(as.POSIXct.numeric(as.numeric(tail(data,n=1)$t2),origin=origin)))
+
+  TBbot<-sum(TBStag[which(TBStag$zone == "bottom"),]$t)/sum(TBStag$t)
+    
+  TBmid<-sum(TBStag[which(TBStag$zone == "middle"),]$t)/sum(TBStag$t)
+     
+  TBtop<-sum(TBStag[which(TBStag$zone == "top"),]$t)/sum(TBStag$t)
+     
+  TBS<-matrix(c(TBbot,TBmid,TBtop),ncol=3)
+     
+  return(data.frame(Interval[1],Interval[2],TBS))
+  
+}
+
 sliceTsibble <- function(data, start, stop){
   
   previous_state <- tail(data[data$datetime <= ymd_hms(start),],n=1)
@@ -257,6 +286,7 @@ bird_ids_room_2 <- na.trim(sort(bird_ids_room_2))
 
 room_2["DateTime"] <- as.POSIXct(room_2$access, origin="1970-01-01", tz="GMT")
 
+
 print("what makes up subzone col")
 unique(room_2$subzone)
 
@@ -272,7 +302,9 @@ print("how many NAs in DateTime and Subzone")
 sum(is.na(room_2$DateTime))
 sum(is.na(room_2$subzone))
 
-room_2$accessdate <- dmy_hms(room_2$accessdate)
+#room_2$accessdate <- dmy_hms(room_2$accessdate)
+# This is a hack to work with the downloaded data from excel and onedrive
+room_2$accessdate <- ymd_hms(room_2$DateTime)
 
 # find the five number summary to determine the median interval in seconds of each reading to determine the proper sampling interval
 # mean of the median times for room 2 is 9 minutes so move up to 10 minutes
@@ -350,7 +382,7 @@ room_2_all_room_time_budget |>
 
 room_2_interval |> 
  unnest(interval) |>
- select(c(tagname, t1,t2,zone)) |> 
+ select(c(tagname, t1,t2,to_zone)) |> 
  write.csv(row.names=F,'../output/all_rooms/room_2_all_room_interval_tab.csv')
 
 
@@ -389,11 +421,67 @@ room_2_all_room_day <- room_2_all_room_day |>
 
 # Run getTimeBudgetProp for each daily interval tables
 
- room_2_all_room_time_budget <- room_2_interval |>
-  mutate(tb = map(interval, ~ getTimeBudgetProp(.x))) |>
-  unnest(tb) 
+ room_2_all_room_time_budget <- room_2_all_room_day |>
+  mutate(daily_tb = map(day_int, ~ map(.x$daily_int, ~ getTimeBudgetPropDayNight(.x)))) |>
+  mutate(night_tb = map(night_int, ~ map(.x$daily_int, ~ getTimeBudgetPropDayNight(.x))))
 
- ```
+
+for(i in 1:length(room_2_all_room_time_budget$tagname)){
+
+    current_tag <- room_2_all_room_time_budget$tagname[i]
+
+    current_day_tb<- room_2_all_room_time_budget |>
+        slice(i) |> 
+        pull(daily_tb) |> 
+        pluck(1)
+
+    current_day_tb_df <- do.call(rbind, current_day_tb)
+    columns = c("interval1","interval2","Bottom","Middle","Top")
+
+    colnames(current_day_tb_df) <- columns
+
+    current_day_tb_df$tagname <- rep(current_tag, length(current_day_tb_df$interval1))
+
+    write.csv(current_day_tb_df, paste0("../intermediate/all_rooms/room_2_day_time_budget_",current_tag,".csv"),row.names=F)
+
+    current_night_tb <- room_2_all_room_time_budget |>
+        slice(i) |> 
+        pull(night_tb) |> 
+        pluck(1)
+
+    current_night_tb_df <- do.call(rbind, current_night_tb)
+    columns = c("interval1","interval2","Bottom","Middle","Top")
+
+    colnames(current_night_tb_df) <- columns
+
+    current_night_tb_df$tagname <- rep(current_tag, length(current_night_tb_df$interval1))
+
+    write.csv(current_night_tb_df, paste0("../intermediate/all_rooms/room_2_night_time_budget_",current_tag,".csv"),row.names=F)
+}
+
+```
+
+
+```{r read in the generated time budgets}
+library(readr)
+
+day_tbs <- Sys.glob("../intermediate/all_rooms/room_2_day_time_budget_*")
+
+night_tbs <- Sys.glob("../intermediate/all_rooms/room_2_night_time_budget_*")
+
+day_tbs_df <- read_csv(day_tbs)
+
+nest_day_tbs <- day_tbs_df |>
+  nest(data = -tagname)
+
+night_tbs_df <- read_csv(night_tbs)
+
+nest_night_tbs <- night_tbs_df |>
+   nest(data = - tagname)
+
+
+
+```
 
  # No Room 3 Time Budget Analysis
 
@@ -518,5 +606,16 @@ two_trans_res <- expect_equal(dim(timeToIntervals(room_2_all_room_day$day_int[[1
 three_trans_res <- expect_equal(dim(timeToIntervals(room_2_all_room_day$day_int[[3]]$by_day[[13]])), dim(three_case), label="case 3 trans")
 
 four_trans_res <- expect_equal(dim(timeToIntervals(room_2_all_room_day$day_int[[19]]$by_day[[12]])), dim(four_case), label="case 4 trans")
+
+
+night_data_issue <- room_2_all_room_day$night_int[[1]]$by_day[[77]]
+
+data <- room_2_interval$sampled[[5]]
+
+data <- room_2_all_room_day$night[[10]]
+
+data <- room_2_all_room_day$night_int[[1]]$by_day[[69]]
+
+data <- room_2_all_room_day$night_int[[1]]$by_day[[85]]
 
 ```
