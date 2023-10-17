@@ -646,6 +646,44 @@ ggsave(paste0("../figures/all_day/night_daily_time_budget_stack_bar_for_", nest_
 }
 ```
 
+
+```{r}
+
+day_tbs_df 
+day_flat <- cbind(day_tbs_df[c(1:2,6)], stack(day_tbs_df[3:5]))
+
+day_flat$ind <- factor(day_flat$ind, levels=c("Top","Middle","Bottom"))
+
+datebreaks <- seq(as.Date(ymd_hms(head(unique(day_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1))), by="7 days")
+
+datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1))))
+
+all_datebreak <- seq(as.Date(ymd_hms(head(unique(day_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1))), by="1 days")
+
+room_2_sb_plot <- ggplot(data = day_flat, aes(x = as.Date(interval1), y=values, fill=ind)) + 
+geom_bar(stat="identity") +
+theme_bw() +  
+xlab("Day of Study") + 
+ylab("Prop. of Time Spent in Zone") +
+scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
+theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+ggtitle("Daily Time Budget for Each Night for Room 2") + 
+labs(fill = "Zone") +
+scale_y_continuous(limits=c(0, 11.001))
+
+ggsave(paste0("../figures/all_day/day_daily_time_budget_stack_bar_for_room_2",".png"), room_2_sb_plot)
+
+
+room_2_bp <- ggplot(day_flat, aes(x = factor(as.Date(interval1)), y=values, fill=ind)) + 
+  geom_boxplot()
+
+ggsave(paste0("../figures/all_day/day_daily_time_budget_boxplot_for_room_2",".png"), room_2_bp)
+
+
+night_tbs_df 
+
+```
+
  # No Room 3 Time Budget Analysis
 
 ```{r no room 3 analysis}
