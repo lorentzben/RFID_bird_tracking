@@ -430,7 +430,7 @@ room_3_all_analysis <- room_3_struct |>
 
 room_3_all_analysis <- room_3_all_analysis |>
  filter(!is.na(slicedTsibble)) |> 
- filter(!(tagname %in% c("")))
+ filter(!(tagname %in% c("6968","6879","6948","6915","6953","6987","9008","6912","9029")))
   
 # interpolate the rest of the intervals
 room_3_regular <- room_3_all_analysis |>
