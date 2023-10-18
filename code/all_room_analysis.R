@@ -1,5 +1,7 @@
 #### All Room: 2,3,8,11 analysis ####
 
+source("./rfid_functions.R")
+
 # Generate Transition tables from Room 2
 library(xts)
 library(lubridate)
@@ -332,6 +334,8 @@ room_2_bp <- ggplot(day_flat, aes(x = factor(as.Date(interval1)), y=values, fill
   geom_boxplot()
 
 ggsave(paste0("../figures/all_day/day_daily_time_budget_boxplot_for_room_2",".png"), room_2_bp)
+
+# Averaged Birds in Room 2 Nightly Time Budget
 
 night_flat <- cbind(night_tbs_df[c(1:2,6)], stack(night_tbs_df[3:5]))
 
