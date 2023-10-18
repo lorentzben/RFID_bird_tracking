@@ -209,29 +209,29 @@ datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))
 
 all_datebreak <- seq(as.Date(ymd_hms(head(unique(sb_data$interval1),n=1))), as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))), by="1 days")
 
-#day_3_plot <- ggplot(data= sb_data, aes(x = as.Date(interval1), y= values, group=ind, color=ind)) +
-  geom_point() + 
-  theme_bw() + 
-  scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
-  xlab("Day of Study") + 
-  ylab("Prop. of Time Spent in Zone") +
-  ggtitle(paste0("Daily Time Budget for Each Day for Bird ID: ", nest_day_tbs[i,1])) + 
-  scale_colour_discrete( name ="Zone") +
-  scale_y_continuous(limits=c(0, 1.001))
+# day_3_plot <- ggplot(data= sb_data, aes(x = as.Date(interval1), y= values, group=ind, color=ind)) +
+#   geom_point() + 
+#   theme_bw() + 
+#   scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
+#   theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+#   xlab("Day of Study") + 
+#   ylab("Prop. of Time Spent in Zone") +
+#   ggtitle(paste0("Daily Time Budget for Each Day for Bird ID: ", nest_day_tbs[i,1])) + 
+#   scale_colour_discrete( name ="Zone") +
+#   scale_y_continuous(limits=c(0, 1.001))
 
 #ggsave(paste0("../figures/all_day/day_daily_time_budget_point_for_", nest_day_tbs[i,1],".png"), day_3_plot)
 
-#day_3_plot_line <- ggplot(data= sb_data, aes(x = as.Date(interval1), y= values, group=ind, color=ind)) +
-  geom_line() + 
-  theme_bw() + 
-  scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
-  xlab("Day of Study") + 
-  ylab("Prop. of Time Spent in Zone") +
-  ggtitle(paste0("Daily Time Budget for Each Day for Bird ID: ", nest_day_tbs[i,1])) + 
-  scale_colour_discrete( name ="Zone") +
-  scale_y_continuous(limits=c(0, 1.001))
+# day_3_plot_line <- ggplot(data= sb_data, aes(x = as.Date(interval1), y= values, group=ind, color=ind)) +
+#   geom_line() + 
+#   theme_bw() + 
+#   scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
+#   theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+#   xlab("Day of Study") + 
+#   ylab("Prop. of Time Spent in Zone") +
+#   ggtitle(paste0("Daily Time Budget for Each Day for Bird ID: ", nest_day_tbs[i,1])) + 
+#   scale_colour_discrete( name ="Zone") +
+#   scale_y_continuous(limits=c(0, 1.001))
 
 #ggsave(paste0("../figures/all_day/day_daily_time_budget_line_for_", nest_day_tbs[i,1],".png"), day_3_plot_line)
 
@@ -263,29 +263,29 @@ datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))
 
 all_datebreak <- seq(as.Date(ymd_hms(head(unique(sb_data$interval1),n=1))), as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))), by="1 days")
 
-#day_3_plot <- ggplot(data= sb_data, aes(x = as.Date(interval1), y= values, group=ind, color=ind)) +
-  geom_point() + 
-  theme_bw() + 
-  scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
-  xlab("Day of Study") + 
-  ylab("Prop. of Time Spent in Zone") +
-  ggtitle(paste0("Daily Time Budget for Each Night for Bird ID: ", nest_day_tbs[i,1])) + 
-  scale_colour_discrete( name ="Zone") +
-  scale_y_continuous(limits=c(0, 1.001))
+# day_3_plot <- ggplot(data= sb_data, aes(x = as.Date(interval1), y= values, group=ind, color=ind)) +
+#   geom_point() + 
+#   theme_bw() + 
+#   scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
+#   theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+#   xlab("Day of Study") + 
+#   ylab("Prop. of Time Spent in Zone") +
+#   ggtitle(paste0("Daily Time Budget for Each Night for Bird ID: ", nest_day_tbs[i,1])) + 
+#   scale_colour_discrete( name ="Zone") +
+#   scale_y_continuous(limits=c(0, 1.001))
 
 #ggsave(paste0("../figures/all_day/night_daily_time_budget_point_for_", nest_day_tbs[i,1],".png"), day_3_plot)
 
-#day_3_plot_line <- ggplot(data= sb_data, aes(x = as.Date(interval1), y= values, group=ind, color=ind)) +
-  geom_line() + 
-  theme_bw() + 
-  scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
-  theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
-  xlab("Day of Study") + 
-  ylab("Prop. of Time Spent in Zone") +
-  ggtitle(paste0("Daily Time Budget for Each Night for Bird ID: ", nest_day_tbs[i,1])) + 
-  scale_colour_discrete( name ="Zone") +
-  scale_y_continuous(limits=c(0, 1.001))
+# day_3_plot_line <- ggplot(data= sb_data, aes(x = as.Date(interval1), y= values, group=ind, color=ind)) +
+#   geom_line() + 
+#   theme_bw() + 
+#   scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
+#   theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+#   xlab("Day of Study") + 
+#   ylab("Prop. of Time Spent in Zone") +
+#   ggtitle(paste0("Daily Time Budget for Each Night for Bird ID: ", nest_day_tbs[i,1])) + 
+#   scale_colour_discrete( name ="Zone") +
+#   scale_y_continuous(limits=c(0, 1.001))
 
 #ggsave(paste0("../figures/all_day/night_daily_time_budget_line_for_", nest_day_tbs[i,1],".png"), day_3_plot_line)
 
@@ -316,6 +316,7 @@ datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1)
 
 all_datebreak <- seq(as.Date(ymd_hms(head(unique(day_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1))), by="1 days")
 
+# Still having a problem
 room_2_sb_plot <- ggplot(data = day_flat, aes(x = as.Date(interval1), y=values, fill=ind)) + 
 geom_bar(stat="identity") +
 theme_bw() +  
@@ -347,6 +348,7 @@ datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(night_flat$interval1),n=
 
 all_datebreak <- seq(as.Date(ymd_hms(head(unique(night_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(night_flat$interval1),n=1))), by="1 days")
 
+# Still having a problem
 room_2_sb_night_plot <- ggplot(data = night_flat, aes(x = as.Date(interval1), y=values, fill=ind)) + 
 geom_bar(stat="identity") +
 theme_bw() +  
@@ -358,4 +360,4 @@ ggtitle("Daily Time Budget for Each Night for Room 2") +
 labs(fill = "Zone") +
 scale_y_continuous(limits=c(0, 11.001))
 
-ggsave(paste0("../figures/all_day/night_daily_time_budget_stack_bar_for_room_2",".png"), room_2_sb_plot)
+ggsave(paste0("../figures/all_day/night_daily_time_budget_stack_bar_for_room_2",".png"), room_2_sb_night_plot)
