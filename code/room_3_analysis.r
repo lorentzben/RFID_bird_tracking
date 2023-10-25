@@ -268,7 +268,7 @@ datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1)
 
 all_datebreak <- seq(as.Date(ymd_hms(head(unique(day_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1))), by="1 days")
 
-# TODO  Check Limits
+# TODO why is the x axis wrong? 
 room_3_sb_plot <- ggplot(data = day_flat, aes(x = as.Date(interval1), y=values, fill=ind)) + 
 geom_bar(stat="identity") +
 theme_bw() +  
@@ -300,7 +300,7 @@ datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(night_flat$interval1),n=
 
 all_datebreak <- seq(as.Date(ymd_hms(head(unique(night_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(night_flat$interval1),n=1))), by="1 days")
 
-# TODO  Check Limits
+
 room_3_sb_night_plot <- ggplot(data = night_flat, aes(x = as.Date(interval1), y=values, fill=ind)) + 
 geom_bar(stat="identity") +
 theme_bw() +  
