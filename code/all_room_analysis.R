@@ -246,7 +246,7 @@ ggtitle(paste0("Daily Time Budget for Each Day for Bird ID: ", nest_day_tbs[i,1]
 labs(fill = "Zone") + 
 scale_y_continuous(limits=c(0, 1.001))
 
-ggsave(paste0("../figures/all_day/day_daily_time_budget_stack_bar_for_", nest_day_tbs[i,1],".png"), day_3_sb_plot)
+ggsave(paste0("../figures/all_day/room2/day_daily_time_budget_stack_bar_for_", nest_day_tbs[i,1],".png"), day_3_sb_plot)
 }
 
 # Night Plots 22:01-4:59
@@ -300,7 +300,7 @@ ggtitle(paste0("Daily Time Budget for Each Night for Bird ID: ", nest_day_tbs[i,
 labs(fill = "Zone") + 
 scale_y_continuous(limits=c(0, 1.001))
 
-ggsave(paste0("../figures/all_day/night_daily_time_budget_stack_bar_for_", nest_day_tbs[i,1],".png"), day_3_sb_plot)
+ggsave(paste0("../figures/all_day/room2/night_daily_time_budget_stack_bar_for_", nest_day_tbs[i,1],".png"), day_3_sb_plot)
 }
 
 # Averaged Birds in Room 2 Daily Time Budget
@@ -316,7 +316,7 @@ datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1)
 
 all_datebreak <- seq(as.Date(ymd_hms(head(unique(day_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1))), by="1 days")
 
-# Still having a problem
+# TODO  Still having a problem
 room_2_sb_plot <- ggplot(data = day_flat, aes(x = as.Date(interval1), y=values, fill=ind)) + 
 geom_bar(stat="identity") +
 theme_bw() +  
@@ -328,13 +328,13 @@ ggtitle("Daily Time Budget for Each Day for Room 2") +
 labs(fill = "Zone") +
 scale_y_continuous(limits=c(0, 11.001))
 
-ggsave(paste0("../figures/all_day/day_daily_time_budget_stack_bar_for_room_2",".png"), room_2_sb_plot)
+ggsave(paste0("../figures/all_day/room2/day_daily_time_budget_stack_bar_for_room_2",".png"), room_2_sb_plot)
 
 
-room_2_bp <- ggplot(day_flat, aes(x = factor(as.Date(interval1)), y=values, fill=ind)) + 
-  geom_boxplot()
+# room_2_bp <- ggplot(day_flat, aes(x = factor(as.Date(interval1)), y=values, fill=ind)) + 
+#   geom_boxplot()
 
-ggsave(paste0("../figures/all_day/day_daily_time_budget_boxplot_for_room_2",".png"), room_2_bp)
+# ggsave(paste0("../figures/all_day/day_daily_time_budget_boxplot_for_room_2",".png"), room_2_bp)
 
 # Averaged Birds in Room 2 Nightly Time Budget
 
@@ -348,7 +348,7 @@ datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(night_flat$interval1),n=
 
 all_datebreak <- seq(as.Date(ymd_hms(head(unique(night_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(night_flat$interval1),n=1))), by="1 days")
 
-# Still having a problem
+# TODO  Still having a problem
 room_2_sb_night_plot <- ggplot(data = night_flat, aes(x = as.Date(interval1), y=values, fill=ind)) + 
 geom_bar(stat="identity") +
 theme_bw() +  
@@ -360,7 +360,7 @@ ggtitle("Daily Time Budget for Each Night for Room 2") +
 labs(fill = "Zone") +
 scale_y_continuous(limits=c(0, 11.001))
 
-ggsave(paste0("../figures/all_day/night_daily_time_budget_stack_bar_for_room_2",".png"), room_2_sb_night_plot)
+ggsave(paste0("../figures/all_day/room2/night_daily_time_budget_stack_bar_for_room_2",".png"), room_2_sb_night_plot)
 
 
 ######## Room 3 Individual Analysis ########
@@ -604,7 +604,7 @@ ggtitle(paste0("Daily Time Budget for Each Night for Bird ID: ", nest_day_tbs[i,
 labs(fill = "Zone") + 
 scale_y_continuous(limits=c(0, 1.001))
 
-ggsave(paste0("../figures/all_day/night_daily_time_budget_stack_bar_for_", nest_day_tbs[i,1],".png"), day_3_sb_plot)
+ggsave(paste0("../figures/all_day/room3/night_daily_time_budget_stack_bar_for_", nest_day_tbs[i,1],".png"), day_3_sb_plot)
 }
 
 # Averaged Birds in room_3 Daily Time Budget
@@ -620,7 +620,7 @@ datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1)
 
 all_datebreak <- seq(as.Date(ymd_hms(head(unique(day_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1))), by="1 days")
 
-# Still having a problem
+# TODO  Still having a problem
 room_3_sb_plot <- ggplot(data = day_flat, aes(x = as.Date(interval1), y=values, fill=ind)) + 
 geom_bar(stat="identity") +
 theme_bw() +  
@@ -632,13 +632,13 @@ ggtitle("Daily Time Budget for Each Day for room_3") +
 labs(fill = "Zone") +
 scale_y_continuous(limits=c(0, 11.001))
 
-ggsave(paste0("../figures/all_day/day_daily_time_budget_stack_bar_for_room_3",".png"), room_3_sb_plot)
+ggsave(paste0("../figures/all_day/room3/day_daily_time_budget_stack_bar_for_room_3",".png"), room_3_sb_plot)
 
 
-room_3_bp <- ggplot(day_flat, aes(x = factor(as.Date(interval1)), y=values, fill=ind)) + 
-  geom_boxplot()
+# room_3_bp <- ggplot(day_flat, aes(x = factor(as.Date(interval1)), y=values, fill=ind)) + 
+#   geom_boxplot()
 
-ggsave(paste0("../figures/all_day/day_daily_time_budget_boxplot_for_room_3",".png"), room_3_bp)
+# ggsave(paste0("../figures/all_day/day_daily_time_budget_boxplot_for_room_3",".png"), room_3_bp)
 
 # Averaged Birds in room_3 Nightly Time Budget
 
@@ -652,7 +652,7 @@ datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(night_flat$interval1),n=
 
 all_datebreak <- seq(as.Date(ymd_hms(head(unique(night_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(night_flat$interval1),n=1))), by="1 days")
 
-# Still having a problem
+# TODO  Still having a problem
 room_3_sb_night_plot <- ggplot(data = night_flat, aes(x = as.Date(interval1), y=values, fill=ind)) + 
 geom_bar(stat="identity") +
 theme_bw() +  
@@ -664,4 +664,386 @@ ggtitle("Daily Time Budget for Each Night for Room 3") +
 labs(fill = "Zone") +
 scale_y_continuous(limits=c(0, 11.001))
 
-ggsave(paste0("../figures/all_day/night_daily_time_budget_stack_bar_for_room_3",".png"), room_3_sb_night_plot)
+ggsave(paste0("../figures/all_day/room3/night_daily_time_budget_stack_bar_for_room_3",".png"), room_3_sb_night_plot)
+
+# All Room room_8 Daily Time Budget Analysis
+# TODO update all this code with room 8 info
+
+# Make day and night "raw data" tables
+
+room_8_all_room_day <- room_8_interval |>
+  mutate(day = map(sampled, ~ getDayRecords(.x,"05:00","22:00"))) |>
+  mutate(night = map(sampled, ~ getNightRecords(.x,"05:00","22:00"))) 
+
+# Turn day and night tables into daily interval tables
+
+room_8_all_room_day <- room_8_all_room_day |>
+  mutate(day_int = map(day, ~ nestedTimeToIntervals(.x))) |>
+  mutate(night_int = map(night, ~ nestedTimeToIntervals(.x)))
+
+
+# Run getTimeBudgetProp for each daily interval tables
+
+ room_8_all_room_time_budget <- room_8_all_room_day |>
+  mutate(daily_tb = map(day_int, ~ map(.x$daily_int, ~ getTimeBudgetPropDayNight(.x)))) |>
+  mutate(night_tb = map(night_int, ~ map(.x$daily_int, ~ getTimeBudgetPropDayNight(.x))))
+
+
+for(i in 1:length(room_8_all_room_time_budget$tagname)){
+
+    current_tag <- room_8_all_room_time_budget$tagname[i]
+
+    current_day_tb<- room_8_all_room_time_budget |>
+        slice(i) |> 
+        pull(daily_tb) |> 
+        pluck(1)
+
+    current_day_tb_df <- do.call(rbind, current_day_tb)
+    columns = c("interval1","interval2","Bottom","Middle","Top")
+
+    colnames(current_day_tb_df) <- columns
+
+    current_day_tb_df$tagname <- rep(current_tag, length(current_day_tb_df$interval1))
+
+    write.csv(current_day_tb_df, paste0("../intermediate/all_rooms/room8/room_8_day_time_budget_",current_tag,".csv"),row.names=F)
+
+    current_night_tb <- room_8_all_room_time_budget |>
+        slice(i) |> 
+        pull(night_tb) |> 
+        pluck(1)
+
+    current_night_tb_df <- do.call(rbind, current_night_tb)
+    columns = c("interval1","interval2","Bottom","Middle","Top")
+
+    colnames(current_night_tb_df) <- columns
+
+    current_night_tb_df$tagname <- rep(current_tag, length(current_night_tb_df$interval1))
+
+    write.csv(current_night_tb_df, paste0("../intermediate/all_rooms/room8/room_8_night_time_budget_",current_tag,".csv"),row.names=F)
+}
+
+# Read in generated time budgets and plot 
+
+library(readr)
+library(ggplot2)
+
+day_tbs <- Sys.glob("../intermediate/all_rooms/room_8_day_time_budget_*")
+
+night_tbs <- Sys.glob("../intermediate/all_rooms/room_8_night_time_budget_*")
+
+day_tbs_df <- read_csv(day_tbs)
+
+nest_day_tbs <- day_tbs_df |>
+  nest(data = -tagname)
+
+night_tbs_df <- read_csv(night_tbs)
+
+nest_night_tbs <- night_tbs_df |>
+   nest(data = - tagname)
+
+# Daytime Plots 05:00-22:00
+
+for(i in 1:length(nest_day_tbs$tagname)){
+
+sb_data <- cbind(nest_day_tbs$data[[i]][1:2], stack(nest_day_tbs$data[[i]][3:5]))
+
+sb_data$ind <- factor(sb_data$ind, levels=c("Top","Middle","Bottom"))
+
+datebreaks <- seq(as.Date(ymd_hms(head(unique(sb_data$interval1),n=1))), as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))), by="7 days")
+
+datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))))
+
+all_datebreak <- seq(as.Date(ymd_hms(head(unique(sb_data$interval1),n=1))), as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))), by="1 days")
+
+
+day_3_sb_plot <- ggplot(data = sb_data, aes(x = as.Date(interval1), y=values, fill=ind)) + 
+geom_bar(stat="identity") +
+theme_bw() +  
+xlab("Day of Study") + 
+ylab("Prop. of Time Spent in Zone") +
+scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
+theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+ggtitle(paste0("Daily Time Budget for Each Day for Bird ID: ", nest_day_tbs[i,1])) + 
+labs(fill = "Zone") + 
+scale_y_continuous(limits=c(0, 1.001))
+
+ggsave(paste0("../figures/all_day/room8/day_daily_time_budget_stack_bar_for_", nest_day_tbs[i,1],".png"), day_3_sb_plot)
+}
+
+# Night Plots 22:01-4:59
+
+for(i in 1:length(nest_night_tbs$tagname)){
+
+sb_data <- cbind(nest_night_tbs$data[[i]][1:2], stack(nest_night_tbs$data[[i]][3:5]))
+
+sb_data$ind <- factor(sb_data$ind, levels=c("Top","Middle","Bottom"))
+
+datebreaks <- seq(as.Date(ymd_hms(head(unique(sb_data$interval1),n=1))), as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))), by="7 days")
+
+datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))))
+
+all_datebreak <- seq(as.Date(ymd_hms(head(unique(sb_data$interval1),n=1))), as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))), by="1 days")
+
+day_3_sb_plot <- ggplot(data = sb_data, aes(x = as.Date(interval1), y=values, fill=ind)) + 
+geom_bar(stat="identity") +
+theme_bw() +  
+xlab("Day of Study") + 
+ylab("Prop. of Time Spent in Zone") +
+scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
+theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+ggtitle(paste0("Daily Time Budget for Each Night for Bird ID: ", nest_day_tbs[i,1])) + 
+labs(fill = "Zone") + 
+scale_y_continuous(limits=c(0, 1.001))
+
+ggsave(paste0("../figures/all_day/room8/night_daily_time_budget_stack_bar_for_", nest_day_tbs[i,1],".png"), day_3_sb_plot)
+}
+
+# Averaged Birds in room_8 Daily Time Budget
+
+day_tbs_df 
+day_flat <- cbind(day_tbs_df[c(1:2,6)], stack(day_tbs_df[3:5]))
+
+day_flat$ind <- factor(day_flat$ind, levels=c("Top","Middle","Bottom"))
+
+datebreaks <- seq(as.Date(ymd_hms(head(unique(day_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1))), by="7 days")
+
+datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1))))
+
+all_datebreak <- seq(as.Date(ymd_hms(head(unique(day_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1))), by="1 days")
+
+# TODO  Still having a problem
+room_8_sb_plot <- ggplot(data = day_flat, aes(x = as.Date(interval1), y=values, fill=ind)) + 
+geom_bar(stat="identity") +
+theme_bw() +  
+xlab("Day of Study") + 
+ylab("Prop. of Time Spent in Zone") +
+scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
+theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+ggtitle("Daily Time Budget for Each Day for room_8") + 
+labs(fill = "Zone") +
+scale_y_continuous(limits=c(0, 11.001))
+
+ggsave(paste0("../figures/all_day/room8/day_daily_time_budget_stack_bar_for_room_8",".png"), room_8_sb_plot)
+
+
+# room_8_bp <- ggplot(day_flat, aes(x = factor(as.Date(interval1)), y=values, fill=ind)) + 
+#   geom_boxplot()
+
+# ggsave(paste0("../figures/all_day/day_daily_time_budget_boxplot_for_room_8",".png"), room_8_bp)
+
+# Averaged Birds in room_8 Nightly Time Budget
+
+night_flat <- cbind(night_tbs_df[c(1:2,6)], stack(night_tbs_df[3:5]))
+
+night_flat$ind <- factor(night_flat$ind, levels=c("Top","Middle","Bottom"))
+
+datebreaks <- seq(as.Date(ymd_hms(head(unique(night_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(night_flat$interval1),n=1))), by="7 days")
+
+datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(night_flat$interval1),n=1))))
+
+all_datebreak <- seq(as.Date(ymd_hms(head(unique(night_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(night_flat$interval1),n=1))), by="1 days")
+
+# TODO  Still having a problem
+room_8_sb_night_plot <- ggplot(data = night_flat, aes(x = as.Date(interval1), y=values, fill=ind)) + 
+geom_bar(stat="identity") +
+theme_bw() +  
+xlab("Day of Study") + 
+ylab("Prop. of Time Spent in Zone") +
+scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
+theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+ggtitle("Daily Time Budget for Each Night for Room 3") + 
+labs(fill = "Zone") +
+scale_y_continuous(limits=c(0, 11.001))
+
+ggsave(paste0("../figures/all_day/room8/night_daily_time_budget_stack_bar_for_room_8",".png"), room_8_sb_night_plot)
+
+# All Room room_11 Daily Time Budget Analysis
+# TODO update this with room 11
+
+# Make day and night "raw data" tables
+
+room_11_all_room_day <- room_11_interval |>
+  mutate(day = map(sampled, ~ getDayRecords(.x,"05:00","22:00"))) |>
+  mutate(night = map(sampled, ~ getNightRecords(.x,"05:00","22:00"))) 
+
+# Turn day and night tables into daily interval tables
+
+room_11_all_room_day <- room_11_all_room_day |>
+  mutate(day_int = map(day, ~ nestedTimeToIntervals(.x))) |>
+  mutate(night_int = map(night, ~ nestedTimeToIntervals(.x)))
+
+
+# Run getTimeBudgetProp for each daily interval tables
+
+ room_11_all_room_time_budget <- room_11_all_room_day |>
+  mutate(daily_tb = map(day_int, ~ map(.x$daily_int, ~ getTimeBudgetPropDayNight(.x)))) |>
+  mutate(night_tb = map(night_int, ~ map(.x$daily_int, ~ getTimeBudgetPropDayNight(.x))))
+
+
+for(i in 1:length(room_11_all_room_time_budget$tagname)){
+
+    current_tag <- room_11_all_room_time_budget$tagname[i]
+
+    current_day_tb<- room_11_all_room_time_budget |>
+        slice(i) |> 
+        pull(daily_tb) |> 
+        pluck(1)
+
+    current_day_tb_df <- do.call(rbind, current_day_tb)
+    columns = c("interval1","interval2","Bottom","Middle","Top")
+
+    colnames(current_day_tb_df) <- columns
+
+    current_day_tb_df$tagname <- rep(current_tag, length(current_day_tb_df$interval1))
+
+    write.csv(current_day_tb_df, paste0("../intermediate/all_rooms/room11/room_11_day_time_budget_",current_tag,".csv"),row.names=F)
+
+    current_night_tb <- room_11_all_room_time_budget |>
+        slice(i) |> 
+        pull(night_tb) |> 
+        pluck(1)
+
+    current_night_tb_df <- do.call(rbind, current_night_tb)
+    columns = c("interval1","interval2","Bottom","Middle","Top")
+
+    colnames(current_night_tb_df) <- columns
+
+    current_night_tb_df$tagname <- rep(current_tag, length(current_night_tb_df$interval1))
+
+    write.csv(current_night_tb_df, paste0("../intermediate/all_rooms/room11/room_11_night_time_budget_",current_tag,".csv"),row.names=F)
+}
+
+# Read in generated time budgets and plot 
+
+library(readr)
+library(ggplot2)
+
+day_tbs <- Sys.glob("../intermediate/all_rooms/room_11_day_time_budget_*")
+
+night_tbs <- Sys.glob("../intermediate/all_rooms/room_11_night_time_budget_*")
+
+day_tbs_df <- read_csv(day_tbs)
+
+nest_day_tbs <- day_tbs_df |>
+  nest(data = -tagname)
+
+night_tbs_df <- read_csv(night_tbs)
+
+nest_night_tbs <- night_tbs_df |>
+   nest(data = - tagname)
+
+# Daytime Plots 05:00-22:00
+
+for(i in 1:length(nest_day_tbs$tagname)){
+
+sb_data <- cbind(nest_day_tbs$data[[i]][1:2], stack(nest_day_tbs$data[[i]][3:5]))
+
+sb_data$ind <- factor(sb_data$ind, levels=c("Top","Middle","Bottom"))
+
+datebreaks <- seq(as.Date(ymd_hms(head(unique(sb_data$interval1),n=1))), as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))), by="7 days")
+
+datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))))
+
+all_datebreak <- seq(as.Date(ymd_hms(head(unique(sb_data$interval1),n=1))), as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))), by="1 days")
+
+
+day_3_sb_plot <- ggplot(data = sb_data, aes(x = as.Date(interval1), y=values, fill=ind)) + 
+geom_bar(stat="identity") +
+theme_bw() +  
+xlab("Day of Study") + 
+ylab("Prop. of Time Spent in Zone") +
+scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
+theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+ggtitle(paste0("Daily Time Budget for Each Day for Bird ID: ", nest_day_tbs[i,1])) + 
+labs(fill = "Zone") + 
+scale_y_continuous(limits=c(0, 1.001))
+
+ggsave(paste0("../figures/all_day/day_daily_time_budget_stack_bar_for_", nest_day_tbs[i,1],".png"), day_3_sb_plot)
+}
+
+# Night Plots 22:01-4:59
+
+for(i in 1:length(nest_night_tbs$tagname)){
+
+sb_data <- cbind(nest_night_tbs$data[[i]][1:2], stack(nest_night_tbs$data[[i]][3:5]))
+
+sb_data$ind <- factor(sb_data$ind, levels=c("Top","Middle","Bottom"))
+
+datebreaks <- seq(as.Date(ymd_hms(head(unique(sb_data$interval1),n=1))), as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))), by="7 days")
+
+datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))))
+
+all_datebreak <- seq(as.Date(ymd_hms(head(unique(sb_data$interval1),n=1))), as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))), by="1 days")
+
+day_3_sb_plot <- ggplot(data = sb_data, aes(x = as.Date(interval1), y=values, fill=ind)) + 
+geom_bar(stat="identity") +
+theme_bw() +  
+xlab("Day of Study") + 
+ylab("Prop. of Time Spent in Zone") +
+scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
+theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+ggtitle(paste0("Daily Time Budget for Each Night for Bird ID: ", nest_day_tbs[i,1])) + 
+labs(fill = "Zone") + 
+scale_y_continuous(limits=c(0, 1.001))
+
+ggsave(paste0("../figures/all_day/room11/night_daily_time_budget_stack_bar_for_", nest_day_tbs[i,1],".png"), day_3_sb_plot)
+}
+
+# Averaged Birds in room_11 Daily Time Budget
+
+day_tbs_df 
+day_flat <- cbind(day_tbs_df[c(1:2,6)], stack(day_tbs_df[3:5]))
+
+day_flat$ind <- factor(day_flat$ind, levels=c("Top","Middle","Bottom"))
+
+datebreaks <- seq(as.Date(ymd_hms(head(unique(day_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1))), by="7 days")
+
+datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1))))
+
+all_datebreak <- seq(as.Date(ymd_hms(head(unique(day_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1))), by="1 days")
+
+# TODO  Still having a problem
+room_11_sb_plot <- ggplot(data = day_flat, aes(x = as.Date(interval1), y=values, fill=ind)) + 
+geom_bar(stat="identity") +
+theme_bw() +  
+xlab("Day of Study") + 
+ylab("Prop. of Time Spent in Zone") +
+scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
+theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+ggtitle("Daily Time Budget for Each Day for room_11") + 
+labs(fill = "Zone") +
+scale_y_continuous(limits=c(0, 11.001))
+
+ggsave(paste0("../figures/all_day/room11/day_daily_time_budget_stack_bar_for_room_11",".png"), room_11_sb_plot)
+
+
+# room_3_bp <- ggplot(day_flat, aes(x = factor(as.Date(interval1)), y=values, fill=ind)) + 
+#   geom_boxplot()
+
+# ggsave(paste0("../figures/all_day/day_daily_time_budget_boxplot_for_room_3",".png"), room_3_bp)
+
+# Averaged Birds in room_3 Nightly Time Budget
+
+night_flat <- cbind(night_tbs_df[c(1:2,6)], stack(night_tbs_df[3:5]))
+
+night_flat$ind <- factor(night_flat$ind, levels=c("Top","Middle","Bottom"))
+
+datebreaks <- seq(as.Date(ymd_hms(head(unique(night_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(night_flat$interval1),n=1))), by="7 days")
+
+datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(night_flat$interval1),n=1))))
+
+all_datebreak <- seq(as.Date(ymd_hms(head(unique(night_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(night_flat$interval1),n=1))), by="1 days")
+
+# TODO  Still having a problem
+room_11_sb_night_plot <- ggplot(data = night_flat, aes(x = as.Date(interval1), y=values, fill=ind)) + 
+geom_bar(stat="identity") +
+theme_bw() +  
+xlab("Day of Study") + 
+ylab("Prop. of Time Spent in Zone") +
+scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
+theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+ggtitle("Daily Time Budget for Each Night for Room 3") + 
+labs(fill = "Zone") +
+scale_y_continuous(limits=c(0, 11.001))
+
+ggsave(paste0("../figures/all_day/room11/night_daily_time_budget_stack_bar_for_room_11",".png"), room_3_sb_night_plot)
