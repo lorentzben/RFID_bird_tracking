@@ -279,7 +279,7 @@ scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) +
 theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
 ggtitle("Daily Time Budget for Each Day for Room 8") + 
 labs(fill = "Zone") +
-scale_y_continuous(limits=c(0, 11.001))
+scale_y_continuous(limits=c(0, 18.001))
 
 ggsave(paste0("../figures/all_day/room8/day_daily_time_budget_stack_bar_for_room_8",".png"), room_8_sb_plot)
 
@@ -311,7 +311,7 @@ scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) +
 theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
 ggtitle("Daily Time Budget for Each Night for Room 8") + 
 labs(fill = "Zone") +
-scale_y_continuous(limits=c(0, 11.001))
+scale_y_continuous(limits=c(0, 18.001))
 
 ggsave(paste0("../figures/all_day/room8/night_daily_time_budget_stack_bar_for_room_8",".png"), room_8_sb_night_plot)
 
