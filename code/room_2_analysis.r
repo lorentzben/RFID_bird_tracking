@@ -306,7 +306,7 @@ ggsave(paste0("../figures/all_day/room2/night_daily_time_budget_stack_bar_for_",
 
 # Averaged Birds in Room 2 Daily Time Budget
 
-day_tbs_df 
+
 day_flat <- cbind(day_tbs_df[c(1:2,6)], stack(day_tbs_df[3:5]))
 
 day_flat$ind <- factor(day_flat$ind, levels=c("Top","Middle","Bottom"))
