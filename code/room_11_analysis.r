@@ -52,6 +52,7 @@ room_11_summary <- room_11 |> nest(data = - tagname) |>
  unnest(c(first_rec, last_rec, minimum, median,mean))
 
 # Time in minutes and min in sec of average duration between transitions
+print("median, mean, minimum ; duration between transitions (sec)")
 (mean(room_11_summary$median)/60)
 (mean(room_11_summary$mean)/60)
 (min(room_11_summary$minimum))
