@@ -78,7 +78,7 @@ room_11_all_analysis <- room_11_struct |>
 # TODO update the id's from room 8 
 room_11_all_analysis <- room_11_all_analysis |>
  filter(!is.na(slicedTsibble)) |> 
- filter(!(tagname %in% c("6888")))
+ filter(!(tagname %in% c("6888","9059")))
   
 # interpolate the rest of the intervals
 room_11_regular <- room_11_all_analysis |>
@@ -269,6 +269,8 @@ datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1)
 
 all_datebreak <- seq(as.Date(ymd_hms(head(unique(day_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1))), by="1 days")
 
+y_lim <- length(unique(day_flat$tagname))+.001
+
 # TODO  Check Limits
 room_11_sb_plot <- ggplot(data = day_flat, aes(x = as.Date(interval1), y=values, fill=ind)) + 
 geom_bar(stat="identity") +
@@ -279,7 +281,7 @@ scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) +
 theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
 ggtitle("Daily Time Budget for Each Day for Room 8") + 
 labs(fill = "Zone") +
-scale_y_continuous(limits=c(0, 11.001))
+scale_y_continuous(limits=c(0,y_lim))
 
 ggsave(paste0("../figures/all_day/room11/day_daily_time_budget_stack_bar_for_room_11",".png"), room_11_sb_plot)
 
@@ -301,7 +303,10 @@ datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(night_flat$interval1),n=
 
 all_datebreak <- seq(as.Date(ymd_hms(head(unique(night_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(night_flat$interval1),n=1))), by="1 days")
 
+
 # TODO  Check Limits
+
+
 room_11_sb_night_plot <- ggplot(data = night_flat, aes(x = as.Date(interval1), y=values, fill=ind)) + 
 geom_bar(stat="identity") +
 theme_bw() +  
@@ -311,7 +316,7 @@ scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) +
 theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
 ggtitle("Daily Time Budget for Each Night for Room 8") + 
 labs(fill = "Zone") +
-scale_y_continuous(limits=c(0, 11.001))
+scale_y_continuous(limits=c(0, y_lim))
 
 ggsave(paste0("../figures/all_day/room11/night_daily_time_budget_stack_bar_for_room_11",".png"), room_11_sb_night_plot)
 
