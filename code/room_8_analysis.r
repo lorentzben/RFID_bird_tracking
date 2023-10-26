@@ -78,7 +78,7 @@ room_8_all_analysis <- room_8_struct |>
 # TODO update the id's from room 8 
 room_8_all_analysis <- room_8_all_analysis |>
  filter(!is.na(slicedTsibble)) |> 
- filter(!(tagname %in% c("6949","6936","6974","9009","9011","6995")))
+ filter(!(tagname %in% c("6949","6941","6936","6974","9009","9011","6995")))
   
 # interpolate the rest of the intervals
 room_8_regular <- room_8_all_analysis |>
