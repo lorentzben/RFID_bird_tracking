@@ -383,26 +383,41 @@ for(i in 1:length( room_2_interval$tagname)){
     write.csv(current_tsibble, paste0("../intermediate/all_rooms/overall_interval/room_2_interval_",current_tag,".csv"),row.names=F)
 }
 
-# Daily & Nightly
+# Daily 
 
-for(i in 1:length( room_2_all_room_day$tagname)){
+room_2_day_int <- room_2_all_room_day |>
+  mutate(daily_int = map(day, ~timeToIntervals(.x)))
 
-    current_tag <- room_2_all_room_day$tagname[i]
+for(i in 1:length(room_2_day_int$tagname)){
 
-    current_day_tsibble <- room_2_interval |>
+    current_tag <- room_2_day_int$tagname[i]
+
+    current_day_tsibble <- room_2_day_int |>
         slice(i) |> 
-        pull(day_int) |> 
+        pull(daily_int) |> 
         pluck(1)
     
-    current_night_tsibble <- room_2_interval |>
-        slice(i) |> 
-        pull(night_int) |> 
-        pluck(1)
-
-    current_day_tsibble$tagname <- rep(current_tag, length(current_tsibble$t1))
-    current_night_tsibble$tagname <- rep(current_tag, length(current_tsibble$t1))
-
+    current_day_tsibble$tagname <- rep(current_tag, length(current_day_tsibble$t1))
+  
     write.csv(current_day_tsibble, paste0("../intermediate/all_rooms/daily_interval/room_2_interval_",current_tag,".csv"),row.names=F)
+}
+
+# Nightly
+
+room_2_night_int <- room_2_all_room_day |>
+  mutate(nightly_int = map(night, ~timeToIntervals(.x)))
+
+for(i in 1:length(room_2_night_int$tagname)){
+
+    current_tag <- room_2_night_int$tagname[i]
+
+    current_night_tsibble <- room_2_night_int |>
+        slice(i) |> 
+        pull(nightly_int) |> 
+        pluck(1)
+  
+    current_night_tsibble$tagname <- rep(current_tag, length(current_night_tsibble$t1))
+
     write.csv(current_night_tsibble, paste0("../intermediate/all_rooms/nightly_interval/room_2_interval_",current_tag,".csv"),row.names=F)
 }
 
