@@ -269,18 +269,6 @@ datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1)
 all_datebreak <- seq(as.Date(ymd_hms(head(unique(day_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1))), by="1 days")
 
 
-room_3_sb_day_plot <- ggplot(data = day_flat, aes(x = as.Date(interval1), y=values, fill=ind)) + 
-geom_bar(stat="identity") +
-theme_bw() +  
-xlab("Day of Study") + 
-ylab("Prop. of Time Spent in Zone") +
-scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
-theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
-ggtitle("Daily Time Budget for Each Day for Room 3") + 
-labs(fill = "Zone") +
-scale_y_continuous(limits=c(0, 6.001))
-
-ggsave(paste0("../figures/all_day/room3/day_daily_time_budget_stack_bar_for_room_3",".png"), room_3_sb_day_plot)
 
 
 # room_3_bp <- ggplot(day_flat, aes(x = factor(as.Date(interval1)), y=values, fill=ind)) + 
@@ -313,5 +301,19 @@ labs(fill = "Zone") +
 scale_y_continuous(limits=c(0, 6.001))
 
 ggsave(paste0("../figures/all_day/room3/night_daily_time_budget_stack_bar_for_room_3",".png"), room_3_sb_night_plot)
+
+
+room_3_sb_day_plot <- ggplot(data = day_flat, aes(x = as.Date(interval1), y=values, fill=ind)) + 
+geom_bar(stat="identity") +
+theme_bw() +  
+xlab("Day of Study") + 
+ylab("Prop. of Time Spent in Zone") +
+scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
+theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+ggtitle("Daily Time Budget for Each Day for Room 3") + 
+labs(fill = "Zone") +
+scale_y_continuous(limits=c(0, 6.001))
+
+ggsave(paste0("../figures/all_day/room3/day_daily_time_budget_stack_bar_for_room_3",".png"), room_3_sb_day_plot)
 
 ### END OF ROOM 3 ANALYSIS ###
