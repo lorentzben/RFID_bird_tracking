@@ -367,18 +367,43 @@ ggsave(paste0("../figures/all_day/room2/night_daily_time_budget_stack_bar_for_ro
 
 ### Save Overall Interval, Daily Interval and Nightly Interval to disk ###
 
-for(i in 1:length(room_2_struct$tagname)){
+# Overall
 
-    current_tag <- room_2_struct$tagname[i]
+for(i in 1:length( room_2_interval$tagname)){
 
-    current_tsibble <- room_2_struct |>
+    current_tag <- room_2_interval$tagname[i]
+
+    current_tsibble <- room_2_interval |>
         slice(i) |> 
-        pull(tsibble) |> 
+        pull(interval) |> 
         pluck(1)
 
-    current_tsibble$tagname <- rep(current_tag, length(current_tsibble$datetime))
+    current_tsibble$tagname <- rep(current_tag, length(current_tsibble$t1))
 
     write.csv(current_tsibble, paste0("../intermediate/all_rooms/overall_interval/room_2_interval_",current_tag,".csv"),row.names=F)
+}
+
+# Daily & Nightly
+
+for(i in 1:length( room_2_all_room_day$tagname)){
+
+    current_tag <- room_2_all_room_day$tagname[i]
+
+    current_day_tsibble <- room_2_interval |>
+        slice(i) |> 
+        pull(day_int) |> 
+        pluck(1)
+    
+    current_night_tsibble <- room_2_interval |>
+        slice(i) |> 
+        pull(night_int) |> 
+        pluck(1)
+
+    current_day_tsibble$tagname <- rep(current_tag, length(current_tsibble$t1))
+    current_night_tsibble$tagname <- rep(current_tag, length(current_tsibble$t1))
+
+    write.csv(current_day_tsibble, paste0("../intermediate/all_rooms/daily_interval/room_2_interval_",current_tag,".csv"),row.names=F)
+    write.csv(current_night_tsibble, paste0("../intermediate/all_rooms/nightly_interval/room_2_interval_",current_tag,".csv"),row.names=F)
 }
 
 ### END OF ROOM 2 ANALYSIS ###
