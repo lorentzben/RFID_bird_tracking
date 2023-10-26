@@ -317,4 +317,60 @@ scale_y_continuous(limits=c(0, y_lim))
 
 ggsave(paste0("../figures/all_day/room8/night_daily_time_budget_stack_bar_for_room_8",".png"), room_8_sb_night_plot)
 
+### Save Overall Interval, Daily Interval and Nightly Interval to disk ###
+
+# Overall
+
+for(i in 1:length( room_8_interval$tagname)){
+
+    current_tag <- room_8_interval$tagname[i]
+
+    current_tsibble <- room_8_interval |>
+        slice(i) |> 
+        pull(interval) |> 
+        pluck(1)
+
+    current_tsibble$tagname <- rep(current_tag, length(current_tsibble$t1))
+
+    write.csv(current_tsibble, paste0("../intermediate/all_rooms/overall_interval/room_8_interval_",current_tag,".csv"),row.names=F)
+}
+
+# Daily 
+
+room_8_day_int <- room_8_all_room_day |>
+  mutate(daily_int = map(day, ~timeToIntervals(.x)))
+
+for(i in 1:length(room_8_day_int$tagname)){
+
+    current_tag <- room_8_day_int$tagname[i]
+
+    current_day_tsibble <- room_8_day_int |>
+        slice(i) |> 
+        pull(daily_int) |> 
+        pluck(1)
+    
+    current_day_tsibble$tagname <- rep(current_tag, length(current_day_tsibble$t1))
+  
+    write.csv(current_day_tsibble, paste0("../intermediate/all_rooms/daily_interval/room_8_interval_",current_tag,".csv"),row.names=F)
+}
+
+# Nightly
+
+room_8_night_int <- room_8_all_room_day |>
+  mutate(nightly_int = map(night, ~timeToIntervals(.x)))
+
+for(i in 1:length(room_8_night_int$tagname)){
+
+    current_tag <- room_8_night_int$tagname[i]
+
+    current_night_tsibble <- room_8_night_int |>
+        slice(i) |> 
+        pull(nightly_int) |> 
+        pluck(1)
+  
+    current_night_tsibble$tagname <- rep(current_tag, length(current_night_tsibble$t1))
+
+    write.csv(current_night_tsibble, paste0("../intermediate/all_rooms/nightly_interval/room_8_interval_",current_tag,".csv"),row.names=F)
+}
+
 ### END OF ROOM 8 ANALYSIS ###
