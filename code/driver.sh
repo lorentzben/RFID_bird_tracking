@@ -55,8 +55,8 @@ Rscript room_8_analysis.r > ../logs/"$TS"_rm8.log
 
 Rscript room_11_analysis.r > ../logs/"$TS"_rm11.log
 
-# # Run All Room Joint Analysis
+# Run All Room Joint Analysis
 
-# Rscript joint_analysis.r > ../logs/"$TS"_joint.log
+Rscript joint_analysis.r > ../logs/"$TS"_joint.log
 
 echo "Script finished"
