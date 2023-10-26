@@ -365,4 +365,20 @@ scale_y_continuous(limits=c(0, y_lim))
 
 ggsave(paste0("../figures/all_day/room2/night_daily_time_budget_stack_bar_for_room_2",".png"), room_2_sb_night_plot)
 
+### Save Overall Interval, Daily Interval and Nightly Interval to disk ###
+
+for(i in 1:length(room_2_struct$tagname)){
+
+    current_tag <- room_2_struct$tagname[i]
+
+    current_tsibble <- room_2_struct |>
+        slice(i) |> 
+        pull(tsibble) |> 
+        pluck(1)
+
+    current_tsibble$tagname <- rep(current_tag, length(current_tsibble$datetime))
+
+    write.csv(current_tsibble, paste0("../intermediate/all_rooms/overall_interval/room_2_interval_",current_tag,".csv"),row.names=F)
+}
+
 ### END OF ROOM 2 ANALYSIS ###

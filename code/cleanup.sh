@@ -21,6 +21,9 @@ fi
 if [ -d "../intermediate" ]; then
     rm -rf ../intermediate/all_rooms
     rm -rf ../intermediate/no_room_3
+    rm -rf ../intermediate/all_rooms/overall_interval
+    rm -rf ../intermediate/all_rooms/daily_interval
+    rm -rf ../intermediate/all_rooms/nightly_interval
 fi
 
 # remove output dir

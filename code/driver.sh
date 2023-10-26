@@ -27,6 +27,9 @@ fi
 if [ ! -d "../intermediate/all_rooms" ]; then
     mkdir -p ../intermediate/all_rooms
     mkdir -p ../intermediate/no_room_3
+    mkdir -p ../intermediate/all_rooms/overall_interval
+    mkdir -p ../intermediate/all_rooms/daily_interval
+    mkdir -p ../intermediate/all_rooms/nightly_interval
 fi
 
 # make output dir
