@@ -83,7 +83,33 @@ rm_2_nest_night_int <- rm_2_night_int_df |>
 # nest_night_tbs <- night_tbs_df |>
 #    nest(data = - tagname)
 
-# # calc num trans in room 2
+# calc num trans in room 2
+
+rm_2_overall <- rm_2_nest_overall_int |>
+    mutate(ntrans = map(data, ~length(.x$t1))) |>
+    select(c(tagname,ntrans)) |>
+    unnest(ntrans)
+
+print(paste('overall summary: '))
+print(summary(rm_2_overall$ntrans))
+
+rm_2_day <- rm_2_nest_day_int |>
+    mutate(ntrans = map(data, ~length(.x$t1))) |>
+    select(c(tagname,ntrans)) |>
+    unnest(ntrans)
+
+print(paste('day summary: '))
+print(summary(rm_2_day$ntrans))
+
+
+rm_2_night <- rm_2_nest_night_int |>
+    mutate(ntrans = map(data, ~length(.x$t1))) |>
+    select(c(tagname,ntrans)) |>
+    unnest(ntrans)
+
+print(paste('night summary: '))
+print(summary(rm_2_night$ntrans))
+
 
 # # calc num trans room 3
 
