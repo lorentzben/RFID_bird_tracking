@@ -95,7 +95,7 @@ d1t0_overall_interval <- d1t0_regular |>
   mutate(interval = map(sampled, ~timeToIntervals(.x)))
 
 d1t0_all_room_time_budget <- d1t0_overall_interval |>
-  mutate(tb = map(interval, ~ getTimeBudgetPropDayNight(.x))) |>
+  mutate(tb = map(interval, ~ getTimeBudgetProp(.x))) |>
   unnest(tb) 
 
 d1t0_overall_tb <- d1t0_all_room_time_budget |>
@@ -105,7 +105,10 @@ Interval <- c(ymd_hms(as.POSIXct.numeric(as.numeric(head(d1t0_overall_interval$i
 
 expected_res <- tibble(data.frame(Interval[1],Interval[2],matrix(c(1,0,0), ncol=3)))
 
+# check that time budget says that it spent 100% in bottom
 expect_equal(d1t0_overall_tb, expected_res, label='d1t0 overall time budget')
+
+
 
 # One Day 1 Trans
 

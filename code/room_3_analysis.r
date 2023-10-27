@@ -96,7 +96,7 @@ room_3_interval <- room_3_regular |>
 
 # TODO need to set start and end timepoints for this dataset.
 room_3_all_room_time_budget <- room_3_interval |>
-  mutate(tb = map(interval, ~ getTimeBudgetPropDayNight(.x))) |>
+  mutate(tb = map(interval, ~ getTimeBudgetProp(.x))) |>
   unnest(tb) 
 
 room_3_all_room_time_budget |>
@@ -143,8 +143,8 @@ room_3_all_room_day <- room_3_all_room_day |>
 # Run getTimeBudgetProp for each daily interval tables
 
  room_3_all_room_time_budget <- room_3_all_room_day |>
-  mutate(daily_tb = map(day_int, ~ map(.x$daily_int, ~ getTimeBudgetPropDayNight(.x)))) |>
-  mutate(night_tb = map(night_int, ~ map(.x$daily_int, ~ getTimeBudgetPropDayNight(.x))))
+  mutate(daily_tb = map(day_int, ~ map(.x$daily_int, ~ getTimeBudgetProp(.x)))) |>
+  mutate(night_tb = map(night_int, ~ map(.x$daily_int, ~ getTimeBudgetProp(.x))))
 
 
 for(i in 1:length(room_3_all_room_time_budget$tagname)){
