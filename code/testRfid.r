@@ -75,6 +75,7 @@ d1t0_all_analysis <- d1t0_struct |>
 # check that there are zero trans
 expect_equal(unique(d1t0_all_analysis$slicedTsibble[[1]]$value),"bottom", label='d1t0 sliced tsibble valuecol')
 
+# TODO can we delete the sampled?
 d1t0_regular <- d1t0_all_analysis |>
  select(c(tagname, slicedTsibble)) |>
  mutate(near_5 = map(slicedTsibble, ~ nice_start(.x, "5 seconds",5/60))) |>
@@ -107,6 +108,59 @@ expected_res <- tibble(data.frame(Interval[1],Interval[2],matrix(c(1,0,0), ncol=
 
 # check that time budget says that it spent 100% in bottom
 expect_equal(d1t0_overall_tb, expected_res, label='d1t0 overall time budget')
+
+# TODO change the code to be slicedTsibble as opposed to sampled
+d1t0_all_room_day <- d1t0_overall_interval |>
+  mutate(day = map(slicedTsibble, ~ getDayRecords(.x,"05:00","22:00"))) |>
+  mutate(night = map(slicedTsibble, ~ getNightRecords(.x,"05:00","22:00"))) 
+
+# check n day records
+
+expect_equal(length(d1t0_all_room_day$day[[1]]$day), sum(d1t0$characteristic == "day"), label='d1t0 num of day records')
+
+# check n night records
+
+expect_equal(length(d1t0_all_room_day$night[[1]]$day), sum(d1t0$characteristic == "night"), label='d1t0 num of night records')
+
+# check that rejoining day and night gives you the overall table (Will break if Regmi wants to have a hour deadband for night)
+
+expect_equal( bind_rows(d1t0_all_room_day$day[[1]],d1t0_all_room_day$night[[1]])[,1:2], d1t0_overall_interval$slicedTsibble[[1]], label='d1t0 day+night == overall')
+
+# check range of dos
+
+expect_equal(unique(d1t0_all_room_day$day[[1]]$dos), 1 , label='d1t0 unique dos counts')
+
+# check range of wos
+
+expect_equal(unique(d1t0_all_room_day$day[[1]]$wos), 1 , label='d1t0 unique wos counts')
+
+d1t0_all_room_day <- d1t0_all_room_day |>
+  mutate(day_int = map(day, ~ nestedTimeToIntervals(.x))) |>
+  mutate(night_int = map(night, ~ nestedTimeToIntervals(.x)))
+
+# check 0 trans in day
+
+n_trans <- length(d1t0_all_room_day$day_int[[1]]$daily_int[[1]]$to_zone)-1
+
+expect_equal(n_trans, 0 , label='d1t0 expect 0 trans in day')
+
+# check 0 trans in night
+
+n_trans <- length(d1t0_all_room_day$night_int[[1]]$daily_int[[1]]$to_zone)-1
+
+expect_equal(n_trans, 0 , label='d1t0 expect 0 trans in night')
+
+# check start and end day
+d1t0_all_room_day$day_int[[1]]$daily_int[[1]]$t1
+d1t0_all_room_day$day_int[[1]]$daily_int[[1]]$t2
+
+expect_equal(n_trans, 0 , label='d1t0 expect 0 trans in night')
+expect_equal(n_trans, 0 , label='d1t0 expect 0 trans in night')
+# check start and end night
+
+# check sum of time day+night == time from overall
+
+# check n records day+night - 1 == n records overall 
 
 
 
