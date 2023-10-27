@@ -96,7 +96,7 @@ room_11_interval <- room_11_regular |>
 
 # TODO need to set start and end timepoints for this dataset.
 room_11_all_room_time_budget <- room_11_interval |>
-  mutate(tb = map(interval, ~ getTimeBudgetProp(.x))) |>
+  mutate(tb = map(interval, ~ getTimeBudgetPropDayNight(.x))) |>
   unnest(tb) 
 
 room_11_all_room_time_budget |>

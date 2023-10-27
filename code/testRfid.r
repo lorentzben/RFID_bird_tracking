@@ -95,7 +95,7 @@ d1t0_overall_interval <- d1t0_regular |>
   mutate(interval = map(sampled, ~timeToIntervals(.x)))
 
 d1t0_all_room_time_budget <- d1t0_overall_interval |>
-  mutate(tb = map(interval, ~ getTimeBudgetProp(.x))) |>
+  mutate(tb = map(interval, ~ getTimeBudgetPropDayNight(.x))) |>
   unnest(tb) 
 
 d1t0_overall_tb <- d1t0_all_room_time_budget |>
