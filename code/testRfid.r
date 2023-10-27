@@ -104,6 +104,7 @@ d1t0_overall_tb <- d1t0_all_room_time_budget |>
 
 Interval <- c(ymd_hms(as.POSIXct.numeric(as.numeric(head(d1t0_overall_interval$interval[[1]],n=1)$t1),origin=origin)),ymd_hms(as.POSIXct.numeric(as.numeric(tail(d1t0_overall_interval$interval[[1]],n=1)$t2),origin=origin)))
 
+# check overall time budget
 expected_res <- tibble(data.frame(Interval[1],Interval[2],matrix(c(1,0,0), ncol=3)))
 
 # check that time budget says that it spent 100% in bottom
@@ -151,18 +152,49 @@ n_trans <- length(d1t0_all_room_day$night_int[[1]]$daily_int[[1]]$to_zone)-1
 expect_equal(n_trans, 0 , label='d1t0 expect 0 trans in night')
 
 # check start and end day
-d1t0_all_room_day$day_int[[1]]$daily_int[[1]]$t1
-d1t0_all_room_day$day_int[[1]]$daily_int[[1]]$t2
 
-expect_equal(n_trans, 0 , label='d1t0 expect 0 trans in night')
-expect_equal(n_trans, 0 , label='d1t0 expect 0 trans in night')
+expect_equal(as.numeric(head(d1t0_all_room_day$day_int[[1]]$daily_int[[1]],n=1)$t1), as.numeric(head(d1t0_all_room_day$day[[1]]$datetime,n=1)) , label='d1t0 expect first record t1 is beginning of day')
+expect_equal(as.numeric(tail(d1t0_all_room_day$day_int[[1]]$daily_int[[1]],n=1)$t2), as.numeric(tail(d1t0_all_room_day$day[[1]]$datetime,n=1)) , label='d1t0 expect last record t2 is beginning of day')
+
 # check start and end night
 
-# check sum of time day+night == time from overall
+expect_equal(as.numeric(head(d1t0_all_room_day$night_int[[1]]$daily_int[[1]],n=1)$t1), as.numeric(head(d1t0_all_room_day$night[[1]]$datetime,n=1)) , label='d1t0 expect first record t1 is beginning of night')
+expect_equal(as.numeric(tail(d1t0_all_room_day$night_int[[1]]$daily_int[[1]],n=1)$t2), as.numeric(tail(d1t0_all_room_day$night[[1]]$datetime,n=1)) , label='d1t0 expect last record t2 is beginning of night')
 
 # check n records day+night - 1 == n records overall 
 
+n_day_trans <- length(d1t0_all_room_day$day_int[[1]]$daily_int[[1]]$to_zone)-1
+n_night_trans <- length(d1t0_all_room_day$night_int[[1]]$daily_int[[1]]$to_zone)-1
 
+n_trans_overall <- length(d1t0_overall_interval[[1]]$interval$to_zone) - 1
+
+expect_equal(as.numeric(n_day_trans+n_night_trans), as.numeric(n_trans_overall) , label='d1t0 expect nTransDay+nTransNight == nTransOverall')
+
+d1t0_all_room_time_budget <- d1t0_all_room_day |>
+  mutate(daily_tb = map(day_int, ~ map(.x$daily_int, ~ getTimeBudgetProp(.x)))) |>
+  mutate(night_tb = map(night_int, ~ map(.x$daily_int, ~ getTimeBudgetProp(.x))))
+
+# check day time budget
+
+d1t0_day_tb <- tibble(d1t0_all_room_time_budget$daily_tb[[1]][[1]])
+
+Interval <- c(ymd_hms(as.POSIXct.numeric(as.numeric(head(d1t0_all_room_day$day_int[[1]]$daily_int[[1]],n=1)$t1),origin=origin)),ymd_hms(as.POSIXct.numeric(as.numeric(tail(d1t0_all_room_day$day_int[[1]]$daily_int[[1]],n=1)$t2),origin=origin)))
+
+expected_res <- tibble(data.frame(Interval[1],Interval[2],matrix(c(1,0,0), ncol=3)))
+
+expect_equal(d1t0_day_tb, expected_res, label='d1t0 expect day tb 100% bottom')
+
+# check night time budget
+
+d1t0_night_tb <- tibble(d1t0_all_room_time_budget$night_tb[[1]][[1]])
+
+Interval <- c(ymd_hms(as.POSIXct.numeric(as.numeric(head(d1t0_all_room_day$night_int[[1]]$daily_int[[1]],n=1)$t1),origin=origin)),ymd_hms(as.POSIXct.numeric(as.numeric(tail(d1t0_all_room_day$night_int[[1]]$daily_int[[1]],n=1)$t2),origin=origin)))
+
+expected_res <- tibble(data.frame(Interval[1],Interval[2],matrix(c(1,0,0), ncol=3)))
+
+expect_equal(d1t0_night_tb, expected_res, label='d1t0 expect day tb 100% bottom')
+
+### END ONE DAY 0 TRANS ###
 
 # One Day 1 Trans
 
