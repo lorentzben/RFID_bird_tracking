@@ -166,7 +166,7 @@ expect_equal(as.numeric(tail(d1t0_all_room_day$night_int[[1]]$daily_int[[1]],n=1
 n_day_trans <- length(d1t0_all_room_day$day_int[[1]]$daily_int[[1]]$to_zone)-1
 n_night_trans <- length(d1t0_all_room_day$night_int[[1]]$daily_int[[1]]$to_zone)-1
 
-n_trans_overall <- length(d1t0_overall_interval[[1]]$interval$to_zone) - 1
+n_trans_overall <- length(d1t0_overall_interval$interval[[1]]$to_zone) - 1
 
 expect_equal(as.numeric(n_day_trans+n_night_trans), as.numeric(n_trans_overall) , label='d1t0 expect nTransDay+nTransNight == nTransOverall')
 
