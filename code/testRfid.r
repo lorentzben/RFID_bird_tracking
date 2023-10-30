@@ -400,6 +400,8 @@ d1t2_regular <- d1t2_all_analysis |>
 d1t2_overall_interval <- d1t2_regular |>
   mutate(interval = map(sampled, ~timeToIntervals(.x)))
 
+
+
 d1t2_all_room_time_budget <- d1t2_overall_interval |>
   mutate(tb = map(interval, ~ getTimeBudgetProp(.x))) |>
   unnest(tb) 
@@ -453,8 +455,8 @@ d1t2_all_room_day <- d1t2_all_room_day |>
 
 n_trans <- length(d1t2_all_room_day$day_int[[1]]$daily_int[[1]]$to_zone)-1
 
-# MISMATCH ERROR
-expect_equal(n_trans, 2 , label='d1t2 expect 1 trans in day')
+# The second trans happens right at day to night
+expect_equal(n_trans, 1 , label='d1t2 expect 1 trans in day')
 
 # check 1 trans in night
 
@@ -477,8 +479,11 @@ expect_equal(as.numeric(tail(d1t2_all_room_day$night_int[[1]]$daily_int[[1]],n=1
 n_day_trans <- length(d1t2_all_room_day$day_int[[1]]$daily_int[[1]]$to_zone)-1
 n_night_trans <- length(d1t2_all_room_day$night_int[[1]]$daily_int[[1]]$to_zone)-1
 
+
+
 n_trans_overall <- length(d1t2_overall_interval$interval[[1]]$to_zone) - 1
 
+# Mismatch error because there are transitions at day and night
 expect_equal(as.numeric(n_day_trans+n_night_trans), as.numeric(n_trans_overall) , label='d1t2 expect nTransDay+nTransNight == nTransOverall')
 
 d1t2_all_room_time_budget <- d1t2_all_room_day |>
