@@ -263,7 +263,7 @@ timeToIntervals <- function(data){
     new_row <- cbind(ymd_hms(first_entry$datetime),ymd_hms(transition_into[1,]$datetime),NA, as.character(first_entry$value))
     interval_table <- rbind(interval_table, new_row)
 
-    for(i in 2:length(transition_into$value)-1){
+    for(i in 1:length(transition_into$value)){
       new_row <- cbind(ymd_hms(transition_into[i,]$datetime), ymd_hms(transition_into[i+1,]$datetime),as.character(transition_from[i,2]),as.character(transition_into[i,2]))
       interval_table <- rbind(interval_table, new_row)
     }
