@@ -912,6 +912,142 @@ d2t1_all_room_time_budget <- d2t1_all_room_day |>
 
 # Two Day 2 Trans
 
+d2t2 <- read.csv("../data/test_data/two_day_two_trans_r8.csv")
+
+#d2t2$tagname <- d2t2$LegBand
+
+bird_ids_d2t2 <- unique(d2t2$tagname)
+bird_ids_d2t2 <- na.trim(sort(bird_ids_d2t2))
+
+d2t2["DateTime"] <- as.POSIXct(d2t2$access, origin="1970-01-01", tz="GMT")
+
+print("what makes up subzone col")
+unique(d2t2$subzone)
+
+d2t2$subzone[d2t2$subzone == "Bottom"] <- "bottom"
+d2t2$subzone[d2t2$subzone == "Middle"] <- "middle"
+d2t2$subzone[d2t2$subzone == "Top"] <- "top"
+
+
+print("what makes up subzone col")
+unique(d2t2$subzone)
+
+print("how many NAs in DateTime and Subzone")
+sum(is.na(d2t2$DateTime))
+sum(is.na(d2t2$subzone))
+
+# This is a hack to work with the downloaded data from excel and onedrive
+d2t2$accessdate <- ymd_hms(d2t2$DateTime)
+
+d2t2_struct <- d2t2 |> nest(data = - tagname) |> 
+ na.exclude() |>
+ mutate(tsibble = map(data, ~tsibble(datetime = ymd_hms(.x$accessdate), value = .x$subzone, index = datetime) ))
+
+d2t2_all_analysis <- d2t2_struct |>
+ mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T05:00:00", "2021-05-06 T22:00:00")))
+
+# check that there are two zones observed
+expect_equal(unique(d2t2_all_analysis$slicedTsibble[[1]]$value),c('top',"middle","bottom"), label='d2t2 sliced tsibble valuecol')
+
+# TODO can we delete the sampled?
+d2t2_regular <- d2t2_all_analysis |>
+ select(c(tagname, slicedTsibble)) |>
+ mutate(near_5 = map(slicedTsibble, ~ nice_start(.x, "5 seconds",5/60))) |>
+ mutate(perSec = map(near_5, ~ fill_gaps(.x)))|>
+ mutate(sampled = map(perSec, ~ na.locf(.x))) 
+
+
+# first item to compare to day+night
+d2t2_overall_interval <- d2t2_regular |>
+  mutate(interval = map(sampled, ~timeToIntervals(.x)))
+
+d2t2_all_room_time_budget <- d2t2_overall_interval |>
+  mutate(tb = map(interval, ~ getTimeBudgetProp(.x))) |>
+  unnest(tb) 
+
+#TODO can compare this later but not functional right now
+d2t2_overall_tb <- d2t2_all_room_time_budget |>
+    select("Interval.1.", "Interval.2.", "X1", "X2", "X3")
+
+# Interval <- c(ymd_hms(as.POSIXct.numeric(as.numeric(head(d2t2_overall_interval$interval[[1]],n=1)$t1),origin=origin)),ymd_hms(as.POSIXct.numeric(as.numeric(tail(d2t2_overall_interval$interval[[1]],n=1)$t2),origin=origin)))
+
+# # check overall time budget
+# bot_time <- sum(d2t2$subzone == "bottom")/length(d2t2$subzone)
+# mid_time <- sum(d2t2$subzone == "middle")/length(d2t2$subzone)
+# top_time <- sum(d2t2$subzone == "top")/length(d2t2$subzone)
+# expected_res <- tibble(data.frame(Interval[1],Interval[2],matrix(c(bot_time,mid_time,top_time), ncol=3)))
+
+# # check that time budget says that it spent
+# expect_equal(d2t2_overall_tb, expected_res, label='d2t2 overall time budget')
+
+# TODO change the code to be slicedTsibble as opposed to sampled
+d2t2_all_room_day <- d2t2_overall_interval |>
+  mutate(day = map(slicedTsibble, ~ getDayRecords(.x,"05:00","22:00"))) |>
+  mutate(night = map(slicedTsibble, ~ getNightRecords(.x,"05:00","22:00"))) 
+
+# check n day records
+
+expect_equal(length(d2t2_all_room_day$day[[1]]$day), sum(d2t2$characteristic == "day"), label='d2t2 num of day records')
+
+# check n night records
+
+expect_equal(length(d2t2_all_room_day$night[[1]]$day), sum(d2t2$characteristic == "night"), label='d2t2 num of night records')
+
+# check that rejoining day and night gives you the overall table (Will break if Regmi wants to have a hour deadband for night)
+
+expect_equal( bind_rows(d2t2_all_room_day$day[[1]],d2t2_all_room_day$night[[1]])[,1:2], d2t2_overall_interval$slicedTsibble[[1]], label='d2t2 day+night == overall')
+
+# check range of dos
+
+expect_equal(unique(d2t2_all_room_day$day[[1]]$dos), c(1,2) , label='d2t2 unique dos counts')
+expect_equal(unique(d2t2_all_room_day$night[[1]]$dos), c(1,2) , label='d2t2 unique dos night counts')
+
+# check range of wos
+
+expect_equal(unique(d2t2_all_room_day$day[[1]]$wos), 1 , label='d2t2 unique wos counts')
+
+d2t2_all_room_day <- d2t2_all_room_day |>
+  mutate(day_int = map(day, ~ nestedTimeToIntervals(.x))) |>
+  mutate(night_int = map(night, ~ nestedTimeToIntervals(.x)))
+
+# check 1 trans in day
+
+n_trans <- length(d2t2_all_room_day$day_int[[1]]$daily_int[[1]]$to_zone)+length(d2t2_all_room_day$day_int[[1]]$daily_int[[2]]$to_zone)-2
+
+expect_equal(n_trans, 0 , label='d2t2 expect 0 trans in day')
+
+# check 1 trans in night
+
+n_trans <- length(d2t2_all_room_day$night_int[[1]]$daily_int[[1]]$to_zone)+length(d2t2_all_room_day$night_int[[1]]$daily_int[[2]]$to_zone)-2
+
+expect_equal(n_trans, 2 , label='d2t2 expect 2 trans in night')
+
+# TODO update check start and end day
+
+expect_equal(as.numeric(head(d2t2_all_room_day$day_int[[1]]$daily_int[[1]],n=1)$t1), as.numeric(head(d2t2_all_room_day$day[[1]]$datetime,n=1)) , label='d2t2 expect first record t1 is beginning of day')
+expect_equal(as.numeric(tail(d2t2_all_room_day$day_int[[1]]$daily_int[[1]],n=1)$t2), as.numeric(tail(d2t2_all_room_day$day[[1]]$datetime,n=1)) , label='d2t2 expect last record t2 is beginning of day')
+
+#  TODO update check start and end night
+
+expect_equal(as.numeric(head(d2t2_all_room_day$night_int[[1]]$daily_int[[1]],n=1)$t1), as.numeric(head(d2t2_all_room_day$night[[1]]$datetime,n=1)) , label='d2t2 expect first record t1 is beginning of night')
+expect_equal(as.numeric(tail(d2t2_all_room_day$night_int[[1]]$daily_int[[1]],n=1)$t2), as.numeric(tail(d2t2_all_room_day$night[[1]]$datetime,n=1)) , label='d2t2 expect last record t2 is beginning of night')
+
+# check n records day+night - 1 == n records overall 
+
+n_day_trans <- length(d2t2_all_room_day$day_int[[1]]$daily_int[[1]]$to_zone)+length(d2t2_all_room_day$day_int[[1]]$daily_int[[2]]$to_zone)-2
+n_night_trans <- length(d2t2_all_room_day$night_int[[1]]$daily_int[[1]]$to_zone)+length(d2t2_all_room_day$night_int[[1]]$daily_int[[2]]$to_zone)-2
+
+n_trans_overall <- length(d2t2_overall_interval$interval[[1]]$to_zone)-1
+
+# Mismatch error because there are transitions at day and night
+expect_equal(as.numeric(n_day_trans+n_night_trans), as.numeric(n_trans_overall) , label='d2t2 expect nTransDay+nTransNight == nTransOverall')
+
+d2t2_all_room_time_budget <- d2t2_all_room_day |>
+  mutate(daily_tb = map(day_int, ~ map(.x$daily_int, ~ getTimeBudgetProp(.x)))) |>
+  mutate(night_tb = map(night_int, ~ map(.x$daily_int, ~ getTimeBudgetProp(.x))))
+
+### END OF TWO DAY TWO TRANS
+
 # Two Day 3 Trans
 
 
