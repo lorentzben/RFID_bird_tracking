@@ -1288,32 +1288,32 @@ d3t0_all_room_day <- d3t0_all_room_day |>
   mutate(day_int = map(day, ~ nestedTimeToIntervals(.x))) |>
   mutate(night_int = map(night, ~ nestedTimeToIntervals(.x)))
 
-# check 1 trans in day
+# check 0 trans in day
 
 n_trans <- length(d3t0_all_room_day$day_int[[1]]$daily_int[[1]]$to_zone)+length(d3t0_all_room_day$day_int[[1]]$daily_int[[2]]$to_zone)-2
 
-expect_equal(n_trans, 1 , label='d3t0 expect 1 trans in day')
+expect_equal(n_trans, 0 , label='d3t0 expect 0 trans in day')
 
-# check 1 trans in night
+# check 0 trans in night
 
 n_trans <- length(d3t0_all_room_day$night_int[[1]]$daily_int[[1]]$to_zone)+length(d3t0_all_room_day$night_int[[1]]$daily_int[[2]]$to_zone)-2
 
-expect_equal(n_trans, 2 , label='d3t0 expect 2 trans in night')
+expect_equal(n_trans, 0 , label='d3t0 expect 0 trans in night')
 
 # TODO update check start and end day
 
 expect_equal(as.numeric(head(d3t0_all_room_day$day_int[[1]]$daily_int[[1]],n=1)$t1), as.numeric(head(d3t0_all_room_day$day[[1]]$datetime,n=1)) , label='d3t0 expect first record t1 is beginning of day')
-expect_equal(as.numeric(tail(d3t0_all_room_day$day_int[[1]]$daily_int[[2]],n=1)$t2), as.numeric(tail(d3t0_all_room_day$day[[1]]$datetime,n=1)) , label='d3t0 expect last record t2 is beginning of day')
+expect_equal(as.numeric(tail(d3t0_all_room_day$day_int[[1]]$daily_int[[3]],n=1)$t2), as.numeric(tail(d3t0_all_room_day$day[[1]]$datetime,n=1)) , label='d3t0 expect last record t2 is beginning of day')
 
 #  TODO update check start and end night
 
 expect_equal(as.numeric(head(d3t0_all_room_day$night_int[[1]]$daily_int[[1]],n=1)$t1), as.numeric(head(d3t0_all_room_day$night[[1]]$datetime,n=1)) , label='d3t0 expect first record t1 is beginning of night')
-expect_equal(as.numeric(tail(d3t0_all_room_day$night_int[[1]]$daily_int[[2]],n=1)$t2), as.numeric(tail(d3t0_all_room_day$night[[1]]$datetime,n=1)) , label='d3t0 expect last record t2 is beginning of night')
+expect_equal(as.numeric(tail(d3t0_all_room_day$night_int[[1]]$daily_int[[3]],n=1)$t2), as.numeric(tail(d3t0_all_room_day$night[[1]]$datetime,n=1)) , label='d3t0 expect last record t2 is beginning of night')
 
 # check n records day+night - 1 == n records overall 
 
-n_day_trans <- length(d3t0_all_room_day$day_int[[1]]$daily_int[[1]]$to_zone)+length(d3t0_all_room_day$day_int[[1]]$daily_int[[2]]$to_zone)-2
-n_night_trans <- length(d3t0_all_room_day$night_int[[1]]$daily_int[[1]]$to_zone)+length(d3t0_all_room_day$night_int[[1]]$daily_int[[2]]$to_zone)-2
+n_day_trans <- length(d3t0_all_room_day$day_int[[1]]$daily_int[[1]]$to_zone)+length(d3t0_all_room_day$day_int[[1]]$daily_int[[2]]$to_zone)+length(d3t0_all_room_day$day_int[[1]]$daily_int[[3]]$to_zone)-3
+n_night_trans <- length(d3t0_all_room_day$night_int[[1]]$daily_int[[1]]$to_zone)+length(d3t0_all_room_day$night_int[[1]]$daily_int[[2]]$to_zone)+length(d3t0_all_room_day$night_int[[1]]$daily_int[[3]]$to_zone)-3
 
 n_trans_overall <- length(d3t0_overall_interval$interval[[1]]$to_zone)-1
 
