@@ -1639,7 +1639,7 @@ d3t3_all_analysis <- d3t3_struct |>
  mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T05:00:00", "2021-05-06 T22:00:00")))
 
 # check that there are two zones observed
-expect_equal(unique(d3t3_all_analysis$slicedTsibble[[1]]$value),c("top","middle","bottom"), label='d3t3 sliced tsibble valuecol')
+expect_equal(unique(d3t3_all_analysis$slicedTsibble[[1]]$value),c("middle","top","bottom"), label='d3t3 sliced tsibble valuecol')
 
 # TODO can we delete the sampled?
 d3t3_regular <- d3t3_all_analysis |>
