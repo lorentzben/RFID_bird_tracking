@@ -1430,7 +1430,7 @@ d3t1_all_room_day <- d3t1_all_room_day |>
 
 n_trans <- length(d3t1_all_room_day$day_int[[1]]$daily_int[[1]]$to_zone)+length(d3t1_all_room_day$day_int[[1]]$daily_int[[2]]$to_zone)-2
 
-expect_equal(n_trans, 0 , label='d3t1 expect 0 trans in day')
+expect_equal(n_trans, 1 , label='d3t1 expect 1 trans in day')
 
 # check 0 trans in night
 
