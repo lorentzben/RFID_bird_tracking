@@ -1749,4 +1749,145 @@ d3t3_all_room_time_budget <- d3t3_all_room_day |>
 
 # TEST getNightRecords when on the separation of a week
 
+tw <- read.csv("../data/test_data/two_weeks_test_r11.csv")
+
+#tw$tagname <- tw$LegBand
+
+bird_ids_tw <- unique(tw$tagname)
+bird_ids_tw <- na.trim(sort(bird_ids_tw))
+
+tw["DateTime"] <- as.POSIXct(tw$access, origin="1970-01-01", tz="GMT")
+
+print("what makes up subzone col")
+unique(tw$subzone)
+
+tw$subzone[tw$subzone == "Bottom"] <- "bottom"
+tw$subzone[tw$subzone == "Middle"] <- "middle"
+tw$subzone[tw$subzone == "Top"] <- "top"
+
+
+print("what makes up subzone col")
+unique(tw$subzone)
+
+print("how many NAs in DateTime and Subzone")
+sum(is.na(tw$DateTime))
+sum(is.na(tw$subzone))
+
+# This is a hack to work with the downloaded data from excel and onedrive
+tw$accessdate <- ymd_hms(tw$DateTime)
+
+tw_struct <- tw |> nest(data = - tagname) |> 
+ na.exclude() |>
+ mutate(tsibble = map(data, ~tsibble(datetime = ymd_hms(.x$accessdate), value = .x$subzone, index = datetime) ))
+
+tw_all_analysis <- tw_struct |>
+ mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T05:00:00", "2021-05-06 T22:00:00")))
+
+# check that there are two zones observed
+expect_equal(unique(tw_all_analysis$slicedTsibble[[1]]$value),c("top","bottom","middle"), label='tw sliced tsibble valuecol')
+
+# TODO can we delete the sampled?
+tw_regular <- tw_all_analysis |>
+ select(c(tagname, slicedTsibble)) |>
+ mutate(near_5 = map(slicedTsibble, ~ nice_start(.x, "5 seconds",5/60))) |>
+ mutate(perSec = map(near_5, ~ fill_gaps(.x)))|>
+ mutate(sampled = map(perSec, ~ na.locf(.x))) 
+
+
+# first item to compare to day+night
+tw_overall_interval <- tw_regular |>
+  mutate(interval = map(sampled, ~timeToIntervals(.x)))
+
+tw_overall_interval_tsibble <- tw_regular |>
+  mutate(interval = map(near_5, ~timeToIntervals(.x)))
+
+expect_equal(tw_overall_interval$interval, tw_overall_interval_tsibble$interval, label='tw is sampled equal to tsibble when it comes to time to intervals') 
+
+tw_all_room_time_budget <- tw_overall_interval |>
+  mutate(tb = map(interval, ~ getTimeBudgetProp(.x))) |>
+  unnest(tb) 
+
+#TODO can compare this later but not functional right now
+tw_overall_tb <- tw_all_room_time_budget |>
+    select("Interval.1.", "Interval.2.", "X1", "X2", "X3")
+
+# Interval <- c(ymd_hms(as.POSIXct.numeric(as.numeric(head(tw_overall_interval$interval[[1]],n=1)$t1),origin=origin)),ymd_hms(as.POSIXct.numeric(as.numeric(tail(tw_overall_interval$interval[[1]],n=1)$t2),origin=origin)))
+
+# # check overall time budget
+# bot_time <- sum(tw$subzone == "bottom")/length(tw$subzone)
+# mid_time <- sum(tw$subzone == "middle")/length(tw$subzone)
+# top_time <- sum(tw$subzone == "top")/length(tw$subzone)
+# expected_res <- tibble(data.frame(Interval[1],Interval[2],matrix(c(bot_time,mid_time,top_time), ncol=3)))
+
+# # check that time budget says that it spent
+# expect_equal(tw_overall_tb, expected_res, label='tw overall time budget')
+
+# TODO change the code to be slicedTsibble as opposed to sampled
+tw_all_room_day <- tw_overall_interval |>
+  mutate(day = map(slicedTsibble, ~ getDayRecords(.x,"05:00","22:00"))) |>
+  mutate(night = map(slicedTsibble, ~ getNightRecords(.x,"05:00","22:00"))) 
+
+# check n day records
+
+expect_equal(length(tw_all_room_day$day[[1]]$day), sum(tw$characteristic == "day"), label='tw num of day records')
+
+# check n night records
+
+expect_equal(length(tw_all_room_day$night[[1]]$day), sum(tw$characteristic == "night"), label='tw num of night records')
+
+# check that rejoining day and night gives you the overall table (Will break if Regmi wants to have a hour deadband for night)
+
+expect_equal( bind_rows(tw_all_room_day$day[[1]],tw_all_room_day$night[[1]])[,1:2], tw_overall_interval$slicedTsibble[[1]], label='tw day+night == overall')
+
+# check range of dos
+
+expect_equal(sort(unique(tw_all_room_day$day[[1]]$dos)), sort(unique(tw$day)) , label='tw unique dos counts')
+expect_equal(sort(unique(tw_all_room_day$night[[1]]$dos)), sort(unique(tw$day)) , label='tw unique dos night counts')
+
+# check range of wos
+
+expect_equal(sort(unique(tw_all_room_day$day[[1]]$wos)), sort(unique(tw$week)) , label='tw unique wos counts')
+
+tw_all_room_day <- tw_all_room_day |>
+  mutate(day_int = map(day, ~ nestedTimeToIntervals(.x))) |>
+  mutate(night_int = map(night, ~ nestedTimeToIntervals(.x)))
+
+# # check 0 trans in day
+
+# n_trans <- length(tw_all_room_day$day_int[[1]]$daily_int[[1]]$to_zone)+length(tw_all_room_day$day_int[[1]]$daily_int[[2]]$to_zone)+length(tw_all_room_day$day_int[[1]]$daily_int[[3]]$to_zone)-3
+
+# expect_equal(n_trans, 2 , label='tw expect 2 trans in day')
+
+# # check 0 trans in night
+
+# n_trans <- length(tw_all_room_day$night_int[[1]]$daily_int[[1]]$to_zone)+length(tw_all_room_day$night_int[[1]]$daily_int[[2]]$to_zone)+length(tw_all_room_day$night_int[[1]]$daily_int[[3]]$to_zone)-3
+
+# expect_equal(n_trans, 1 , label='tw expect 1 trans in night')
+
+# # TODO update check start and end day
+
+# expect_equal(as.numeric(head(tw_all_room_day$day_int[[1]]$daily_int[[1]],n=1)$t1), as.numeric(head(tw_all_room_day$day[[1]]$datetime,n=1)) , label='tw expect first record t1 is beginning of day')
+# expect_equal(as.numeric(tail(tw_all_room_day$day_int[[1]]$daily_int[[3]],n=1)$t2), as.numeric(tail(tw_all_room_day$day[[1]]$datetime,n=1)) , label='tw expect last record t2 is beginning of day')
+
+# #  TODO update check start and end night
+
+# expect_equal(as.numeric(head(tw_all_room_day$night_int[[1]]$daily_int[[1]],n=1)$t1), as.numeric(head(tw_all_room_day$night[[1]]$datetime,n=1)) , label='tw expect first record t1 is beginning of night')
+# expect_equal(as.numeric(tail(tw_all_room_day$night_int[[1]]$daily_int[[3]],n=1)$t2), as.numeric(tail(tw_all_room_day$night[[1]]$datetime,n=1)) , label='tw expect last record t2 is beginning of night')
+
+# # check n records day+night - 1 == n records overall 
+
+# n_day_trans <- length(tw_all_room_day$day_int[[1]]$daily_int[[1]]$to_zone)+length(tw_all_room_day$day_int[[1]]$daily_int[[2]]$to_zone)+length(tw_all_room_day$day_int[[1]]$daily_int[[3]]$to_zone)-3
+# n_night_trans <- length(tw_all_room_day$night_int[[1]]$daily_int[[1]]$to_zone)+length(tw_all_room_day$night_int[[1]]$daily_int[[2]]$to_zone)+length(tw_all_room_day$night_int[[1]]$daily_int[[3]]$to_zone)-3
+
+# n_trans_overall <- length(tw_overall_interval$interval[[1]]$to_zone)-1
+
+# # Mismatch error because there are transitions at day and night
+# expect_equal(as.numeric(n_day_trans+n_night_trans), as.numeric(n_trans_overall) , label='tw expect nTransDay+nTransNight == nTransOverall')
+
+# tw_all_room_time_budget <- tw_all_room_day |>
+#   mutate(daily_tb = map(day_int, ~ map(.x$daily_int, ~ getTimeBudgetProp(.x)))) |>
+#   mutate(night_tb = map(night_int, ~ map(.x$daily_int, ~ getTimeBudgetProp(.x))))
+
+### END OF TWO WEEK TEST
+
 # TEST getDayRecords when on the separation of a week
