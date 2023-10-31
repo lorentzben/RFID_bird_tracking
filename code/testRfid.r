@@ -1704,13 +1704,13 @@ d3t3_all_room_day <- d3t3_all_room_day |>
 
 # check 0 trans in day
 
-n_trans <- length(d3t3_all_room_day$day_int[[1]]$daily_int[[1]]$to_zone)+length(d3t3_all_room_day$day_int[[1]]$daily_int[[2]]$to_zone)-2
+n_trans <- length(d3t3_all_room_day$day_int[[1]]$daily_int[[1]]$to_zone)+length(d3t3_all_room_day$day_int[[1]]$daily_int[[2]]$to_zone)+length(d3t3_all_room_day$day_int[[1]]$daily_int[[3]]$to_zone)-3
 
 expect_equal(n_trans, 2 , label='d3t3 expect 2 trans in day')
 
 # check 0 trans in night
 
-n_trans <- length(d3t3_all_room_day$night_int[[1]]$daily_int[[1]]$to_zone)+length(d3t3_all_room_day$night_int[[1]]$daily_int[[2]]$to_zone)-2
+n_trans <- length(d3t3_all_room_day$night_int[[1]]$daily_int[[1]]$to_zone)+length(d3t3_all_room_day$night_int[[1]]$daily_int[[2]]$to_zone)+length(d3t3_all_room_day$night_int[[1]]$daily_int[[3]]$to_zone)-3
 
 expect_equal(n_trans, 1 , label='d3t3 expect 1 trans in night')
 
