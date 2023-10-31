@@ -749,12 +749,12 @@ expect_equal(n_trans, 0 , label='d2t0 expect 1 trans in night')
 # check start and end day
 
 expect_equal(as.numeric(head(d2t0_all_room_day$day_int[[1]]$daily_int[[1]],n=1)$t1), as.numeric(head(d2t0_all_room_day$day[[1]]$datetime,n=1)) , label='d2t0 expect first record t1 is beginning of day')
-expect_equal(as.numeric(tail(d2t0_all_room_day$day_int[[1]]$daily_int[[1]],n=1)$t2), as.numeric(tail(d2t0_all_room_day$day[[1]]$datetime,n=1)) , label='d2t0 expect last record t2 is beginning of day')
+expect_equal(as.numeric(tail(d2t0_all_room_day$day_int[[1]]$daily_int[[2]],n=1)$t2), as.numeric(tail(d2t0_all_room_day$day[[1]]$datetime,n=1)) , label='d2t0 expect last record t2 is beginning of day')
 
 # check start and end night
 
 expect_equal(as.numeric(head(d2t0_all_room_day$night_int[[1]]$daily_int[[1]],n=1)$t1), as.numeric(head(d2t0_all_room_day$night[[1]]$datetime,n=1)) , label='d2t0 expect first record t1 is beginning of night')
-expect_equal(as.numeric(tail(d2t0_all_room_day$night_int[[1]]$daily_int[[1]],n=1)$t2), as.numeric(tail(d2t0_all_room_day$night[[1]]$datetime,n=1)) , label='d2t0 expect last record t2 is beginning of night')
+expect_equal(as.numeric(tail(d2t0_all_room_day$night_int[[1]]$daily_int[[2]],n=1)$t2), as.numeric(tail(d2t0_all_room_day$night[[1]]$datetime,n=1)) , label='d2t0 expect last record t2 is beginning of night')
 
 # check n records day+night - 1 == n records overall 
 
@@ -887,12 +887,12 @@ expect_equal(n_trans, 0 , label='d2t1 expect 0 trans in night')
 # check start and end day
 
 expect_equal(as.numeric(head(d2t1_all_room_day$day_int[[1]]$daily_int[[1]],n=1)$t1), as.numeric(head(d2t1_all_room_day$day[[1]]$datetime,n=1)) , label='d2t1 expect first record t1 is beginning of day')
-expect_equal(as.numeric(tail(d2t1_all_room_day$day_int[[1]]$daily_int[[1]],n=1)$t2), as.numeric(tail(d2t1_all_room_day$day[[1]]$datetime,n=1)) , label='d2t1 expect last record t2 is beginning of day')
+expect_equal(as.numeric(tail(d2t1_all_room_day$day_int[[1]]$daily_int[[2]],n=1)$t2), as.numeric(tail(d2t1_all_room_day$day[[1]]$datetime,n=1)) , label='d2t1 expect last record t2 is beginning of day')
 
 # check start and end night
 
 expect_equal(as.numeric(head(d2t1_all_room_day$night_int[[1]]$daily_int[[1]],n=1)$t1), as.numeric(head(d2t1_all_room_day$night[[1]]$datetime,n=1)) , label='d2t1 expect first record t1 is beginning of night')
-expect_equal(as.numeric(tail(d2t1_all_room_day$night_int[[1]]$daily_int[[1]],n=1)$t2), as.numeric(tail(d2t1_all_room_day$night[[1]]$datetime,n=1)) , label='d2t1 expect last record t2 is beginning of night')
+expect_equal(as.numeric(tail(d2t1_all_room_day$night_int[[1]]$daily_int[[2]],n=1)$t2), as.numeric(tail(d2t1_all_room_day$night[[1]]$datetime,n=1)) , label='d2t1 expect last record t2 is beginning of night')
 
 # check n records day+night - 1 == n records overall 
 
@@ -1025,12 +1025,12 @@ expect_equal(n_trans, 2 , label='d2t2 expect 2 trans in night')
 # TODO update check start and end day
 
 expect_equal(as.numeric(head(d2t2_all_room_day$day_int[[1]]$daily_int[[1]],n=1)$t1), as.numeric(head(d2t2_all_room_day$day[[1]]$datetime,n=1)) , label='d2t2 expect first record t1 is beginning of day')
-expect_equal(as.numeric(tail(d2t2_all_room_day$day_int[[1]]$daily_int[[1]],n=1)$t2), as.numeric(tail(d2t2_all_room_day$day[[1]]$datetime,n=1)) , label='d2t2 expect last record t2 is beginning of day')
+expect_equal(as.numeric(tail(d2t2_all_room_day$day_int[[1]]$daily_int[[2]],n=1)$t2), as.numeric(tail(d2t2_all_room_day$day[[1]]$datetime,n=1)) , label='d2t2 expect last record t2 is beginning of day')
 
 #  TODO update check start and end night
 
 expect_equal(as.numeric(head(d2t2_all_room_day$night_int[[1]]$daily_int[[1]],n=1)$t1), as.numeric(head(d2t2_all_room_day$night[[1]]$datetime,n=1)) , label='d2t2 expect first record t1 is beginning of night')
-expect_equal(as.numeric(tail(d2t2_all_room_day$night_int[[1]]$daily_int[[1]],n=1)$t2), as.numeric(tail(d2t2_all_room_day$night[[1]]$datetime,n=1)) , label='d2t2 expect last record t2 is beginning of night')
+expect_equal(as.numeric(tail(d2t2_all_room_day$night_int[[1]]$daily_int[[2]],n=1)$t2), as.numeric(tail(d2t2_all_room_day$night[[1]]$datetime,n=1)) , label='d2t2 expect last record t2 is beginning of night')
 
 # check n records day+night - 1 == n records overall 
 
@@ -1163,12 +1163,12 @@ expect_equal(n_trans, 2 , label='d2t3 expect 2 trans in night')
 # TODO update check start and end day
 
 expect_equal(as.numeric(head(d2t3_all_room_day$day_int[[1]]$daily_int[[1]],n=1)$t1), as.numeric(head(d2t3_all_room_day$day[[1]]$datetime,n=1)) , label='d2t3 expect first record t1 is beginning of day')
-expect_equal(as.numeric(tail(d2t3_all_room_day$day_int[[1]]$daily_int[[1]],n=1)$t2), as.numeric(tail(d2t3_all_room_day$day[[1]]$datetime,n=1)) , label='d2t3 expect last record t2 is beginning of day')
+expect_equal(as.numeric(tail(d2t3_all_room_day$day_int[[1]]$daily_int[[2]],n=1)$t2), as.numeric(tail(d2t3_all_room_day$day[[1]]$datetime,n=1)) , label='d2t3 expect last record t2 is beginning of day')
 
 #  TODO update check start and end night
 
 expect_equal(as.numeric(head(d2t3_all_room_day$night_int[[1]]$daily_int[[1]],n=1)$t1), as.numeric(head(d2t3_all_room_day$night[[1]]$datetime,n=1)) , label='d2t3 expect first record t1 is beginning of night')
-expect_equal(as.numeric(tail(d2t3_all_room_day$night_int[[1]]$daily_int[[1]],n=1)$t2), as.numeric(tail(d2t3_all_room_day$night[[1]]$datetime,n=1)) , label='d2t3 expect last record t2 is beginning of night')
+expect_equal(as.numeric(tail(d2t3_all_room_day$night_int[[1]]$daily_int[[2]],n=1)$t2), as.numeric(tail(d2t3_all_room_day$night[[1]]$datetime,n=1)) , label='d2t3 expect last record t2 is beginning of night')
 
 # check n records day+night - 1 == n records overall 
 
