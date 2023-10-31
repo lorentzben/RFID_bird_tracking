@@ -182,13 +182,17 @@ getDayRecords <- function(data, start, end){
 
 getNightRecords <- function(data, start, end){
 
+  first_day_of_study <- format(data[1]$datetime,"%Y/%m/%d")
+
   data$day <- (format(data$datetime, "%H:%M") >= start & format(data$datetime, "%H:%M") < end)
 
   night <- data[data$day != TRUE,]
 
   night$date <- format(night$datetime, "%Y/%m/%d")
 
-  date_to_day <- data.frame(cbind(unique(night$date),1:length(unique(night$date))))
+  night_dates <- c(first_day_of_study, night$date)
+
+  date_to_day <- data.frame(cbind(unique(night_dates),1:length(unique(night_dates))))
 
   colnames(date_to_day) <- c('datetime','dos')
 
