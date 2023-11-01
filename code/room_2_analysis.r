@@ -81,16 +81,16 @@ room_2_all_analysis <- room_2_all_analysis |>
 # interpolate the rest of the intervals
 room_2_regular <- room_2_all_analysis |>
  select(c(tagname, slicedTsibble)) |>
- mutate(near_5 = map(slicedTsibble, ~ nice_start(.x, "5 seconds",5/60))) #|>
- #mutate(perSec = map(near_5, ~ fill_gaps(.x)))|>
- #mutate(sampled = map(perSec, ~ na.locf(.x))) 
+ mutate(near_5 = map(slicedTsibble, ~ nice_start(.x, "5 seconds",5/60))) |>
+ mutate(perSec = map(near_5, ~ fill_gaps(.x)))|>
+ mutate(sampled = map(perSec, ~ na.locf(.x))) 
 
 room_2_dupes <- room_2_regular |>
-  select(tagname, near_5) |> 
-  mutate(duplicates = map(near_5, ~duplicates(.x)))
+  select(tagname, sampled) |> 
+  mutate(duplicates = map(sampled, ~duplicates(.x)))
 
 room_2_interval <- room_2_regular |>
-  mutate(interval = map(near_5, ~timeToIntervals(.x))) 
+  mutate(interval = map(sampled, ~timeToIntervals(.x))) 
 
 # TODO need to set start and end timepoints for this dataset.
 room_2_all_room_time_budget <- room_2_interval |>
@@ -127,8 +127,8 @@ for(i in 1:length(room_2_struct$tagname)){
 # Make day and night "raw data" tables
 
 room_2_all_room_day <- room_2_interval |>
-  mutate(day = map(near_5, ~ getDayRecords(.x,"05:00","22:00"))) |>
-  mutate(night = map(near_5, ~ getNightRecords(.x,"05:00","22:00"))) 
+  mutate(day = map(sampled, ~ getDayRecords(.x,"05:00","22:00"))) |>
+  mutate(night = map(sampled, ~ getNightRecords(.x,"05:00","22:00"))) 
 
 # Turn day and night tables into daily interval tables
 

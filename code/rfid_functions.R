@@ -75,114 +75,37 @@ getTimeBudgetProp <- function(data) {
   if(all.equal(colnames(data),c("t1","t2","from_zone","to_zone"))){
     # store inteval as minutes
     TBStag<- data.frame(t = (as.numeric(data$t2) - as.numeric(data$t1)) / 60, to_zone=data$to_zone)
+    Interval <- c(ymd_hms(as.POSIXct.numeric(as.numeric(head(data,n=1)$t1),origin=origin)),ymd_hms(as.POSIXct.numeric(as.numeric(tail(data,n=1)$t2),origin=origin)))
 
-    if(length(TBStag$t) == 1 && TBStag$t[1] == 0){
-      TBStag$t <- 1
-
-      if(hour(as.POSIXct.numeric(as.numeric(head(data,n=1)$t2),origin=origin)) %in% c(22,23)){
-        interval_2 <- ymd_hms(paste(as.Date(as.POSIXct.numeric(as.numeric(head(data,n=1)$t2),origin=origin))+1,"05:00:00"))
-
-        Interval <- c(ymd_hms(as.POSIXct.numeric(as.numeric(head(data,n=1)$t1),origin=origin)),interval_2)
-
-        TBbot<-sum(TBStag[which(TBStag$to_zone == "bottom"),]$t)/sum(TBStag$t)
-          
-        TBmid<-sum(TBStag[which(TBStag$to_zone == "middle"),]$t)/sum(TBStag$t)
-          
-        TBtop<-sum(TBStag[which(TBStag$to_zone == "top"),]$t)/sum(TBStag$t)
+    TBbot<-sum(TBStag[which(TBStag$to_zone == "bottom"),]$t)/sum(TBStag$t)
         
-        TBS<-matrix(c(TBbot,TBmid,TBtop),ncol=3)
-
-        return(data.frame(Interval[1],Interval[2],TBS))
-      } else {
-        interval_2 <- ymd_hms(paste(as.Date(as.POSIXct.numeric(as.numeric(head(data,n=1)$t2),origin=origin)),"05:00:00"))
-
-        Interval <- c(ymd_hms(as.POSIXct.numeric(as.numeric(head(data,n=1)$t1),origin=origin)),interval_2)
-
-        TBbot<-sum(TBStag[which(TBStag$to_zone == "bottom"),]$t)/sum(TBStag$t)
-          
-        TBmid<-sum(TBStag[which(TBStag$to_zone == "middle"),]$t)/sum(TBStag$t)
-          
-        TBtop<-sum(TBStag[which(TBStag$to_zone == "top"),]$t)/sum(TBStag$t)
+    TBmid<-sum(TBStag[which(TBStag$to_zone == "middle"),]$t)/sum(TBStag$t)
         
-        TBS<-matrix(c(TBbot,TBmid,TBtop),ncol=3)
-
-        return(data.frame(Interval[1],Interval[2],TBS))
-
-      }
-
-    } else {
-      Interval <- c(ymd_hms(as.POSIXct.numeric(as.numeric(head(data,n=1)$t1),origin=origin)),ymd_hms(as.POSIXct.numeric(as.numeric(tail(data,n=1)$t2),origin=origin)))
-
-      TBbot<-sum(TBStag[which(TBStag$to_zone == "bottom"),]$t)/sum(TBStag$t)
-        
-      TBmid<-sum(TBStag[which(TBStag$to_zone == "middle"),]$t)/sum(TBStag$t)
-        
-      TBtop<-sum(TBStag[which(TBStag$to_zone == "top"),]$t)/sum(TBStag$t)
+    TBtop<-sum(TBStag[which(TBStag$to_zone == "top"),]$t)/sum(TBStag$t)
       
-      TBS<-matrix(c(TBbot,TBmid,TBtop),ncol=3)
+    TBS<-matrix(c(TBbot,TBmid,TBtop),ncol=3)
 
-      return(data.frame(Interval[1],Interval[2],TBS))
-    }
+    return(data.frame(Interval[1],Interval[2],TBS))
 
-    
   } else if(all.equal(colnames(data),c("t1","t2","zone"))){
       # store inteval as minutes
     TBStag<- data.frame(t = (as.numeric(data$t2) - as.numeric(data$t1)) / 60, zone=data$zone)
 
-    if(length(TBStag$t) == 1 && TBStag$t[1] == 0){
-      TBStag$t <- 1
+    Interval <- c(ymd_hms(as.POSIXct.numeric(as.numeric(head(data,n=1)$t1),origin=origin)),ymd_hms(as.POSIXct.numeric(as.numeric(tail(data,n=1)$t2),origin=origin)))
 
-      if(hour(as.POSIXct.numeric(as.numeric(head(data,n=1)$t2),origin=origin)) %in% c(22,23)){
-        interval_2 <- ymd_hms(paste(as.Date(as.POSIXct.numeric(as.numeric(head(data,n=1)$t2),origin=origin))+1,"05:00:00"))
-
-        Interval <- c(ymd_hms(as.POSIXct.numeric(as.numeric(head(data,n=1)$t1),origin=origin)),interval_2)
-
-        TBbot<-sum(TBStag[which(TBStag$zone == "bottom"),]$t)/sum(TBStag$t)
-          
-        TBmid<-sum(TBStag[which(TBStag$zone == "middle"),]$t)/sum(TBStag$t)
-          
-        TBtop<-sum(TBStag[which(TBStag$zone == "top"),]$t)/sum(TBStag$t)
+    TBbot<-sum(TBStag[which(TBStag$zone == "bottom"),]$t)/sum(TBStag$t)
         
-        TBS<-matrix(c(TBbot,TBmid,TBtop),ncol=3)
-
-        return(data.frame(Interval[1],Interval[2],TBS))
-      } else {
-        interval_2 <- ymd_hms(paste(as.Date(as.POSIXct.numeric(as.numeric(head(data,n=1)$t2),origin=origin)),"05:00:00"))
-
-        Interval <- c(ymd_hms(as.POSIXct.numeric(as.numeric(head(data,n=1)$t1),origin=origin)),interval_2)
-
-        TBbot<-sum(TBStag[which(TBStag$zone == "bottom"),]$t)/sum(TBStag$t)
-          
-        TBmid<-sum(TBStag[which(TBStag$zone == "middle"),]$t)/sum(TBStag$t)
-          
-        TBtop<-sum(TBStag[which(TBStag$zone == "top"),]$t)/sum(TBStag$t)
+    TBmid<-sum(TBStag[which(TBStag$zone == "middle"),]$t)/sum(TBStag$t)
         
-        TBS<-matrix(c(TBbot,TBmid,TBtop),ncol=3)
-
-        return(data.frame(Interval[1],Interval[2],TBS))
-
-      }
+    TBtop<-sum(TBStag[which(TBStag$zone == "top"),]$t)/sum(TBStag$t)
       
-      
-    } else {
-      Interval <- c(ymd_hms(as.POSIXct.numeric(as.numeric(head(data,n=1)$t1),origin=origin)),ymd_hms(as.POSIXct.numeric(as.numeric(tail(data,n=1)$t2),origin=origin)))
+    TBS<-matrix(c(TBbot,TBmid,TBtop),ncol=3)
 
-      TBbot<-sum(TBStag[which(TBStag$zone == "bottom"),]$t)/sum(TBStag$t)
-        
-      TBmid<-sum(TBStag[which(TBStag$zone == "middle"),]$t)/sum(TBStag$t)
-        
-      TBtop<-sum(TBStag[which(TBStag$zone == "top"),]$t)/sum(TBStag$t)
-      
-      TBS<-matrix(c(TBbot,TBmid,TBtop),ncol=3)
-
-      return(data.frame(Interval[1],Interval[2],TBS))
-    }
+    return(data.frame(Interval[1],Interval[2],TBS))
   } else {
     print("this should not happen")
     exit(0)
   }
-
-  
   
 }
 
@@ -301,7 +224,7 @@ nestedTimeToIntervals <- function(data){
 }
 
 # Function to turn time table into interval table, handles case of 0,1,2,...n transtitions
-
+# TODO remove cases we dont need
 timeToIntervals <- function(data){
   requireNamespace("dplyr")
 
