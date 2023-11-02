@@ -39,9 +39,9 @@ if [ ! -d "../output/all_rooms" ]; then
     mkdir -p ../output/no_room_3
 fi
 
-# Run Room 2 Individual Analysis
+# # Run Room 2 Individual Analysis
 
-Rscript room_2_analysis.r > ../logs/"$TS"_rm2.log
+# Rscript room_2_analysis.r > ../logs/"$TS"_rm2.log
 
 # # Run Room 3 Individual Analysis 
 
@@ -55,8 +55,8 @@ Rscript room_2_analysis.r > ../logs/"$TS"_rm2.log
 
 # Rscript room_11_analysis.r > ../logs/"$TS"_rm11.log
 
-# # Run All Room Joint Analysis
+# Run All Room Joint Analysis
 
-# Rscript joint_analysis.r > ../logs/"$TS"_joint.log
+Rscript joint_analysis.r > ../logs/"$TS"_joint.log
 
 echo "Script finished"

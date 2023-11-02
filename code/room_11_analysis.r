@@ -69,7 +69,7 @@ room_11_struct <- room_11 |> nest(data = - tagname) |>
  mutate(tsibble = map(cleaned, ~tsibble(datetime = ymd_hms(.x$accessdate), value = .x$subzone, index = datetime) ))
 
 room_11_all_analysis <- room_11_struct |>
- mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-18 T23:30:00", "2021-05-06 T23:00:00")))
+ mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T04:00:00", "2021-05-06 T22:00:00")))
 
 (room_11_boundries <- data.frame(room_11_summary$tagname, room_11_summary$first_rec, room_11_summary$last_rec))
 
@@ -130,8 +130,8 @@ for(i in 1:length(room_11_struct$tagname)){
 # Make day and night "raw data" tables
 
 room_11_all_room_day <- room_11_interval |>
-  mutate(day = map(sampled, ~ getDayRecords(.x,"05:00","22:00"))) |>
-  mutate(night = map(sampled, ~ getNightRecords(.x,"05:00","22:00"))) 
+  mutate(day = map(sampled, ~ getDayRecords(.x,"04:00","22:00"))) |>
+  mutate(night = map(sampled, ~ getNightRecords(.x,"04:00","22:00"))) 
 
 # Turn day and night tables into daily interval tables
 
@@ -199,7 +199,7 @@ night_tbs_df <- read_csv(night_tbs)
 nest_night_tbs <- night_tbs_df |>
    nest(data = - tagname)
 
-# Daytime Plots 05:00-22:00
+# Daytime Plots 04:00-22:00
 
 for(i in 1:length(nest_day_tbs$tagname)){
 
