@@ -346,6 +346,8 @@ rm_11_overall$rm <- 11
 overall_table <- bind_rows(rm_2_overall, rm_3_overall, rm_8_overall, rm_11_overall)
 
 
+
+
 # # separate out low medium high activity
 
 summary_overall <- summary(overall_table$ntrans)
@@ -366,3 +368,39 @@ overall_high_act$activity <- rep("high",length(overall_high_act$ntrans))
 overall_org_table <- bind_rows(overall_low_act,overall_med_act, overall_high_act)
 
 overall_org_table <- overall_org_table[order(overall_org_table$ntrans),]
+
+
+### separate out low medium high activity for day time ###
+
+rm_2_day$rm <- 2
+
+rm_3_day$rm <- 3
+
+rm_8_day$rm <- 8
+
+rm_11_day$rm <- 11
+
+day_table <- bind_rows(rm_2_day, rm_3_day, rm_8_day, rm_11_day)
+
+summary_day <- summary(day_table$ntrans)
+
+l2m <- summary_day[2]
+
+m2h <- summary_day[5]
+
+day_low_act <- day_table[day_table$ntrans < l2m,]
+day_low_act$activity <- rep("low",length(day_low_act$ntrans))
+
+day_med_act <- day_table[(l2m < day_table$ntrans) & (day_table$ntrans <= m2h),]
+day_med_act$activity <- rep("medium",length(day_med_act$ntrans))
+
+day_high_act <- day_table[(day_table$ntrans > m2h),]
+day_high_act$activity <- rep("high",length(day_high_act$ntrans))
+
+day_org_table <- bind_rows(day_low_act,day_med_act, day_high_act)
+
+day_org_table <- day_org_table[order(day_org_table$ntrans),]
+
+### Where do the high low medium birds nest at night? ### 
+
+### does the weekly time budget differ from feb to april ### 
