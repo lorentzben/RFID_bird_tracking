@@ -39,21 +39,21 @@ if [ ! -d "../output/all_rooms" ]; then
     mkdir -p ../output/no_room_3
 fi
 
-# # Run Room 2 Individual Analysis
+# Run Room 2 Individual Analysis
 
-# Rscript room_2_analysis.r > ../logs/"$TS"_rm2.log
+Rscript room_2_analysis.r > ../logs/"$TS"_rm2.log
 
-# # Run Room 3 Individual Analysis 
+# Run Room 3 Individual Analysis 
 
-# Rscript room_3_analysis.r > ../logs/"$TS"_rm3.log
+Rscript room_3_analysis.r > ../logs/"$TS"_rm3.log
 
-# # Run Room 8 Individual Analysis
+# Run Room 8 Individual Analysis
 
-# Rscript room_8_analysis.r > ../logs/"$TS"_rm8.log
+Rscript room_8_analysis.r > ../logs/"$TS"_rm8.log
 
-# # Run Room 11 Individual Analysis
+# Run Room 11 Individual Analysis
 
-# Rscript room_11_analysis.r > ../logs/"$TS"_rm11.log
+Rscript room_11_analysis.r > ../logs/"$TS"_rm11.log
 
 # Run All Room Joint Analysis
 

@@ -67,8 +67,9 @@ room_2_struct <- room_2 |> nest(data = - tagname) |>
  mutate(cleaned = map(id_dupes, ~.x[! .x$duplicate == 1,])) |>
  mutate(tsibble = map(cleaned, ~tsibble(datetime = ymd_hms(.x$accessdate), value = .x$subzone, index = datetime) ))
 
+
 room_2_all_analysis <- room_2_struct |>
- mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T04:00:00", "2021-05-06 T22:00:00")))
+ mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-03-10 T04:00:00", "2021-05-06 T22:00:00")))
 
 (room_2_boundries <- data.frame(room_2_summary$tagname, room_2_summary$first_rec, room_2_summary$last_rec))
 
@@ -127,7 +128,7 @@ for(i in 1:length(room_2_struct$tagname)){
 # Make day and night "raw data" tables
 
 room_2_all_room_day <- room_2_interval |>
-  mutate(day = map(sampled, ~ getDayRecords(.x,"4:00","22:00"))) |>
+  mutate(day = map(sampled, ~ getDayRecords(.x,"04:00","22:00"))) |>
   mutate(night = map(sampled, ~ getNightRecords(.x,"04:00","22:00"))) 
 
 # Turn day and night tables into daily interval tables
