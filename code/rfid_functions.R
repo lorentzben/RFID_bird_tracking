@@ -286,3 +286,6 @@ timeToIntervals <- function(data){
 
 }
 
+nightZoneFromTB <- function(data){
+  
+}

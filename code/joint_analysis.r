@@ -36,54 +36,6 @@ rm_2_night_int_df <- read_csv(rm_2_night_int)
 rm_2_nest_night_int <- rm_2_night_int_df |>
    nest(data = - tagname)
 
-# # read in room 3 tables
-
-# day_tbs <- Sys.glob("../intermediate/all_rooms/room_3_day_time_budget_*")
-
-# night_tbs <- Sys.glob("../intermediate/all_rooms/room_3_night_time_budget_*")
-
-# day_tbs_df <- read_csv(day_tbs)
-
-# nest_day_tbs <- day_tbs_df |>
-#   nest(data = -tagname)
-
-# night_tbs_df <- read_csv(night_tbs)
-
-# nest_night_tbs <- night_tbs_df |>
-#    nest(data = - tagname)
-
-# # read in room 8 tables
-
-# day_tbs <- Sys.glob("../intermediate/all_rooms/room_8_day_time_budget_*")
-
-# night_tbs <- Sys.glob("../intermediate/all_rooms/room_8_night_time_budget_*")
-
-# day_tbs_df <- read_csv(day_tbs)
-
-# nest_day_tbs <- day_tbs_df |>
-#   nest(data = -tagname)
-
-# night_tbs_df <- read_csv(night_tbs)
-
-# nest_night_tbs <- night_tbs_df |>
-#    nest(data = - tagname)
-
-# # read in room 11 tables
-
-# day_tbs <- Sys.glob("../intermediate/all_rooms/room_11_day_time_budget_*")
-
-# night_tbs <- Sys.glob("../intermediate/all_rooms/room_11_night_time_budget_*")
-
-# day_tbs_df <- read_csv(day_tbs)
-
-# nest_day_tbs <- day_tbs_df |>
-#   nest(data = -tagname)
-
-# night_tbs_df <- read_csv(night_tbs)
-
-# nest_night_tbs <- night_tbs_df |>
-#    nest(data = - tagname)
-
 # calc num trans in room 2
 
 rm_2_overall <- rm_2_nest_overall_int |>
@@ -402,5 +354,41 @@ day_org_table <- bind_rows(day_low_act,day_med_act, day_high_act)
 day_org_table <- day_org_table[order(day_org_table$ntrans),]
 
 ### Where do the high low medium birds nest at night? ### 
+
+# read in time budget tables
+
+rm_2_day_tb <- Sys.glob("../intermediate/all_rooms/room_2_day_time_budget_*")
+rm_2_night_tb <- Sys.glob("../intermediate/all_rooms/room_2_night_time_budget_*")
+
+rm_3_day_tb <- Sys.glob("../intermediate/all_rooms/room_3_day_time_budget_*")
+rm_3_night_tb <- Sys.glob("../intermediate/all_rooms/room_3_night_time_budget_*")
+
+rm_8_day_tb <- Sys.glob("../intermediate/all_rooms/room_8_day_time_budget_*")
+rm_8_night_tb <- Sys.glob("../intermediate/all_rooms/room_8_night_time_budget_*")
+
+rm_11_day_tb <- Sys.glob("../intermediate/all_rooms/room_11_day_time_budget_*")
+rm_11_night_tb <- Sys.glob("../intermediate/all_rooms/room_11_night_time_budget_*")
+
+day_tb_df <- read_csv(c(rm_2_day_tb, rm_3_day_tb, rm_8_day_tb, rm_11_day_tb))
+
+nest_day_tb <- day_tb_df |>
+  nest(data = -tagname)
+
+night_tb_df <- read_csv(c(rm_2_night_tb, rm_3_night_tb, rm_8_night_tb, rm_11_night_tb))
+
+nest_night_tb <- night_tb_df |>
+   nest(data = - tagname)
+
+# select high activity birds
+day_high <- day_org_table[day_org_table$activity =="high",]
+overall_high <- overall_org_table[overall_org_table$activity == "high",]
+
+# check same ids are slotted as high
+expect_equal(sort(day_high$tagname), sort(overall_high$tagname))
+
+# select high time budgets based on ids
+
+high_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% day_high$tagname,]
+
 
 ### does the weekly time budget differ from feb to april ### 
