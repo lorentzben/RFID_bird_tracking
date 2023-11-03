@@ -197,7 +197,7 @@ getNightRecords <- function(data, start, end){
 
   #night$dos <- as.numeric(date_to_day[match(format(night$datetime, "%Y/%m/%d"), date_to_day$datetime),2])
 
-  night$dos <- ifelse(hour(night$datetime) %in% c(0,1,2,3,4,5),as.numeric(date_to_day[match(format(night$datetime, "%Y/%m/%d"), date_to_day$datetime),2])-1, as.numeric(date_to_day[match(format(night$datetime, "%Y/%m/%d"), date_to_day$datetime),2]))
+  night$dos <- ifelse(hour(night$datetime) %in% c(0,1,2,3,4),as.numeric(date_to_day[match(format(night$datetime, "%Y/%m/%d"), date_to_day$datetime),2])-1, as.numeric(date_to_day[match(format(night$datetime, "%Y/%m/%d"), date_to_day$datetime),2]))
 
 
   #night$dos <- as.numeric(date_to_day[match(format(night$datetime, "%Y/%m/%d"), date_to_day$datetime),2])

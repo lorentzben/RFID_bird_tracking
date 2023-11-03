@@ -69,7 +69,7 @@ room_8_struct <- room_8 |> nest(data = - tagname) |>
  mutate(tsibble = map(cleaned, ~tsibble(datetime = ymd_hms(.x$accessdate), value = .x$subzone, index = datetime) ))
 
 room_8_all_analysis <- room_8_struct |>
- mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-18 T23:30:00", "2021-05-06 T23:00:00")))
+ mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-03-10 T04:00:00", "2021-05-06 T23:00:00")))
 
 (room_8_boundries <- data.frame(room_8_summary$tagname, room_8_summary$first_rec, room_8_summary$last_rec))
 
