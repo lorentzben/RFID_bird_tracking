@@ -1741,11 +1741,15 @@ d3t3_all_room_time_budget <- d3t3_all_room_day |>
 ### END OF THREE DAY THREE TRANS
 
 
-### Duplicate entries ###
+### DUPLICATE DAT ###
 
-# One day one trans one dupe
+# TODO possibly Deprecated 
 
-# One day one trans multiple dupes
+# Sythetic Duplicate #
+
+### END SYNTHETIC DUPLICATE ###
+
+# Real Duplicate #
 
 # TEST getNightRecords when on the separation of a week
 
