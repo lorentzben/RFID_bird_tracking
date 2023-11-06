@@ -63,8 +63,8 @@ print("median, mean, minimum ; duration between transitions (sec)")
 
 room_2_struct <- room_2 |> nest(data = - tagname) |> 
  na.exclude() |>
- mutate(id_dupes = map(data ,~identify_duplicate_records(.x))) |>
- mutate(cleaned = map(id_dupes, ~.x[! .x$duplicate == 1,])) |>
+#  mutate(id_dupes = map(data ,~identify_duplicate_records(.x))) |>
+ mutate(cleaned = map(data, ~distinct(.x, accessdate, .keep_all=TRUE))) |>
  mutate(tsibble = map(cleaned, ~tsibble(datetime = ymd_hms(.x$accessdate), value = .x$subzone, index = datetime) ))
 
 
