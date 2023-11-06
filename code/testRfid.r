@@ -1745,11 +1745,90 @@ d3t3_all_room_time_budget <- d3t3_all_room_day |>
 
 # TODO possibly Deprecated 
 
-# Sythetic Duplicate #
-
-### END SYNTHETIC DUPLICATE ###
-
 # Real Duplicate #
+
+dupe <- read.csv("../data/test_data/id_dupes-R3.csv")
+
+dupe$tagname <- dupe$LegBand
+
+bird_ids_dupe <- unique(dupe$tagname)
+bird_ids_dupe <- na.trim(sort(bird_ids_dupe))
+
+dupe["DateTime"] <- as.POSIXct(dupe$access, origin="1970-01-01", tz="GMT")
+
+print("what makes up subzone col")
+unique(dupe$subzone)
+
+dupe$subzone[dupe$subzone == "Bottom"] <- "bottom"
+dupe$subzone[dupe$subzone == "Middle"] <- "middle"
+dupe$subzone[dupe$subzone == "Top"] <- "top"
+
+
+print("what makes up subzone col")
+unique(dupe$subzone)
+
+print("how many NAs in DateTime and Subzone")
+sum(is.na(dupe$DateTime))
+sum(is.na(dupe$subzone))
+
+# This is a hack to work with the downloaded data from excel and onedrive
+dupe$accessdate <- ymd_hms(dupe$DateTime)
+#dupe$datetime <- dupe$accessdate
+
+dupe_dupe_struct <- dupe |> nest(data = - tagname) |> 
+ na.exclude() |>
+ mutate(id_dupes = map(data ,~identify_duplicate_records(.x))) |>
+ mutate(cleaned = map(id_dupes, ~.x[! .x$duplicate == 1,])) |>
+ mutate(tsibble = map(cleaned, ~tsibble(datetime = ymd_hms(.x$accessdate), value = .x$subzone, index = datetime) ))
+
+dupe_struct <- dupe |> 
+ nest(data = - tagname) |> 
+ na.exclude() |> 
+ mutate(rmDupe = map(data, ~distinct(.x, accessdate, .keep_all=TRUE))) |>
+ mutate(tsibble = map(rmDupe, ~tsibble(datetime = ymd_hms(.x$accessdate), value = .x$subzone, index = datetime) ))
+
+#these are probably not actually equal because of the ID dupes function
+expect_gt(length(dupe_struct$tsibble[[2]]$datetime), length(dupe_dupe_struct$tsibble[[2]]$datetime))
+
+
+dupe_all_analysis <- dupe_struct |>
+ mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T04:00:00", "2021-05-06 T22:00:00")))
+
+dupe_dupe_all_analysis <- dupe_dupe_struct |>
+ mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T04:00:00", "2021-05-06 T22:00:00")))
+
+dupe_regular <- dupe_all_analysis |>
+ select(c(tagname, slicedTsibble)) |>
+ mutate(near_5 = map(slicedTsibble, ~ nice_start(.x, "5 seconds",5/60))) |>
+ mutate(perSec = map(near_5, ~ fill_gaps(.x))) |>
+ mutate(sampled = map(perSec, ~ na.locf(.x)))
+
+dupe_dupe_regular <- dupe_dupe_all_analysis |>
+ select(c(tagname, slicedTsibble)) |>
+ mutate(near_5 = map(slicedTsibble, ~ nice_start(.x, "5 seconds",5/60))) |>
+ mutate(perSec = map(near_5, ~ fill_gaps(.x))) |>
+ mutate(sampled = map(perSec, ~ na.locf(.x)))
+
+dupe_overall_interval <- dupe_regular |>
+  mutate(interval = map(sampled, ~timeToIntervals(.x)))
+
+dupe_dupe_overall_interval <- dupe_dupe_regular |>
+  mutate(interval = map(sampled, ~timeToIntervals(.x)))
+
+
+# are the same number of trans observed?
+
+# #no! 
+# > length(dupe_overall_interval$interval[[1]]$t1)
+# [1] 1269
+# > length(dupe_overall_interval$interval[[2]]$t1)
+# [1] 893
+# > length(dupe_dupe_overall_interval$interval[[1]]$t1)
+# [1] 805
+# > length(dupe_dupe_overall_interval$interval[[2]]$t1)
+# [1] 498
+
+### END REAL DUPLICATED ###
 
 # TEST getNightRecords when on the separation of a week
 

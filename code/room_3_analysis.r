@@ -69,6 +69,7 @@ room_3_struct <- room_3 |> nest(data = - tagname) |>
  mutate(cleaned = map(id_dupes, ~.x[! .x$duplicate == 1,])) |>
  mutate(tsibble = map(cleaned, ~tsibble(datetime = ymd_hms(.x$accessdate), value = .x$subzone, index = datetime) ))
 
+
 room_3_all_analysis <- room_3_struct |>
  mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-03-10 T04:00:00", "2021-05-06 T22:00:00")))
 
