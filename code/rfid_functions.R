@@ -57,10 +57,14 @@ sliceTsibble <- function(data, start, stop){
 nice_start <- function(dataframe, units, interval_min){
   requireNamespace("lubridate")
   dataframe[1,1]$datetime <- round_date(ymd_hms(dataframe[1,1]$datetime), unit=units)
-  attr(dataframe, 'interval') <- new_interval(min=interval_min)
+  
   # remove duplicate entries 
   #dataframe <- dataframe[!duplicates(dataframe)]
+  dataframe <- dataframe |> 
+    distinct(datetime, .keep_all=TRUE)
+  dataframe <- tsibble(dataframe,index= datetime)
 
+  attr(dataframe, 'interval') <- new_interval(min=interval_min)
   return(dataframe)
 }
 

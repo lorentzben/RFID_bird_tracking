@@ -69,7 +69,7 @@ room_11_struct <- room_11 |> nest(data = - tagname) |>
  mutate(tsibble = map(cleaned, ~tsibble(datetime = ymd_hms(.x$accessdate), value = .x$subzone, index = datetime) ))
 
 room_11_all_analysis <- room_11_struct |>
- mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-03-10 T04:00:00", "2021-05-06 T22:00:00")))
+ mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(as_tibble(.x), "2021-03-10 T04:00:00", "2021-05-06 T22:00:00")))
 
 (room_11_boundries <- data.frame(room_11_summary$tagname, room_11_summary$first_rec, room_11_summary$last_rec))
 
@@ -84,7 +84,7 @@ room_11_all_analysis <- room_11_all_analysis |>
 room_11_regular <- room_11_all_analysis |>
  select(c(tagname, slicedTsibble)) |>
  mutate(near_5 = map(slicedTsibble, ~ nice_start(.x, "5 seconds",5/60))) |>
- mutate(perSec = map(near_5, ~ fill_gaps(.x)))|>
+ mutate(perSec = map(near_5, ~fill_gaps(.x))) |>
  mutate(sampled = map(perSec, ~ na.locf(.x))) 
 
 room_11_dupes <- room_11_regular |>
