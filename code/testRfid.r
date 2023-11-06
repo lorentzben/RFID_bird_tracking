@@ -30,7 +30,7 @@ oc_struct <- oc |> nest(data = - tagname) |>
  mutate(tsibble = map(data, ~tsibble(datetime = ymd_hms(.x$accessdate), value = .x$subzone, index = datetime) ))
 
 oc_all_analysis <- oc_struct |>
- mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T05:00:00", "2021-05-06 T22:00:00")))
+ mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T04:00:00", "2021-05-06 T22:00:00")))
 
 expect_equal(oc_all_analysis$slicedTsibble[[1]], NA, label='outside cutoff values')
 
@@ -69,7 +69,7 @@ d1t0_struct <- d1t0 |> nest(data = - tagname) |>
  mutate(tsibble = map(data, ~tsibble(datetime = ymd_hms(.x$accessdate), value = .x$subzone, index = datetime) ))
 
 d1t0_all_analysis <- d1t0_struct |>
- mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T05:00:00", "2021-05-06 T22:00:00")))
+ mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T04:00:00", "2021-05-06 T22:00:00")))
 
 # check that there are zero trans
 expect_equal(unique(d1t0_all_analysis$slicedTsibble[[1]]$value),"bottom", label='d1t0 sliced tsibble valuecol')
@@ -111,8 +111,8 @@ expect_equal(d1t0_overall_tb, expected_res, label='d1t0 overall time budget')
 
 # TODO change the code to be slicedTsibble as opposed to sampled
 d1t0_all_room_day <- d1t0_overall_interval |>
-  mutate(day = map(slicedTsibble, ~ getDayRecords(.x,"05:00","22:00"))) |>
-  mutate(night = map(slicedTsibble, ~ getNightRecords(.x,"05:00","22:00"))) 
+  mutate(day = map(slicedTsibble, ~ getDayRecords(.x,"04:00","22:00"))) |>
+  mutate(night = map(slicedTsibble, ~ getNightRecords(.x,"04:00","22:00"))) 
 
 # check n day records
 
@@ -227,7 +227,7 @@ d1t1_struct <- d1t1 |> nest(data = - tagname) |>
  mutate(tsibble = map(data, ~tsibble(datetime = ymd_hms(.x$accessdate), value = .x$subzone, index = datetime) ))
 
 d1t1_all_analysis <- d1t1_struct |>
- mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T05:00:00", "2021-05-06 T22:00:00")))
+ mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T04:00:00", "2021-05-06 T22:00:00")))
 
 # check that there are two zones observed
 expect_equal(unique(d1t1_all_analysis$slicedTsibble[[1]]$value),c("bottom","top"), label='d1t1 sliced tsibble valuecol')
@@ -265,8 +265,8 @@ d1t1_overall_tb <- d1t1_all_room_time_budget |>
 
 # TODO change the code to be slicedTsibble as opposed to sampled
 d1t1_all_room_day <- d1t1_overall_interval |>
-  mutate(day = map(slicedTsibble, ~ getDayRecords(.x,"05:00","22:00"))) |>
-  mutate(night = map(slicedTsibble, ~ getNightRecords(.x,"05:00","22:00"))) 
+  mutate(day = map(slicedTsibble, ~ getDayRecords(.x,"04:00","22:00"))) |>
+  mutate(night = map(slicedTsibble, ~ getNightRecords(.x,"04:00","22:00"))) 
 
 # check n day records
 
@@ -383,7 +383,7 @@ d1t2_struct <- d1t2 |> nest(data = - tagname) |>
  mutate(tsibble = map(data, ~tsibble(datetime = ymd_hms(.x$accessdate), value = .x$subzone, index = datetime) ))
 
 d1t2_all_analysis <- d1t2_struct |>
- mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T05:00:00", "2021-05-06 T22:00:00")))
+ mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T04:00:00", "2021-05-06 T22:00:00")))
 
 # check that there are two zones observed
 expect_equal(unique(d1t2_all_analysis$slicedTsibble[[1]]$value),c("middle","bottom"), label='d1t2 sliced tsibble valuecol')
@@ -423,8 +423,8 @@ d1t2_overall_tb <- d1t2_all_room_time_budget |>
 
 # TODO change the code to be slicedTsibble as opposed to sampled
 d1t2_all_room_day <- d1t2_overall_interval |>
-  mutate(day = map(slicedTsibble, ~ getDayRecords(.x,"05:00","22:00"))) |>
-  mutate(night = map(slicedTsibble, ~ getNightRecords(.x,"05:00","22:00"))) 
+  mutate(day = map(slicedTsibble, ~ getDayRecords(.x,"04:00","22:00"))) |>
+  mutate(night = map(slicedTsibble, ~ getNightRecords(.x,"04:00","22:00"))) 
 
 # check n day records
 
@@ -526,7 +526,7 @@ d1t3_struct <- d1t3 |> nest(data = - tagname) |>
  mutate(tsibble = map(data, ~tsibble(datetime = ymd_hms(.x$accessdate), value = .x$subzone, index = datetime) ))
 
 d1t3_all_analysis <- d1t3_struct |>
- mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T05:00:00", "2021-05-06 T22:00:00")))
+ mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T04:00:00", "2021-05-06 T22:00:00")))
 
 # check that there are two zones observed
 expect_equal(unique(d1t3_all_analysis$slicedTsibble[[1]]$value),c("middle","top"), label='d1t3 sliced tsibble valuecol')
@@ -564,8 +564,8 @@ d1t3_overall_tb <- d1t3_all_room_time_budget |>
 
 # TODO change the code to be slicedTsibble as opposed to sampled
 d1t3_all_room_day <- d1t3_overall_interval |>
-  mutate(day = map(slicedTsibble, ~ getDayRecords(.x,"05:00","22:00"))) |>
-  mutate(night = map(slicedTsibble, ~ getNightRecords(.x,"05:00","22:00"))) 
+  mutate(day = map(slicedTsibble, ~ getDayRecords(.x,"04:00","22:00"))) |>
+  mutate(night = map(slicedTsibble, ~ getNightRecords(.x,"04:00","22:00"))) 
 
 # check n day records
 
@@ -668,7 +668,7 @@ d2t0_struct <- d2t0 |> nest(data = - tagname) |>
  mutate(tsibble = map(data, ~tsibble(datetime = ymd_hms(.x$accessdate), value = .x$subzone, index = datetime) ))
 
 d2t0_all_analysis <- d2t0_struct |>
- mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T05:00:00", "2021-05-06 T22:00:00")))
+ mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T04:00:00", "2021-05-06 T22:00:00")))
 
 # check that there are two zones observed
 expect_equal(unique(d2t0_all_analysis$slicedTsibble[[1]]$value),c("bottom"), label='d2t0 sliced tsibble valuecol')
@@ -706,8 +706,8 @@ d2t0_overall_tb <- d2t0_all_room_time_budget |>
 
 # TODO change the code to be slicedTsibble as opposed to sampled
 d2t0_all_room_day <- d2t0_overall_interval |>
-  mutate(day = map(slicedTsibble, ~ getDayRecords(.x,"05:00","22:00"))) |>
-  mutate(night = map(slicedTsibble, ~ getNightRecords(.x,"05:00","22:00"))) 
+  mutate(day = map(slicedTsibble, ~ getDayRecords(.x,"04:00","22:00"))) |>
+  mutate(night = map(slicedTsibble, ~ getNightRecords(.x,"04:00","22:00"))) 
 
 # check n day records
 
@@ -806,7 +806,7 @@ d2t1_struct <- d2t1 |> nest(data = - tagname) |>
  mutate(tsibble = map(data, ~tsibble(datetime = ymd_hms(.x$accessdate), value = .x$subzone, index = datetime) ))
 
 d2t1_all_analysis <- d2t1_struct |>
- mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T05:00:00", "2021-05-06 T22:00:00")))
+ mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T04:00:00", "2021-05-06 T22:00:00")))
 
 # check that there are two zones observed
 expect_equal(unique(d2t1_all_analysis$slicedTsibble[[1]]$value),c("top","middle"), label='d2t1 sliced tsibble valuecol')
@@ -844,8 +844,8 @@ d2t1_overall_tb <- d2t1_all_room_time_budget |>
 
 # TODO change the code to be slicedTsibble as opposed to sampled
 d2t1_all_room_day <- d2t1_overall_interval |>
-  mutate(day = map(slicedTsibble, ~ getDayRecords(.x,"05:00","22:00"))) |>
-  mutate(night = map(slicedTsibble, ~ getNightRecords(.x,"05:00","22:00"))) 
+  mutate(day = map(slicedTsibble, ~ getDayRecords(.x,"04:00","22:00"))) |>
+  mutate(night = map(slicedTsibble, ~ getNightRecords(.x,"04:00","22:00"))) 
 
 # check n day records
 
@@ -944,7 +944,7 @@ d2t2_struct <- d2t2 |> nest(data = - tagname) |>
  mutate(tsibble = map(data, ~tsibble(datetime = ymd_hms(.x$accessdate), value = .x$subzone, index = datetime) ))
 
 d2t2_all_analysis <- d2t2_struct |>
- mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T05:00:00", "2021-05-06 T22:00:00")))
+ mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T04:00:00", "2021-05-06 T22:00:00")))
 
 # check that there are two zones observed
 expect_equal(unique(d2t2_all_analysis$slicedTsibble[[1]]$value),c('top',"middle","bottom"), label='d2t2 sliced tsibble valuecol')
@@ -982,8 +982,8 @@ d2t2_overall_tb <- d2t2_all_room_time_budget |>
 
 # TODO change the code to be slicedTsibble as opposed to sampled
 d2t2_all_room_day <- d2t2_overall_interval |>
-  mutate(day = map(slicedTsibble, ~ getDayRecords(.x,"05:00","22:00"))) |>
-  mutate(night = map(slicedTsibble, ~ getNightRecords(.x,"05:00","22:00"))) 
+  mutate(day = map(slicedTsibble, ~ getDayRecords(.x,"04:00","22:00"))) |>
+  mutate(night = map(slicedTsibble, ~ getNightRecords(.x,"04:00","22:00"))) 
 
 # check n day records
 
@@ -1082,7 +1082,7 @@ d2t3_struct <- d2t3 |> nest(data = - tagname) |>
  mutate(tsibble = map(data, ~tsibble(datetime = ymd_hms(.x$accessdate), value = .x$subzone, index = datetime) ))
 
 d2t3_all_analysis <- d2t3_struct |>
- mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T05:00:00", "2021-05-06 T22:00:00")))
+ mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T04:00:00", "2021-05-06 T22:00:00")))
 
 # check that there are two zones observed
 expect_equal(unique(d2t3_all_analysis$slicedTsibble[[1]]$value),c('middle',"top","bottom"), label='d2t3 sliced tsibble valuecol')
@@ -1120,8 +1120,8 @@ d2t3_overall_tb <- d2t3_all_room_time_budget |>
 
 # TODO change the code to be slicedTsibble as opposed to sampled
 d2t3_all_room_day <- d2t3_overall_interval |>
-  mutate(day = map(slicedTsibble, ~ getDayRecords(.x,"05:00","22:00"))) |>
-  mutate(night = map(slicedTsibble, ~ getNightRecords(.x,"05:00","22:00"))) 
+  mutate(day = map(slicedTsibble, ~ getDayRecords(.x,"04:00","22:00"))) |>
+  mutate(night = map(slicedTsibble, ~ getNightRecords(.x,"04:00","22:00"))) 
 
 # check n day records
 
@@ -1222,7 +1222,7 @@ d3t0_struct <- d3t0 |> nest(data = - tagname) |>
  mutate(tsibble = map(data, ~tsibble(datetime = ymd_hms(.x$accessdate), value = .x$subzone, index = datetime) ))
 
 d3t0_all_analysis <- d3t0_struct |>
- mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T05:00:00", "2021-05-06 T22:00:00")))
+ mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T04:00:00", "2021-05-06 T22:00:00")))
 
 # check that there are two zones observed
 expect_equal(unique(d3t0_all_analysis$slicedTsibble[[1]]$value),c("middle"), label='d3t0 sliced tsibble valuecol')
@@ -1260,8 +1260,8 @@ d3t0_overall_tb <- d3t0_all_room_time_budget |>
 
 # TODO change the code to be slicedTsibble as opposed to sampled
 d3t0_all_room_day <- d3t0_overall_interval |>
-  mutate(day = map(slicedTsibble, ~ getDayRecords(.x,"05:00","22:00"))) |>
-  mutate(night = map(slicedTsibble, ~ getNightRecords(.x,"05:00","22:00"))) 
+  mutate(day = map(slicedTsibble, ~ getDayRecords(.x,"04:00","22:00"))) |>
+  mutate(night = map(slicedTsibble, ~ getNightRecords(.x,"04:00","22:00"))) 
 
 # check n day records
 
@@ -1360,7 +1360,7 @@ d3t1_struct <- d3t1 |> nest(data = - tagname) |>
  mutate(tsibble = map(data, ~tsibble(datetime = ymd_hms(.x$accessdate), value = .x$subzone, index = datetime) ))
 
 d3t1_all_analysis <- d3t1_struct |>
- mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T05:00:00", "2021-05-06 T22:00:00")))
+ mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T04:00:00", "2021-05-06 T22:00:00")))
 
 # check that there are two zones observed
 expect_equal(unique(d3t1_all_analysis$slicedTsibble[[1]]$value),c("top","bottom"), label='d3t1 sliced tsibble valuecol')
@@ -1398,8 +1398,8 @@ d3t1_overall_tb <- d3t1_all_room_time_budget |>
 
 # TODO change the code to be slicedTsibble as opposed to sampled
 d3t1_all_room_day <- d3t1_overall_interval |>
-  mutate(day = map(slicedTsibble, ~ getDayRecords(.x,"05:00","22:00"))) |>
-  mutate(night = map(slicedTsibble, ~ getNightRecords(.x,"05:00","22:00"))) 
+  mutate(day = map(slicedTsibble, ~ getDayRecords(.x,"04:00","22:00"))) |>
+  mutate(night = map(slicedTsibble, ~ getNightRecords(.x,"04:00","22:00"))) 
 
 # check n day records
 
@@ -1498,7 +1498,7 @@ d3t2_struct <- d3t2 |> nest(data = - tagname) |>
  mutate(tsibble = map(data, ~tsibble(datetime = ymd_hms(.x$accessdate), value = .x$subzone, index = datetime) ))
 
 d3t2_all_analysis <- d3t2_struct |>
- mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T05:00:00", "2021-05-06 T22:00:00")))
+ mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T04:00:00", "2021-05-06 T22:00:00")))
 
 # check that there are two zones observed
 expect_equal(unique(d3t2_all_analysis$slicedTsibble[[1]]$value),c("top","middle","bottom"), label='d3t2 sliced tsibble valuecol')
@@ -1536,8 +1536,8 @@ d3t2_overall_tb <- d3t2_all_room_time_budget |>
 
 # TODO change the code to be slicedTsibble as opposed to sampled
 d3t2_all_room_day <- d3t2_overall_interval |>
-  mutate(day = map(slicedTsibble, ~ getDayRecords(.x,"05:00","22:00"))) |>
-  mutate(night = map(slicedTsibble, ~ getNightRecords(.x,"05:00","22:00"))) 
+  mutate(day = map(slicedTsibble, ~ getDayRecords(.x,"04:00","22:00"))) |>
+  mutate(night = map(slicedTsibble, ~ getNightRecords(.x,"04:00","22:00"))) 
 
 # check n day records
 
@@ -1636,7 +1636,7 @@ d3t3_struct <- d3t3 |> nest(data = - tagname) |>
  mutate(tsibble = map(data, ~tsibble(datetime = ymd_hms(.x$accessdate), value = .x$subzone, index = datetime) ))
 
 d3t3_all_analysis <- d3t3_struct |>
- mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T05:00:00", "2021-05-06 T22:00:00")))
+ mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T04:00:00", "2021-05-06 T22:00:00")))
 
 # check that there are two zones observed
 expect_equal(unique(d3t3_all_analysis$slicedTsibble[[1]]$value),c("middle","top","bottom"), label='d3t3 sliced tsibble valuecol')
@@ -1674,8 +1674,8 @@ d3t3_overall_tb <- d3t3_all_room_time_budget |>
 
 # TODO change the code to be slicedTsibble as opposed to sampled
 d3t3_all_room_day <- d3t3_overall_interval |>
-  mutate(day = map(slicedTsibble, ~ getDayRecords(.x,"05:00","22:00"))) |>
-  mutate(night = map(slicedTsibble, ~ getNightRecords(.x,"05:00","22:00"))) 
+  mutate(day = map(slicedTsibble, ~ getDayRecords(.x,"04:00","22:00"))) |>
+  mutate(night = map(slicedTsibble, ~ getNightRecords(.x,"04:00","22:00"))) 
 
 # check n day records
 
@@ -1785,7 +1785,7 @@ tw_struct <- tw |> nest(data = - tagname) |>
  mutate(tsibble = map(data, ~tsibble(datetime = ymd_hms(.x$accessdate), value = .x$subzone, index = datetime) ))
 
 tw_all_analysis <- tw_struct |>
- mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T05:00:00", "2021-05-06 T22:00:00")))
+ mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T04:00:00", "2021-05-06 T22:00:00")))
 
 # check that there are two zones observed
 expect_equal(unique(tw_all_analysis$slicedTsibble[[1]]$value),c("top","bottom","middle"), label='tw sliced tsibble valuecol')
@@ -1828,8 +1828,8 @@ tw_overall_tb <- tw_all_room_time_budget |>
 
 # TODO change the code to be slicedTsibble as opposed to sampled
 tw_all_room_day <- tw_overall_interval |>
-  mutate(day = map(slicedTsibble, ~ getDayRecords(.x,"05:00","22:00"))) |>
-  mutate(night = map(slicedTsibble, ~ getNightRecords(.x,"05:00","22:00"))) 
+  mutate(day = map(slicedTsibble, ~ getDayRecords(.x,"04:00","22:00"))) |>
+  mutate(night = map(slicedTsibble, ~ getNightRecords(.x,"04:00","22:00"))) 
 
 # check n day records
 
@@ -1930,7 +1930,7 @@ oran_struct <- oran |> nest(data = - tagname) |>
  mutate(tsibble = map(data, ~tsibble(datetime = ymd_hms(.x$accessdate), value = .x$subzone, index = datetime) ))
 
 oran_all_analysis <- oran_struct |>
- mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T05:00:00", "2021-05-06 T22:00:00")))
+ mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-02-19 T04:00:00", "2021-05-06 T22:00:00")))
 
 
 # TODO can we delete the sampled?
@@ -1966,8 +1966,8 @@ oran_overall_tb <- oran_all_room_time_budget |>
 
 # TODO change the code to be slicedTsibble as opposed to sampled
 oran_all_room_day <- oran_overall_interval |>
-  mutate(day = map(slicedTsibble, ~ getDayRecords(.x,"05:00","22:00"))) |>
-  mutate(night = map(slicedTsibble, ~ getNightRecords(.x,"05:00","22:00"))) 
+  mutate(day = map(slicedTsibble, ~ getDayRecords(.x,"04:00","22:00"))) |>
+  mutate(night = map(slicedTsibble, ~ getNightRecords(.x,"04:00","22:00"))) 
 
 # check n day records
 
