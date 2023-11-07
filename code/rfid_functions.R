@@ -291,6 +291,12 @@ timeToIntervals <- function(data){
 }
 
 nightZoneFromTB <- function(data){
-  
+  overall_zone_sum <- data[,3:5] |>  
+    na.exclude() |>
+    colSums()
+  nest_zone <- sort(overall_zone_sum)[1]
+
+  return(c(names(nest_zone), nest_zone))
+
 }
 

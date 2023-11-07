@@ -390,5 +390,9 @@ expect_equal(sort(day_high$tagname), sort(overall_high$tagname))
 
 high_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% day_high$tagname,]
 
+high_act_nest <- high_act_night_tb |> 
+  mutate(nest = map(data, ~nightZoneFromTB(.x))) |>
+  unnest(nest)
+
 
 ### does the weekly time budget differ from feb to april ### 
