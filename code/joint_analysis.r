@@ -479,6 +479,35 @@ low_act_nest <- low_act_night_tb |>
 print("Where do the low activity birds nest at night: ")
 (sort(table(low_act_nest$nest),decreasing=T))
 
+### END Activity classification with overall table ###
+
+
+### Activity Classification of room 2 ###
+
+overall_table[overall_table$rm == 2,]
+
+### END Activity Class of room 2 ###
+
+### Activity Classification of room 3 ###
+
+overall_table[overall_table$rm == 3,]
+
+### END Activity Class of room 3 ###
+
+### Activity Classification of room 8 ###
+
+overall_table[overall_table$rm == 8,]
+
+### END Activity Class of room 8 ###
+
+### Activity Classification of room 11 ###
+
+overall_table[overall_table$rm == 11,]
+
+### END Activity Class of room 11 ###
+
+### END Activity Class for each room ### 
+
 ### does the weekly time budget differ from feb to april ### 
 
 day_tb_df$week <- week(day_tb_df$interval1)
