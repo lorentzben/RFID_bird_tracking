@@ -354,13 +354,15 @@ sorted_overall_org <- overall_org_table[order(overall_org_table$activity, overal
 
 sorted_day_org <- day_org_table[order(day_org_table$activity, day_org_table$tagname),]
 
-# high changes 
+# Differences
 
+(diff <- setdiff( sorted_overall_org[,c(1,4)], sorted_day_org[,c(1,4)]))
+same <- intersect( sorted_overall_org[,c(1,4)], sorted_day_org[,c(1,4)])
 
-# med changes
-
-# low changes
-
+# where they are in overall
+(overall_org_table[overall_org_table$tagname %in% diff$tagname,])
+# where they are in day
+(day_org_table[day_org_table$tagname %in% diff$tagname,])
 
 ### Compare overall low med high act to night time classification ###
 
@@ -393,12 +395,19 @@ night_org_table <- bind_rows(night_low_act,night_med_act, night_high_act)
 
 night_org_table <- night_org_table[order(night_org_table$ntrans),]
 
-# high changes 
+sorted_overall_org <- overall_org_table[order(overall_org_table$activity, overall_org_table$tagname),]
 
-# med changes
+sorted_night_org <- night_org_table[order(night_org_table$activity, night_org_table$tagname),]
 
-# low changes
+# Differences
 
+(diff <- setdiff( sorted_overall_org[,c(1,4)], sorted_night_org[,c(1,4)]))
+same <- intersect( sorted_overall_org[,c(1,4)], sorted_night_org[,c(1,4)])
+
+# where they are in overall
+(overall_org_table[overall_org_table$tagname %in% diff$tagname,])
+# where they are in day
+(night_org_table[night_org_table$tagname %in% diff$tagname,])
 
 
 ### Where do the high low medium birds nest at night? ### 
@@ -428,35 +437,64 @@ nest_night_tb <- night_tb_df |>
    nest(data = - tagname)
 
 # select high activity birds
-day_high <- day_org_table[day_org_table$activity =="high",]
 overall_high <- overall_org_table[overall_org_table$activity == "high",]
-
-# check same ids are slotted as high
-expect_equal(sort(day_high$tagname), sort(overall_high$tagname))
 
 # select high time budgets based on ids
 
-high_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% day_high$tagname,]
+high_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% overall_high$tagname,]
 
 high_act_nest <- high_act_night_tb |> 
   mutate(nest = map(data, ~nightZoneFromTB(.x))) |>
   unnest(nest)
 
-max_nest <- sort(table(high_act_nest$nest),decreasing=T)
+print("Where do the high activity birds nest at night: ")
+(sort(table(high_act_nest$nest),decreasing=T))
 
 # select med activity birds
-day_med <- day_org_table[day_org_table$activity =="medium",]
 overall_med <- overall_org_table[overall_org_table$activity == "medium",]
-
-# check same ids are slotted as med
-expect_equal(sort(day_med$tagname), sort(overall_med$tagname))
 
 # select med time budgets based on ids
 
-med_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% day_med$tagname,]
+med_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% overall_med$tagname,]
 
 med_act_nest <- med_act_night_tb |> 
   mutate(nest = map(data, ~nightZoneFromTB(.x))) |>
   unnest(nest)
 
+
+print("Where do the medium activity birds nest at night: ")
+(sort(table(med_act_nest$nest),decreasing=T))
+
+# select low activity birds
+overall_low <- overall_org_table[overall_org_table$activity == "low",]
+
+# select low time budgets based on ids
+
+low_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% overall_low$tagname,]
+
+low_act_nest <- low_act_night_tb |> 
+  mutate(nest = map(data, ~nightZoneFromTB(.x))) |>
+  unnest(nest)
+
+print("Where do the low activity birds nest at night: ")
+(sort(table(low_act_nest$nest),decreasing=T))
+
 ### does the weekly time budget differ from feb to april ### 
+
+day_tb_df$week <- week(day_tb_df$interval1)
+
+day_bottom_sum <- day_tb_df |>
+  group_by(tagname,week) |>
+  summarize(bottom_mean = mean(Bottom)) 
+
+day_middle_sum <- day_tb_df |>
+  group_by(tagname,week) |>
+  summarize(middle_mean = mean(Middle)) 
+
+day_top_sum <- day_tb_df |>
+  group_by(tagname,week) |>
+  summarize(top_mean = mean(Top))
+
+(overall_day_summary <- cbind(day_bottom_sum,day_middle_sum[,3],day_top_sum[,3]))
+(unique(day_tb_df$interval1))
+(unique(day_tb_df$interval2))
