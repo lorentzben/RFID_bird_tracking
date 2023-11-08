@@ -484,25 +484,245 @@ print("Where do the low activity birds nest at night: ")
 
 ### Activity Classification of room 2 ###
 
-overall_table[overall_table$rm == 2,]
+rm_2 <- overall_table[overall_table$rm == 2,]
+
+summary_rm_2 <- summary(rm_2$ntrans)
+
+l2m <- summary_rm_2[2]
+
+m2h <- summary_rm_2[5]
+
+rm_2_low_act <- rm_2[rm_2$ntrans <= l2m,]
+rm_2_low_act$activity <- rep("low",length(rm_2_low_act$ntrans))
+
+rm_2_med_act <- rm_2[(l2m < rm_2$ntrans) & (rm_2$ntrans <= m2h),]
+rm_2_med_act$activity <- rep("medium",length(rm_2_med_act$ntrans))
+
+rm_2_high_act <- rm_2[(rm_2$ntrans > m2h),]
+rm_2_high_act$activity <- rep("high",length(rm_2_high_act$ntrans))
+
+rm_2_org_table <- bind_rows(rm_2_low_act,rm_2_med_act, rm_2_high_act)
+
+rm_2_org_table <- rm_2_org_table[order(rm_2_org_table$ntrans),]
+
+# select high time budgets based on ids
+
+high_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% rm_2_high_act$tagname,]
+
+high_act_nest <- high_act_night_tb |> 
+  mutate(nest = map(data, ~nightZoneFromTB(.x))) |>
+  unnest(nest)
+
+print("Where do the high activity birds nest at night: ")
+(sort(table(high_act_nest$nest),decreasing=T))
+
+
+# select med time budgets based on ids
+
+med_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% rm_2_med_act$tagname,]
+
+med_act_nest <- med_act_night_tb |> 
+  mutate(nest = map(data, ~nightZoneFromTB(.x))) |>
+  unnest(nest)
+
+
+print("Where do the medium activity birds nest at night: ")
+(sort(table(med_act_nest$nest),decreasing=T))
+
+
+# select low time budgets based on ids
+
+low_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% rm_2_low_act$tagname,]
+
+low_act_nest <- low_act_night_tb |> 
+  mutate(nest = map(data, ~nightZoneFromTB(.x))) |>
+  unnest(nest)
+
+print("Where do the low activity birds nest at night: ")
+(sort(table(low_act_nest$nest),decreasing=T))
 
 ### END Activity Class of room 2 ###
 
 ### Activity Classification of room 3 ###
 
-overall_table[overall_table$rm == 3,]
+rm_3 <- overall_table[overall_table$rm == 3,]
+
+summary_rm_3 <- summary(rm_3$ntrans)
+
+l2m <- summary_rm_3[2]
+
+m2h <- summary_rm_3[5]
+
+rm_3_low_act <- rm_3[rm_3$ntrans <= l2m,]
+rm_3_low_act$activity <- rep("low",length(rm_3_low_act$ntrans))
+
+rm_3_med_act <- rm_3[(l2m < rm_3$ntrans) & (rm_3$ntrans <= m2h),]
+rm_3_med_act$activity <- rep("medium",length(rm_3_med_act$ntrans))
+
+rm_3_high_act <- rm_3[(rm_3$ntrans > m2h),]
+rm_3_high_act$activity <- rep("high",length(rm_3_high_act$ntrans))
+
+rm_3_org_table <- bind_rows(rm_3_low_act,rm_3_med_act, rm_3_high_act)
+
+rm_3_org_table <- rm_3_org_table[order(rm_3_org_table$ntrans),]
+
+# select high time budgets based on ids
+
+high_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% rm_3_high_act$tagname,]
+
+high_act_nest <- high_act_night_tb |> 
+  mutate(nest = map(data, ~nightZoneFromTB(.x))) |>
+  unnest(nest)
+
+print("Where do the high activity birds nest at night: ")
+(sort(table(high_act_nest$nest),decreasing=T))
+
+
+# select med time budgets based on ids
+
+med_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% rm_3_med_act$tagname,]
+
+med_act_nest <- med_act_night_tb |> 
+  mutate(nest = map(data, ~nightZoneFromTB(.x))) |>
+  unnest(nest)
+
+
+print("Where do the medium activity birds nest at night: ")
+(sort(table(med_act_nest$nest),decreasing=T))
+
+
+# select low time budgets based on ids
+
+low_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% rm_3_low_act$tagname,]
+
+low_act_nest <- low_act_night_tb |> 
+  mutate(nest = map(data, ~nightZoneFromTB(.x))) |>
+  unnest(nest)
+
+print("Where do the low activity birds nest at night: ")
+(sort(table(low_act_nest$nest),decreasing=T))
 
 ### END Activity Class of room 3 ###
 
 ### Activity Classification of room 8 ###
 
-overall_table[overall_table$rm == 8,]
+rm_8 <- overall_table[overall_table$rm == 8,]
+
+summary_rm_8 <- summary(rm_8$ntrans)
+
+l2m <- summary_rm_8[2]
+
+m2h <- summary_rm_8[5]
+
+rm_8_low_act <- rm_8[rm_8$ntrans <= l2m,]
+rm_8_low_act$activity <- rep("low",length(rm_8_low_act$ntrans))
+
+rm_8_med_act <- rm_8[(l2m < rm_8$ntrans) & (rm_8$ntrans <= m2h),]
+rm_8_med_act$activity <- rep("medium",length(rm_8_med_act$ntrans))
+
+rm_8_high_act <- rm_8[(rm_8$ntrans > m2h),]
+rm_8_high_act$activity <- rep("high",length(rm_8_high_act$ntrans))
+
+rm_8_org_table <- bind_rows(rm_8_low_act,rm_8_med_act, rm_8_high_act)
+
+rm_8_org_table <- rm_8_org_table[order(rm_8_org_table$ntrans),]
+
+# select high time budgets based on ids
+
+high_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% rm_8_high_act$tagname,]
+
+high_act_nest <- high_act_night_tb |> 
+  mutate(nest = map(data, ~nightZoneFromTB(.x))) |>
+  unnest(nest)
+
+print("Where do the high activity birds nest at night: ")
+(sort(table(high_act_nest$nest),decreasing=T))
+
+
+# select med time budgets based on ids
+
+med_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% rm_8_med_act$tagname,]
+
+med_act_nest <- med_act_night_tb |> 
+  mutate(nest = map(data, ~nightZoneFromTB(.x))) |>
+  unnest(nest)
+
+
+print("Where do the medium activity birds nest at night: ")
+(sort(table(med_act_nest$nest),decreasing=T))
+
+
+# select low time budgets based on ids
+
+low_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% rm_8_low_act$tagname,]
+
+low_act_nest <- low_act_night_tb |> 
+  mutate(nest = map(data, ~nightZoneFromTB(.x))) |>
+  unnest(nest)
+
+print("Where do the low activity birds nest at night: ")
+(sort(table(low_act_nest$nest),decreasing=T))
 
 ### END Activity Class of room 8 ###
 
 ### Activity Classification of room 11 ###
 
-overall_table[overall_table$rm == 11,]
+rm_11 <- overall_table[overall_table$rm == 11,]
+
+summary_rm_11 <- summary(rm_11$ntrans)
+
+l2m <- summary_rm_11[2]
+
+m2h <- summary_rm_11[5]
+
+rm_11_low_act <- rm_11[rm_11$ntrans <= l2m,]
+rm_11_low_act$activity <- rep("low",length(rm_11_low_act$ntrans))
+
+rm_11_med_act <- rm_11[(l2m < rm_11$ntrans) & (rm_11$ntrans <= m2h),]
+rm_11_med_act$activity <- rep("medium",length(rm_11_med_act$ntrans))
+
+rm_11_high_act <- rm_11[(rm_11$ntrans > m2h),]
+rm_11_high_act$activity <- rep("high",length(rm_11_high_act$ntrans))
+
+rm_11_org_table <- bind_rows(rm_11_low_act,rm_11_med_act, rm_11_high_act)
+
+rm_11_org_table <- rm_11_org_table[order(rm_11_org_table$ntrans),]
+
+# select high time budgets based on ids
+
+high_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% rm_11_high_act$tagname,]
+
+high_act_nest <- high_act_night_tb |> 
+  mutate(nest = map(data, ~nightZoneFromTB(.x))) |>
+  unnest(nest)
+
+print("Where do the high activity birds nest at night: ")
+(sort(table(high_act_nest$nest),decreasing=T))
+
+
+# select med time budgets based on ids
+
+med_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% rm_11_med_act$tagname,]
+
+med_act_nest <- med_act_night_tb |> 
+  mutate(nest = map(data, ~nightZoneFromTB(.x))) |>
+  unnest(nest)
+
+
+print("Where do the medium activity birds nest at night: ")
+(sort(table(med_act_nest$nest),decreasing=T))
+
+
+# select low time budgets based on ids
+
+low_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% rm_11_low_act$tagname,]
+
+low_act_nest <- low_act_night_tb |> 
+  mutate(nest = map(data, ~nightZoneFromTB(.x))) |>
+  unnest(nest)
+
+print("Where do the low activity birds nest at night: ")
+(sort(table(low_act_nest$nest),decreasing=T))
 
 ### END Activity Class of room 11 ###
 
