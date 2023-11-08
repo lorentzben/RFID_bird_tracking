@@ -524,6 +524,10 @@ day_top_sum <- day_tb_df |>
   group_by(tagname,week) |>
   summarize(top_mean = mean(Top))
 
-(overall_day_summary <- cbind(day_bottom_sum,day_middle_sum[,3],day_top_sum[,3]))
+overall_day_summary <- cbind(day_bottom_sum,day_middle_sum[,3],day_top_sum[,3])
+overall_day_summary <- data.frame(merge(overall_day_summary,overall_org_table[,c(1,4)], by="tagname"))
+overall_day_summary$activity <- factor(overall_day_summary$activity)
 (unique(day_tb_df$interval1))
 (unique(day_tb_df$interval2))
+
+m1 <- aov(bottom_mean ~ activity + week + activity:week + (1|tagname), overall_day_summary)
