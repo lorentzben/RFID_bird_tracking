@@ -728,6 +728,8 @@ print("Where do the low activity birds nest at night: ")
 
 ### END Activity Class for each room ### 
 
+
+
 ### does the weekly time budget differ from feb to april ### 
 
 day_tb_df$week <- week(day_tb_df$interval1)
