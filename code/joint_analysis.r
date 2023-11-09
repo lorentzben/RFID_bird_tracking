@@ -752,9 +752,91 @@ day_top_sum <- day_tb_df |>
 
 overall_day_summary <- cbind(day_bottom_sum,day_middle_sum[,3],day_top_sum[,3])
 overall_day_summary <- data.frame(merge(overall_day_summary,overall_org_table[,c(1,4)], by="tagname"))
-overall_day_summary$activity <- factor(overall_day_summary$activity)
+overall_day_summary$activity <- factor(overall_day_summary$activity, levels=c("low","medium","high"))
+overall_day_summary$week <- factor(overall_day_summary$week)
 (unique(day_tb_df$interval1))
 (unique(day_tb_df$interval2))
+
+m1 <- lmer(bottom_mean ~ week + activity + week:activity + (1|tagname), overall_day_summary)
+summary(m1)
+anova(m1)
+m1.res <- resid(m1)
+
+# generate and save residual plot of model to check assumptions
+
+png("../figures/all_day/model_diag/bottom_mean_resid.png")
+plot(fitted(m1),m1.res)
+abline(0,0)
+dev.off()
+
+# generate and save Q-Q normal plot to check assumptions
+
+png("../figures/all_day/model_diag/bottom_mean_qq.png")
+qqnorm(m1.res)
+qqline(m1.res)
+dev.off()
+
+
+# Get estimations of bottom time spent
+
+m1.bottom.means <- emmeans(m1, specs=list(weekMeans = ~week,
+                                          actMeans = ~activity,
+                                          jointMeans=~week:activity))
+
+ 
+# interaction plot of week on x
+png("../figures/all_day/model_diag/bottom_interaction_act_week.png")
+emmip(m1.bottom.means$jointMeans, activity~week)
+dev.off()
+
+# interaction plot of activity on x
+png("../figures/all_day/model_diag/bottom_interaction_week_act.png")
+emmip(m1.bottom.means$jointMeans, week~activity)
+dev.off()
+
+# little evidence of interaction so we can use the joint means for comparison I think 
+# are you sure? weeks 12 to 16 flip flop
+
+contrast(m1.bottom.means$jointMeans, method=list(
+  low.vs.medHigh = c(1/9,1/9,1/9,1/9,1/9,1/9,1/9,1/9,1/9,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18),
+  med.vs.high = c(0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1)))
+
+(contrast(m1.bottom.means$actMeans, method="pairwise"))
+
+(contrast(m1.bottom.means$weekMeans, method=list(
+  first.vs.last = c(1,0,0,0,0,0,0,0,-1),
+  ftwo.vs.ltwo = c(1,1,0,0,0,0,0,-1,-1),
+  ffour.vs.lfour = c(1,1,1,1,0,-1,-1,-1,-1))))
+ 
+
+m2 <- lmer(middle_mean ~ week + activity + week:activity + (1|tagname), overall_day_summary)
+summary(m2)
+anova(m2)
+m2.res <- resid(m2)
+
+
+# generate and save residual plot of model to check assumptions
+
+png("../figures/all_day/model_diag/bottom_mean_resid.png")
+plot(fitted(m1),m1.res)
+abline(0,0)
+dev.off()
+
+# generate and save Q-Q normal plot to check assumptions
+
+png("../figures/all_day/model_diag/bottom_mean_qq.png")
+qqnorm(m1.res)
+qqline(m1.res)
+dev.off()
+
+# Get estimations of bottom time spent
+
+m1.bottom.means <- emmeans(m1, spect=~week)
+
+m3 <- lmer(top_mean ~ week + activity + week:activity + (1|tagname), overall_day_summary)
+summary(m3)
+anova(m3)
+
 
 m1 <- aov(bottom_mean ~ activity + week + activity:week + (1|tagname), overall_day_summary)
 
