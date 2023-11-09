@@ -732,6 +732,10 @@ print("Where do the low activity birds nest at night: ")
 
 ### does the weekly time budget differ from feb to april ### 
 
+library(emmeans)
+library(lme4)
+library(lmerTest)
+
 day_tb_df$week <- week(day_tb_df$interval1)
 
 day_bottom_sum <- day_tb_df |>
@@ -753,3 +757,11 @@ overall_day_summary$activity <- factor(overall_day_summary$activity)
 (unique(day_tb_df$interval2))
 
 m1 <- aov(bottom_mean ~ activity + week + activity:week + (1|tagname), overall_day_summary)
+
+### End weekly time budget differ march to april ###
+
+### Does Keel Score differ based on activity level and week ###
+
+keel_score <- read_csv('../data/keel_score/rfid_keel_scores_old_classification.csv')
+
+### End does Keel Score Differ based on activity level and week ###
