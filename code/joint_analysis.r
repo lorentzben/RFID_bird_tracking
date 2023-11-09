@@ -794,20 +794,18 @@ png("../figures/all_day/model_diag/bottom_interaction_week_act.png")
 emmip(m1.bottom.means$jointMeans, week~activity)
 dev.off()
 
-# little evidence of interaction so we can use the joint means for comparison I think 
-# are you sure? weeks 12 to 16 flip flop
+
+# Some evidence of interaction weeks 12 to 16 flip flop
 
 contrast(m1.bottom.means$jointMeans, method=list(
   low.vs.medHigh = c(1/9,1/9,1/9,1/9,1/9,1/9,1/9,1/9,1/9,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18),
-  med.vs.high = c(0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1)))
+  med.vs.high = c(0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1),
+  first.vs.last = c(1,0,0,0,0,0,0,0,-1,1,0,0,0,0,0,0,0,-1,1,0,0,0,0,0,0,0,-1)), adjust="bonferroni")
 
-(contrast(m1.bottom.means$actMeans, method="pairwise"))
+# can we choose a slice of does low activity etc have linear or non-linear 
+contrast(m1.bottom.means$jointMeans, method="poly")
 
-(contrast(m1.bottom.means$weekMeans, method=list(
-  first.vs.last = c(1,0,0,0,0,0,0,0,-1),
-  ftwo.vs.ltwo = c(1,1,0,0,0,0,0,-1,-1),
-  ffour.vs.lfour = c(1,1,1,1,0,-1,-1,-1,-1))))
- 
+
 
 m2 <- lmer(middle_mean ~ week + activity + week:activity + (1|tagname), overall_day_summary)
 summary(m2)
