@@ -803,7 +803,49 @@ contrast(m1.bottom.means$jointMeans, method=list(
   first.vs.last = c(1,0,0,0,0,0,0,0,-1,1,0,0,0,0,0,0,0,-1,1,0,0,0,0,0,0,0,-1)), adjust="bonferroni")
 
 # can we choose a slice of does low activity etc have linear or non-linear 
-contrast(m1.bottom.means$jointMeans, method="poly")
+orthPolyCon <- contr.poly(9)
+
+# linear vs non-linear inside low activity birds
+cl1 <- c(orthPolyCon[,1],0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+cl2 <- c(orthPolyCon[,2],0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+cl3 <- c(orthPolyCon[,3],0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+cl4 <- c(orthPolyCon[,4],0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+cl5 <- c(orthPolyCon[,5],0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+cl6 <- c(orthPolyCon[,6],0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+cl7 <- c(orthPolyCon[,7],0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+cl8 <- c(orthPolyCon[,8],0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
+
+# linear vs non-linear inside low activity birds
+cm1 <- c(0,0,0,0,0,0,0,0,0,orthPolyCon[,1],0,0,0,0,0,0,0,0,0)
+cm2 <- c(0,0,0,0,0,0,0,0,0,orthPolyCon[,2],0,0,0,0,0,0,0,0,0)
+cm3 <- c(0,0,0,0,0,0,0,0,0,orthPolyCon[,3],0,0,0,0,0,0,0,0,0)
+cm4 <- c(0,0,0,0,0,0,0,0,0,orthPolyCon[,4],0,0,0,0,0,0,0,0,0)
+cm5 <- c(0,0,0,0,0,0,0,0,0,orthPolyCon[,5],0,0,0,0,0,0,0,0,0)
+cm6 <- c(0,0,0,0,0,0,0,0,0,orthPolyCon[,6],0,0,0,0,0,0,0,0,0)
+cm7 <- c(0,0,0,0,0,0,0,0,0,orthPolyCon[,7],0,0,0,0,0,0,0,0,0)
+cm8 <- c(0,0,0,0,0,0,0,0,0,orthPolyCon[,8],0,0,0,0,0,0,0,0,0)
+
+# linear vs non-linear inside low activity birds
+ch1 <- c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,orthPolyCon[,1])
+ch2 <- c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,orthPolyCon[,2])
+ch3 <- c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,orthPolyCon[,3])
+ch4 <- c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,orthPolyCon[,4])
+ch5 <- c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,orthPolyCon[,5])
+ch6 <- c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,orthPolyCon[,6])
+ch7 <- c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,orthPolyCon[,7])
+ch8 <- c(0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,orthPolyCon[,8])
+
+contrast(m1.bottom.means$jointMeans, method=list(
+  low.lin=cl1))
+
+test(contrast(m1.bottom.means$jointMeans, method=list(
+  low.2=cl2,
+  low.3=cl3,
+  low.4=cl4,
+  low.5=cl5,
+  low.6=cl6,
+  low.7=cl7,
+  low.8=cl8)),joint=T)
 
 
 
@@ -829,7 +871,7 @@ dev.off()
 
 # Get estimations of bottom time spent
 
-m1.bottom.means <- emmeans(m1, spect=~week)
+m1.bottom.means <- emmeans(m1, specs=~week)
 
 m3 <- lmer(top_mean ~ week + activity + week:activity + (1|tagname), overall_day_summary)
 summary(m3)
