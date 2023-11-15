@@ -894,13 +894,74 @@ test(contrast(m2.middle.means$jointMeans,simple='weekFac',"poly")[13:17],joint=T
 
 ### END OF MIDDLE ZONE ANALYSIS ###
 
+### BEGINING OF TOP ZONE ANALYSIS ###
 
-m3 <- lmer(top_mean ~ week + activity + week:activity + (1|tagname), overall_day_summary)
+m3 <- lmer(top_mean ~ weekFac + activity + weekFac:activity + (1|tagname), overall_day_summary)
 summary(m3)
 anova(m3)
+m3.res <- resid(m3)
+
+# generate and save residual plot of model to check assumptions
+
+png("../figures/all_day/model_diag/top_mean_resid.png")
+plot(fitted(m3),m3.res)
+abline(0,0)
+dev.off()
+
+# generate and save Q-Q normal plot to check assumptions
+
+png("../figures/all_day/model_diag/top_mean_qq.png")
+qqnorm(m3.res)
+qqline(m3.res)
+dev.off()
 
 
-m1 <- aov(bottom_mean ~ activity + week + activity:week + (1|tagname), overall_day_summary)
+# Get estimations of middle time spent
+
+m3.top.means <- emmeans(m3, specs=list(weekMeans = ~weekFac,
+actMeans = ~activity,
+jointMeans=~weekFac:activity))
+
+ 
+# interaction plot of week on x
+png("../figures/all_day/model_diag/top_interaction_act_week.png")
+emmip(m3.top.means$jointMeans, activity~weekFac)
+dev.off()
+
+# interaction plot of activity on x
+png("../figures/all_day/model_diag/top_interaction_week_act.png")
+emmip(m3.top.means$jointMeans, weekFac~activity)
+dev.off()
+
+
+# Some evidence of interaction week 13 to 16
+#TODO Update the analyses below
+
+contrast(m3.top.means$jointMeans, method=list(
+  low.vs.medHigh = c(1/9,1/9,1/9,1/9,1/9,1/9,1/9,1/9,1/9,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18),
+  med.vs.high = c(0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1),
+  first.vs.last = c(1,0,0,0,0,0,0,0,-1,1,0,0,0,0,0,0,0,-1,1,0,0,0,0,0,0,0,-1)), adjust="bonferroni")
+
+
+# top low activity linear effect
+contrast(m3.top.means$jointMeans,simple='weekFac',"poly")[1]
+
+# top low activity non-linear effect
+test(contrast(m3.top.means$jointMeans,simple='weekFac',"poly")[2:6],joint=TRUE)
+
+# top med activity linear effect
+contrast(m3.top.means$jointMeans,simple='weekFac',"poly")[7]
+
+# top med activity non-linear effect
+test(contrast(m3.top.means$jointMeans,simple='weekFac',"poly")[8:12],joint=TRUE)
+
+# top high activity linear effect
+contrast(m3.top.means$jointMeans,simple='weekFac',"poly")[13]
+
+# top high activity non-linear effect 
+test(contrast(m3.top.means$jointMeans,simple='weekFac',"poly")[13:17],joint=TRUE)
+
+### END OF TOP ZONE ANALYSIS ###
 
 ### End weekly time budget differ march to april ###
 
