@@ -874,15 +874,16 @@ contrast(m2.middle.means$actMean, method=list(
   med.vs.high = c(0,-1,1)
 ))
 
-# does the mean time spent in the middle zone differ week to week?
-test(m2.middle.means$weekMean,adjust='bonferroni')
+# does the mean time spent in the middle zone differ week to week averaged across activity levels?
+#test(m2.middle.means$weekMean,adjust='bonferroni')
 
-contrast()
-
+# TODO update these contrasts
 contrast(m2.middle.means$jointMeans, method=list(
-  low.vs.medHigh = c(1/9,1/9,1/9,1/9,1/9,1/9,1/9,1/9,1/9,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18),
-  med.vs.high = c(0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1),
   first.vs.last = c(1,0,0,0,0,0,0,0,-1,1,0,0,0,0,0,0,0,-1,1,0,0,0,0,0,0,0,-1)), adjust="bonferroni")
+
+contrast(m2.middle.means$weekMean, method=list(
+  first.vs.last = c(-1,0,0,0,0,0,0,0,1)
+))
 
 
 # Does the mean time spent in the middle zone have a linear effect?
@@ -936,6 +937,9 @@ dev.off()
 # Some evidence of interaction week 13 to 16
 #TODO Update the analyses below
 
+# does the mean time spent in the top zone differ between low and medium/high act birds?
+# does the mean time spent in the top zone differ between medium and high act birds?
+# does the mean time spent in the top zone differ between first week and last week of the study across activiy levels?
 contrast(m3.top.means$jointMeans, method=list(
   low.vs.medHigh = c(1/9,1/9,1/9,1/9,1/9,1/9,1/9,1/9,1/9,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18),
   med.vs.high = c(0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1),
