@@ -868,29 +868,28 @@ dev.off()
 # I don't really see evidence of interaction so we could use marginal means
 #TODO Update the analyses below
 
+# does the mean time spent in the middle zone differ between bird activity levels?
+contrast(m2.middle.means$actMean, method=list(
+  low.vs.med.high = c(-2,1,1)/2,
+  med.vs.high = c(0,-1,1)
+))
+
+# does the mean time spent in the middle zone differ week to week?
+test(m2.middle.means$weekMean,adjust='bonferroni')
+
+contrast()
+
 contrast(m2.middle.means$jointMeans, method=list(
   low.vs.medHigh = c(1/9,1/9,1/9,1/9,1/9,1/9,1/9,1/9,1/9,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18),
   med.vs.high = c(0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1),
   first.vs.last = c(1,0,0,0,0,0,0,0,-1,1,0,0,0,0,0,0,0,-1,1,0,0,0,0,0,0,0,-1)), adjust="bonferroni")
 
 
-# middle low activity linear effect
-contrast(m2.middle.means$jointMeans,simple='weekFac',"poly")[1]
+# Does the mean time spent in the middle zone have a linear effect?
+contrast(m2.middle.means$weekMeans,"poly")[1]
 
-# middle low activity non-linear effect
-test(contrast(m2.middle.means$jointMeans,simple='weekFac',"poly")[2:6],joint=TRUE)
-
-# middle med activity linear effect
-contrast(m2.middle.means$jointMeans,simple='weekFac',"poly")[7]
-
-# middle med activity non-linear effect
-test(contrast(m2.middle.means$jointMeans,simple='weekFac',"poly")[8:12],joint=TRUE)
-
-# middle high activity linear effect
-contrast(m2.middle.means$jointMeans,simple='weekFac',"poly")[13]
-
-# middle high activity non-linear effect 
-test(contrast(m2.middle.means$jointMeans,simple='weekFac',"poly")[13:17],joint=TRUE)
+# Does the mean time spent in the middle zone have a non-linear effect?
+test(contrast(m2.middle.means$weekMeans,"poly")[2:6],joint=TRUE)
 
 ### END OF MIDDLE ZONE ANALYSIS ###
 
