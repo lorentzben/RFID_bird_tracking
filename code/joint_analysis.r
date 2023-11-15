@@ -805,6 +805,26 @@ contrast(m1.bottom.means$jointMeans, method=list(
 # can we choose a slice of does low activity etc have linear or non-linear 
 orthPolyCon <- contr.poly(9)
 
+# bottom low activity linear effect
+contrast(m1.bottom.means$jointMeans,simple='weekFac',"poly")[1]
+
+# bottom low activity non-linear effect
+test(contrast(m1.bottom.means$jointMeans,simple='weekFac',"poly")[2:6],joint=TRUE)
+
+# bottom med activity linear effect
+contrast(m1.bottom.means$jointMeans,simple='weekFac',"poly")[7]
+
+# bottom med activity non-linear effect
+test(contrast(m1.bottom.means$jointMeans,simple='weekFac',"poly")[8:12],joint=TRUE)
+
+# bottom high activity linear effect
+contrast(m1.bottom.means$jointMeans,simple='weekFac',"poly")[13]
+
+# bottom high activity non-linear effect 
+test(contrast(m1.bottom.means$jointMeans,simple='weekFac',"poly")[13:17],joint=TRUE)
+
+
+
 # linear vs non-linear inside low activity birds
 cl1 <- c(orthPolyCon[,1],0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
 cl2 <- c(orthPolyCon[,2],0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0)
