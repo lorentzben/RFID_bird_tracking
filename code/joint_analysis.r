@@ -753,11 +753,11 @@ day_top_sum <- day_tb_df |>
 overall_day_summary <- cbind(day_bottom_sum,day_middle_sum[,3],day_top_sum[,3])
 overall_day_summary <- data.frame(merge(overall_day_summary,overall_org_table[,c(1,4)], by="tagname"))
 overall_day_summary$activity <- factor(overall_day_summary$activity, levels=c("low","medium","high"))
-overall_day_summary$week <- factor(overall_day_summary$week)
+overall_day_summary$weekFac <- factor(overall_day_summary$week)
 (unique(day_tb_df$interval1))
 (unique(day_tb_df$interval2))
 
-m1 <- lmer(bottom_mean ~ week + activity + week:activity + (1|tagname), overall_day_summary)
+m1 <- lmer(bottom_mean ~ weekFac + activity + weekFac:activity + (1|tagname), overall_day_summary)
 summary(m1)
 anova(m1)
 m1.res <- resid(m1)
@@ -779,19 +779,19 @@ dev.off()
 
 # Get estimations of bottom time spent
 
-m1.bottom.means <- emmeans(m1, specs=list(weekMeans = ~week,
-                                          actMeans = ~activity,
-                                          jointMeans=~week:activity))
+m1.bottom.means <- emmeans(m1, specs=list(weekMeans = ~weekFac,
+actMeans = ~activity,
+jointMeans=~weekFac:activity))
 
  
 # interaction plot of week on x
 png("../figures/all_day/model_diag/bottom_interaction_act_week.png")
-emmip(m1.bottom.means$jointMeans, activity~week)
+emmip(m1.bottom.means$jointMeans, activity~weekFac)
 dev.off()
 
 # interaction plot of activity on x
 png("../figures/all_day/model_diag/bottom_interaction_week_act.png")
-emmip(m1.bottom.means$jointMeans, week~activity)
+emmip(m1.bottom.means$jointMeans, weekFac~activity)
 dev.off()
 
 
