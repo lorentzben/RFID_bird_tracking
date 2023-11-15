@@ -757,6 +757,8 @@ overall_day_summary$weekFac <- factor(overall_day_summary$week)
 (unique(day_tb_df$interval1))
 (unique(day_tb_df$interval2))
 
+### BEGINING OF BOTTOM ZONE ANALYSIS ###
+
 m1 <- lmer(bottom_mean ~ weekFac + activity + weekFac:activity + (1|tagname), overall_day_summary)
 summary(m1)
 anova(m1)
@@ -821,30 +823,77 @@ contrast(m1.bottom.means$jointMeans,simple='weekFac',"poly")[13]
 # bottom high activity non-linear effect 
 test(contrast(m1.bottom.means$jointMeans,simple='weekFac',"poly")[13:17],joint=TRUE)
 
+### END OF BOTTOM ZONE ANALYSIS ###
 
-m2 <- lmer(middle_mean ~ week + activity + week:activity + (1|tagname), overall_day_summary)
+### BEGINING OF MIDDLE ZONE ANALYSIS ###
+
+m2 <- lmer(middle_mean ~ weekFac + activity + weekFac:activity + (1|tagname), overall_day_summary)
 summary(m2)
 anova(m2)
 m2.res <- resid(m2)
 
-
 # generate and save residual plot of model to check assumptions
 
-png("../figures/all_day/model_diag/bottom_mean_resid.png")
-plot(fitted(m1),m1.res)
+png("../figures/all_day/model_diag/middle_mean_resid.png")
+plot(fitted(m2),m2.res)
 abline(0,0)
 dev.off()
 
 # generate and save Q-Q normal plot to check assumptions
 
-png("../figures/all_day/model_diag/bottom_mean_qq.png")
-qqnorm(m1.res)
-qqline(m1.res)
+png("../figures/all_day/model_diag/middle_mean_qq.png")
+qqnorm(m2.res)
+qqline(m2.res)
 dev.off()
 
-# Get estimations of bottom time spent
 
-m1.bottom.means <- emmeans(m1, specs=~week)
+# Get estimations of middle time spent
+
+m2.middle.means <- emmeans(m2, specs=list(weekMeans = ~weekFac,
+actMeans = ~activity,
+jointMeans=~weekFac:activity))
+
+ 
+# interaction plot of week on x
+png("../figures/all_day/model_diag/middle_interaction_act_week.png")
+emmip(m2.middle.means$jointMeans, activity~weekFac)
+dev.off()
+
+# interaction plot of activity on x
+png("../figures/all_day/model_diag/middle_interaction_week_act.png")
+emmip(m2.middle.means$jointMeans, weekFac~activity)
+dev.off()
+
+
+# I don't really see evidence of interaction so we could use marginal means
+#TODO Update the analyses below
+
+contrast(m2.middle.means$jointMeans, method=list(
+  low.vs.medHigh = c(1/9,1/9,1/9,1/9,1/9,1/9,1/9,1/9,1/9,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18),
+  med.vs.high = c(0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1),
+  first.vs.last = c(1,0,0,0,0,0,0,0,-1,1,0,0,0,0,0,0,0,-1,1,0,0,0,0,0,0,0,-1)), adjust="bonferroni")
+
+
+# middle low activity linear effect
+contrast(m2.middle.means$jointMeans,simple='weekFac',"poly")[1]
+
+# middle low activity non-linear effect
+test(contrast(m2.middle.means$jointMeans,simple='weekFac',"poly")[2:6],joint=TRUE)
+
+# middle med activity linear effect
+contrast(m2.middle.means$jointMeans,simple='weekFac',"poly")[7]
+
+# middle med activity non-linear effect
+test(contrast(m2.middle.means$jointMeans,simple='weekFac',"poly")[8:12],joint=TRUE)
+
+# middle high activity linear effect
+contrast(m2.middle.means$jointMeans,simple='weekFac',"poly")[13]
+
+# middle high activity non-linear effect 
+test(contrast(m2.middle.means$jointMeans,simple='weekFac',"poly")[13:17],joint=TRUE)
+
+### END OF MIDDLE ZONE ANALYSIS ###
+
 
 m3 <- lmer(top_mean ~ week + activity + week:activity + (1|tagname), overall_day_summary)
 summary(m3)
