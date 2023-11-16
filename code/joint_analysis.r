@@ -796,21 +796,21 @@ png("../figures/all_day/model_diag/bottom_interaction_week_act.png")
 emmip(m1.bottom.means$jointMeans, weekFac~activity)
 dev.off()
 
-
 # Some evidence of interaction weeks 12 to 16 flip flop
 
-# Does mean time spent in the bottom zone differ based on week of study? (main effect of weekFac)
-# Use effect slices, averaging over week 
+# effect slice test for activity
+test(contrast(m1.bottom.means$jointMeans, simple='weekFac',adjust="bonferroni"),joint=T)
+# effect slice test for week
+test(contrast(m1.bottom.means$jointMeans, simple='activity',adjust="bonferroni"),joint=T)
 
-test(contrast(m1.bottom.means$jointMeans, simple='weekFac'),joint=T)
-test(contrast(m1.bottom.means$jointMeans, simple='activity'),joint=T)
+# contrast to decode how mean time in bottom zone differes in medium activity birds
 
 contrast(m1.bottom.means$jointMeans, method=list(
-  low.vs.medHigh = c(1/9,1/9,1/9,1/9,1/9,1/9,1/9,1/9,1/9,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18),
-  med.vs.high = c(0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1),
-  first.vs.last = c(1,0,0,0,0,0,0,0,-1,1,0,0,0,0,0,0,0,-1,1,0,0,0,0,0,0,0,-1)), adjust="bonferroni")
+  first.vs.last = c(0,0,0,0,0,0,0,0,0,-1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0),
+  fhalf.vs.lhalf = c(0,0,0,0,0,0,0,0,0,-1,-1,-1,-1,0,1,1,1,1,0,0,0,0,0,0,0,0,0)), adjust="bonferroni")
 
-contrast(m1.bottom.means$weekFac)
+# Examine if there is a linear/non-linear effect of week on time spent in bottom zone
+
 # bottom low activity linear effect
 contrast(m1.bottom.means$jointMeans,simple='weekFac',"poly")[1]
 
