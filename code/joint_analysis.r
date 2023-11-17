@@ -880,17 +880,6 @@ contrast(m2.middle.means$actMean, method=list(
   med.vs.high = c(0,-1,1)
 ))
 
-# does the mean time spent in the middle zone differ week to week averaged across activity levels?
-#test(m2.middle.means$weekMean,adjust='bonferroni')
-
-# TODO update these contrasts
-contrast(m2.middle.means$jointMeans, method=list(
-  first.vs.last = c(1,0,0,0,0,0,0,0,-1,1,0,0,0,0,0,0,0,-1,1,0,0,0,0,0,0,0,-1)), adjust="bonferroni")
-
-contrast(m2.middle.means$weekMean, method=list(
-  first.vs.last = c(-1,0,0,0,0,0,0,0,1)
-))
-
 
 # Does the mean time spent in the middle zone have a linear effect?
 contrast(m2.middle.means$weekMeans,"poly")[1]
