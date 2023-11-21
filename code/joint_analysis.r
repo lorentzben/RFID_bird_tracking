@@ -955,4 +955,28 @@ test(contrast(m3.top.means$weekMeans,"poly")[2:6],joint=TRUE)
 
 keel_score <- read_csv('../data/keel_score/rfid_keel_scores_old_classification.csv')
 
+# join keel score to overall day summary table
+
+overall_day_summary$tagname %in% keel_score$tag
+
+
+overall_day_summary_w_keel <- data.frame(merge(overall_day_summary,keel_score[,c(1,4)], by.x="tagname",by.y="tag"))
+
+overall_day_summary_w_keel <- overall_day_summary_w_keel[overall_day_summary_w_keel$keel_score != ".",]
+
+overall_day_summary_w_keel$keel_score <- as.numeric(overall_day_summary_w_keel$keel_score)
+
+print("Tagnames Obeserved with Keel Score: ")
+print(unique(overall_day_summary_w_keel$tagname))
+
+m4 <- aov(keel_score ~ activity*weekFac, overall_day_summary_w_keel)
+summary(m4)
+
+emmeans(m4, specs=list(
+  activityMeans = ~activity,
+  weekMean = ~weekFac, 
+  jointMeans =~activity:weekFac
+))
+
+
 ### End does Keel Score Differ based on activity level and week ###
