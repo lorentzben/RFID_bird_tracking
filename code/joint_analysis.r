@@ -936,28 +936,16 @@ dev.off()
 # does the mean time spent in the top zone differ between medium and high act birds?
 # does the mean time spent in the top zone differ between first week and last week of the study across activiy levels?
 contrast(m3.top.means$jointMeans, method=list(
-  low.vs.medHigh = c(1/9,1/9,1/9,1/9,1/9,1/9,1/9,1/9,1/9,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18,-1/18),
-  med.vs.high = c(0,0,0,0,0,0,0,0,0,1,1,1,1,1,1,1,1,1,-1,-1,-1,-1,-1,-1,-1,-1,-1),
-  first.vs.last = c(1,0,0,0,0,0,0,0,-1,1,0,0,0,0,0,0,0,-1,1,0,0,0,0,0,0,0,-1)), adjust="bonferroni")
+  first.vs.last = c(1,0,0,0,0,0,0,0,-1,1,0,0,0,0,0,0,0,-1,1,0,0,0,0,0,0,0,-1),
+  ffour.vs.lfour = c(1,1,1,1,0,-1,-1,-1,-1,1,1,1,1,0,-1,-1,-1,-1,1,1,1,1,0,-1,-1,-1,-1)), adjust="bonferroni")
 
 
-# top low activity linear effect
-contrast(m3.top.means$jointMeans,simple='weekFac',"poly")[1]
+# Does the mean time spent in the top zone have a linear effect?
+contrast(m3.top.means$weekMeans,"poly")[1]
 
-# top low activity non-linear effect
-test(contrast(m3.top.means$jointMeans,simple='weekFac',"poly")[2:6],joint=TRUE)
+# Does the mean time spent in the top zone have a non-linear effect?
+test(contrast(m3.top.means$weekMeans,"poly")[2:6],joint=TRUE)
 
-# top med activity linear effect
-contrast(m3.top.means$jointMeans,simple='weekFac',"poly")[7]
-
-# top med activity non-linear effect
-test(contrast(m3.top.means$jointMeans,simple='weekFac',"poly")[8:12],joint=TRUE)
-
-# top high activity linear effect
-contrast(m3.top.means$jointMeans,simple='weekFac',"poly")[13]
-
-# top high activity non-linear effect 
-test(contrast(m3.top.means$jointMeans,simple='weekFac',"poly")[13:17],joint=TRUE)
 
 ### END OF TOP ZONE ANALYSIS ###
 
