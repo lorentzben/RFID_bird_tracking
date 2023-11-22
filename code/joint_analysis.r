@@ -951,7 +951,7 @@ test(contrast(m3.top.means$weekMeans,"poly")[2:6],joint=TRUE)
 
 ### End weekly time budget differ march to april ###
 
-### Does Keel Score differ based on activity level and week ###
+### Does Keel Score differ based on activity level ###
 
 keel_score <- read_csv('../data/keel_score/rfid_keel_scores_old_classification.csv')
 
@@ -969,14 +969,21 @@ overall_day_summary_w_keel$keel_score <- as.numeric(overall_day_summary_w_keel$k
 print("Tagnames Obeserved with Keel Score: ")
 print(unique(overall_day_summary_w_keel$tagname))
 
-m4 <- aov(keel_score ~ activity*weekFac, overall_day_summary_w_keel)
+
+
+m4 <- lmer(keel_score ~ activity + (1|tagname), overall_day_summary_w_keel)
 summary(m4)
+anova(m4)
 
-emmeans(m4, specs=list(
-  activityMeans = ~activity,
-  weekMean = ~weekFac, 
-  jointMeans =~activity:weekFac
-))
+m5 <- aov(keel_score ~ activity, overall_day_summary_w_keel)
+summary(m5)
 
+m5_means <- emmeans(m5, specs=list( actMean = ~activity))
 
-### End does Keel Score Differ based on activity level and week ###
+c1 <- c(-1,.5,.5)
+c2 <- c(0,-1,1)
+
+contrast(m5_means, method=list(low.vs.medHigh = c1,
+med.vs.high = c2),adjust="bonferroni")
+
+### End does Keel Score Differ based on activity level ###
