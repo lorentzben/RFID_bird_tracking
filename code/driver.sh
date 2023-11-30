@@ -19,6 +19,7 @@ if [ ! -d "../figures/all_day" ]; then
     mkdir -p ../figures/all_day/room8
     mkdir -p ../figures/all_day/room11
     mkdir -p ../figures/all_day/all_rooms
+    mkdir -p ../figures/all_day/model_diag
 fi
 
 
@@ -41,7 +42,7 @@ fi
 
 # # Run Room 2 Individual Analysis
 
-# Rscript room_2_analysis.r > ../logs/"$TS"_rm2.log
+Rscript room_2_analysis.r > ../logs/"$TS"_rm2.log
 
 # # Run Room 3 Individual Analysis 
 
@@ -57,6 +58,6 @@ fi
 
 # Run All Room Joint Analysis
 
-Rscript joint_analysis.r > ../logs/"$TS"_joint.log
+#Rscript joint_analysis.r > ../logs/"$TS"_joint.log
 
 echo "Script finished"
