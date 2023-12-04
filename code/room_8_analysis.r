@@ -11,7 +11,7 @@ library(dplyr)
 library(tsibble)
 
 
-room_8 <- read.csv("../data/DK20-03-RFID-r8-febmay-080423.csv") %>% na.exclude()
+room_8 <- read.csv("../data/set_2/DK20-03-RFID-r8-febmay-080423.csv") %>% na.exclude()
 
 bird_ids_room_8 <- unique(room_8$tagname)
 bird_ids_room_8 <- na.trim(sort(bird_ids_room_8))

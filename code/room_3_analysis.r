@@ -10,7 +10,7 @@ library(tidyr)
 library(dplyr)
 library(tsibble)
 
-room_3 <- read.csv("../data/DK20-03-RFID-R3-febmay-080423.csv") %>% na.exclude()
+room_3 <- read.csv("../data/set_2/DK20-03-RFID-R3-febmay-080423.csv") %>% na.exclude()
 
 room_3$tagname <- room_3$LegBand
 

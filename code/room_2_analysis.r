@@ -10,7 +10,7 @@ library(tidyr)
 library(dplyr)
 library(tsibble)
 
-room_2 <- read.csv("../data/DK20-03-RFID-R2-febmay-080423.csv")
+room_2 <- read.csv("../data/set_2/DK20-03-RFID-R2-febmay-080423.csv")
 
 bird_ids_room_2 <- unique(room_2$tagname)
 bird_ids_room_2 <- na.trim(sort(bird_ids_room_2))
