@@ -73,12 +73,17 @@ room_8_all_analysis <- room_8_struct |>
 
 (room_8_boundries <- data.frame(room_8_summary$tagname, room_8_summary$first_rec, room_8_summary$last_rec))
 
+print("to be removed: ")
+
+(room_8_out <- rbind(room_8_boundries[!room_8_boundries$room_8_summary.first_rec < "2021-03-10 T04:00:00",],room_8_boundries[!room_8_boundries$room_8_summary.last_rec > "2021-05-06 T22:00:00",]))
+
+
 # All Room room_8 Time Budget Analysis
 
 # TODO update the id's from room 8 
 room_8_all_analysis <- room_8_all_analysis |>
  filter(!is.na(slicedTsibble)) |> 
- filter(!(tagname %in% c("6949","6941","6936","6974","9009","9011","6995")))
+ filter(!(tagname %in% room_8_out$room_8_summary.tagname))
   
 # interpolate the rest of the intervals
 room_8_regular <- room_8_all_analysis |>

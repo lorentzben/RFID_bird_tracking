@@ -75,11 +75,15 @@ room_3_all_analysis <- room_3_struct |>
 
 (room_3_boundries <- data.frame(room_3_summary$tagname, room_3_summary$first_rec, room_3_summary$last_rec))
 
+print("to be removed: ")
+
+(room_3_out <- rbind(room_3_boundries[!room_3_boundries$room_3_summary.first_rec < "2021-03-10 T04:00:00",],room_3_boundries[!room_3_boundries$room_3_summary.last_rec > "2021-05-06 T22:00:00",]))
+
 # All Room room_3 Time Budget Analysis
 
 room_3_all_analysis <- room_3_all_analysis |>
  filter(!is.na(slicedTsibble)) |> 
- filter(!(tagname %in% c("6968","6879","6948","6915","6953","6987","9008","6912","9029","6998")))
+ filter(!(tagname %in% room_3_out$room_3_summary.tagname))
   
 # interpolate the rest of the intervals
 room_3_regular <- room_3_all_analysis |>

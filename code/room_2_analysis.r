@@ -67,17 +67,22 @@ room_2_struct <- room_2 |> nest(data = - tagname) |>
  mutate(cleaned = map(data, ~distinct(.x, accessdate, .keep_all=TRUE))) |>
  mutate(tsibble = map(cleaned, ~tsibble(datetime = ymd_hms(.x$accessdate), value = .x$subzone, index = datetime) ))
 
+(room_2_boundries <- data.frame(room_2_summary$tagname, room_2_summary$first_rec, room_2_summary$last_rec))
 
 room_2_all_analysis <- room_2_struct |>
  mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-03-10 T04:00:00", "2021-05-06 T22:00:00")))
 
 (room_2_boundries <- data.frame(room_2_summary$tagname, room_2_summary$first_rec, room_2_summary$last_rec))
 
+print("to be removed: ")
+
+(room_2_out <- rbind(room_2_boundries[!room_2_boundries$room_2_summary.first_rec < "2021-03-10 T04:00:00",],room_2_boundries[!room_2_boundries$room_2_summary.last_rec > "2021-05-06 T22:00:00",]))
+
 # All Room Room 2 Time Budget Analysis
 
 room_2_all_analysis <- room_2_all_analysis |>
  filter(!is.na(slicedTsibble)) |> 
- filter(!(tagname %in% c("6910","6966","6914","9005")))
+ filter(!(tagname %in% room_2_out$room_2_summary.tagname))
   
 # interpolate the rest of the intervals
 room_2_regular <- room_2_all_analysis |>
