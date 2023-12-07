@@ -33,10 +33,10 @@ identify_duplicate_records <- function(records){
 
 sliceTsibble <- function(data, start, stop){
   
-  previous_state <- tail(data[data$datetime <= ymd_hms(start),],n=1)
-  greater_than_start <- data[data$datetime >= ymd_hms(start),]
-  less_than_end <- greater_than_start[greater_than_start$datetime <= ymd_hms(stop),]
-  final_state <- head(greater_than_start[greater_than_start$datetime >= ymd_hms(stop),],n=1)
+  previous_state <- tail(data[data$datetime <= my_ymd_hms(start),],n=1)
+  greater_than_start <- data[data$datetime >= my_ymd_hms(start),]
+  less_than_end <- greater_than_start[greater_than_start$datetime <= my_ymd_hms(stop),]
+  final_state <- head(greater_than_start[greater_than_start$datetime >= my_ymd_hms(stop),],n=1)
 
 
   if(nrow(less_than_end) == 0){
@@ -44,8 +44,8 @@ sliceTsibble <- function(data, start, stop){
     return(less_than_end)
   }
 
-  previous_state$datetime <- ymd_hms(start)
-  final_state$datetime <- ymd_hms(stop)
+  previous_state$datetime <- my_ymd_hms(start)
+  final_state$datetime <- my_ymd_hms(stop)
   less_than_end <- bind_rows(less_than_end, previous_state)
   less_than_end <- bind_rows(less_than_end, final_state)
   return(less_than_end)
@@ -56,7 +56,7 @@ sliceTsibble <- function(data, start, stop){
 
 nice_start <- function(dataframe, units, interval_min){
   requireNamespace("lubridate")
-  dataframe[1,1]$datetime <- round_date(ymd_hms(dataframe[1,1]$datetime), unit=units)
+  dataframe[1,1]$datetime <- round_date(my_ymd_hms(dataframe[1,1]$datetime), unit=units)
   
   # remove duplicate entries 
   #dataframe <- dataframe[!duplicates(dataframe)]
@@ -79,7 +79,7 @@ getTimeBudgetProp <- function(data) {
   if(all.equal(colnames(data),c("t1","t2","from_zone","to_zone"))){
     # store inteval as minutes
     TBStag<- data.frame(t = (as.numeric(data$t2) - as.numeric(data$t1)) / 60, to_zone=data$to_zone)
-    Interval <- c(ymd_hms(as.POSIXct.numeric(as.numeric(head(data,n=1)$t1),origin=origin)),ymd_hms(as.POSIXct.numeric(as.numeric(tail(data,n=1)$t2),origin=origin)))
+    Interval <- c(my_ymd_hms(as.POSIXct.numeric(as.numeric(head(data,n=1)$t1),origin=origin)),my_ymd_hms(as.POSIXct.numeric(as.numeric(tail(data,n=1)$t2),origin=origin)))
 
     TBbot<-sum(TBStag[which(TBStag$to_zone == "bottom"),]$t)/sum(TBStag$t)
         
@@ -95,7 +95,7 @@ getTimeBudgetProp <- function(data) {
       # store inteval as minutes
     TBStag<- data.frame(t = (as.numeric(data$t2) - as.numeric(data$t1)) / 60, zone=data$zone)
 
-    Interval <- c(ymd_hms(as.POSIXct.numeric(as.numeric(head(data,n=1)$t1),origin=origin)),ymd_hms(as.POSIXct.numeric(as.numeric(tail(data,n=1)$t2),origin=origin)))
+    Interval <- c(my_ymd_hms(as.POSIXct.numeric(as.numeric(head(data,n=1)$t1),origin=origin)),my_ymd_hms(as.POSIXct.numeric(as.numeric(tail(data,n=1)$t2),origin=origin)))
 
     TBbot<-sum(TBStag[which(TBStag$zone == "bottom"),]$t)/sum(TBStag$t)
         
@@ -121,7 +121,7 @@ getTimeBudgetAbs <- function(data) {
   colnames(TBS) = columns
 
   # store inteval as minutes
-  TBStag<- data.frame(t = (as.numeric(data$t2) - as.numeric(data$t1)) / 60, zone=data$zone)
+  TBStag<- data.frame(t = (as.numeric(ymd_hms(data$t2)) - as.numeric(ymd_hms(data$t1))) / 60, zone=data$zone)
 
   TBbot<-sum(TBStag[which(TBStag$to_zone == "bottom"),]$t)
     
@@ -145,7 +145,7 @@ getTimeBudgetAbs <- function(data) {
 #   # store inteval as minutes
 #   TBStag<- data.frame(t = (as.numeric(data$t2) - as.numeric(data$t1)) / 60, zone=data$to_zone)
 
-#   Interval <- c(ymd_hms(as.POSIXct.numeric(as.numeric(head(data,n=1)$t1),origin=origin)),ymd_hms(as.POSIXct.numeric(as.numeric(tail(data,n=1)$t2),origin=origin)))
+#   Interval <- c(my_ymd_hms(as.POSIXct.numeric(as.numeric(head(data,n=1)$t1),origin=origin)),my_ymd_hms(as.POSIXct.numeric(as.numeric(tail(data,n=1)$t2),origin=origin)))
 
 #   TBbot<-sum(TBStag[which(TBStag$zone == "bottom"),]$t)/sum(TBStag$t)
     
@@ -242,37 +242,38 @@ timeToIntervals <- function(data){
 
   if(length(transition_into$datetime) == 0){
 
-    new_row <- cbind(ymd_hms(first_entry$datetime),ymd_hms(last_entry$datetime),NA, as.character(first_entry$value))
+    new_row <- cbind(my_ymd_hms(first_entry$datetime),my_ymd_hms(last_entry$datetime),NA, as.character(first_entry$value))
     interval_table <- rbind(interval_table, new_row)
     colnames(interval_table) <- c("t1","t2","from_zone","to_zone")
 
   } else if( length(transition_into$value) == 1){
 
-    new_row <- cbind(ymd_hms(first_entry$datetime),ymd_hms(transition_into[1,]$datetime),NA, as.character(first_entry$value))
+    new_row <- cbind(my_ymd_hms(first_entry$datetime),my_ymd_hms(transition_into[1,]$datetime),NA, as.character(first_entry$value))
     interval_table <- rbind(interval_table, new_row)
     
-    new_row <- cbind(ymd_hms(transition_into[1,]$datetime), ymd_hms(last_entry[1,]$datetime),as.character(transition_from[1,2]),as.character(transition_into[1,2]))
+    new_row <- cbind(my_ymd_hms(transition_into[1,]$datetime), my_ymd_hms(last_entry[1,]$datetime),as.character(transition_from[1,2]),as.character(transition_into[1,2]))
     interval_table <- rbind(interval_table, new_row)
     colnames(interval_table) <- c("t1","t2","from_zone","to_zone")
 
   } else if(length(transition_into$value) == 2){
 
-    new_row <- cbind(ymd_hms(first_entry$datetime),ymd_hms(transition_into[1,]$datetime),NA, as.character(first_entry$value))
+    new_row <- cbind(my_ymd_hms(first_entry$datetime),my_ymd_hms(transition_into[1,]$datetime),NA, as.character(first_entry$value))
     interval_table <- rbind(interval_table, new_row)
     
-    new_row <- cbind(ymd_hms(transition_into[1,]$datetime), ymd_hms(transition_into[2,]$datetime),as.character(transition_from[1,2]),as.character(transition_into[1,2]))
+    new_row <- cbind(my_ymd_hms(transition_into[1,]$datetime), my_ymd_hms(transition_into[2,]$datetime),as.character(transition_from[1,2]),as.character(transition_into[1,2]))
     interval_table <- rbind(interval_table, new_row)
-    new_row <- cbind(ymd_hms(transition_into[2,]$datetime), ymd_hms(last_entry$datetime),as.character(transition_from[2,2]),as.character(last_entry[,2]))
+    new_row <- cbind(my_ymd_hms(transition_into[2,]$datetime), my_ymd_hms(last_entry$datetime),as.character(transition_from[2,2]),as.character(last_entry[,2]))
     interval_table <- rbind(interval_table, new_row)
     colnames(interval_table) <- c("t1","t2","from_zone","to_zone")
 
   } else if(length(transition_into$value) > 2) {
-
-    new_row <- cbind(ymd_hms(first_entry$datetime),ymd_hms(transition_into[1,]$datetime),NA, as.character(first_entry$value))
+    
+    
+    new_row <- cbind(my_ymd_hms(first_entry$datetime),my_ymd_hms(transition_into[1,]$datetime),NA, as.character(first_entry$value))
     interval_table <- rbind(interval_table, new_row)
 
     for(i in 1:length(transition_into$value)){
-      new_row <- cbind(ymd_hms(transition_into[i,]$datetime), ymd_hms(transition_into[i+1,]$datetime),as.character(transition_from[i,2]),as.character(transition_into[i,2]))
+      new_row <- cbind(my_ymd_hms(transition_into[i,]$datetime), my_ymd_hms(transition_into[i+1,]$datetime),as.character(transition_from[i,2]),as.character(transition_into[i,2]))
       interval_table <- rbind(interval_table, new_row)
     }
 
@@ -300,3 +301,27 @@ nightZoneFromTB <- function(data){
 
 }
 
+my_ymd_hms <- function(date){
+  requireNamespace("lubridate")
+  tryCatch(
+    {
+      parsed <- ymd_hms(date)
+      return(parsed)
+    },
+    warning=function(w) {
+        message('Likely a Midnight Value')
+        # hour <- hour(date)
+        # minute <- minute(date)
+        # second <- second(date)
+        # year <- year(date)
+        # month <- month(date)
+        # day <- day(date)
+
+        # date_char <- paste0(year,"/",month,"/",day," ",hour,":",minute,":",second)
+        # parsed <-  format(as.POSIXct(date_char, tz="UTC"), format="%Y-%m-%d %H:%M:%S")
+        parsed <- as.numeric(date)
+        return(parsed)
+    }
+
+    )
+}
