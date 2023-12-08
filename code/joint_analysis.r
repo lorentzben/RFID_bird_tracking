@@ -319,6 +319,8 @@ overall_org_table <- bind_rows(overall_low_act,overall_med_act, overall_high_act
 
 overall_org_table <- overall_org_table[order(overall_org_table$ntrans),]
 
+write.csv(overall_org_table, "../intermediate/all_rooms/overall_org_table.csv", row.names=FALSE)
+
 ### Compare overall low med high activity to day time classification ###
 
 rm_2_day$rm <- 2
