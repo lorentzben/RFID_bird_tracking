@@ -955,8 +955,301 @@ test(contrast(m3.top.means$weekMeans,"poly")[2:6],joint=TRUE)
 
 ### End weekly time budget differ march to april ###
 
-### Does Keel Score differ based on activity level and week ###
+### Does Keel Score differ based on activity level ###
 
 keel_score <- read_csv('../data/keel_score/rfid_keel_scores_old_classification.csv')
 
-### End does Keel Score Differ based on activity level and week ###
+# join keel score to overall day summary table
+
+unique(overall_day_summary$tagname) %in% keel_score$tag
+
+
+overall_day_summary_w_keel <- data.frame(merge(overall_day_summary,keel_score[,c(1,4)], by.x="tagname",by.y="tag"))
+
+overall_day_summary_w_keel <- overall_day_summary_w_keel[overall_day_summary_w_keel$keel_score != ".",]
+
+overall_day_summary_w_keel$keel_score <- as.numeric(overall_day_summary_w_keel$keel_score)
+
+print("Tagnames Obeserved with Keel Score: ")
+print(unique(overall_day_summary_w_keel$tagname))
+
+
+
+m4 <- lmer(keel_score ~ activity + (1|tagname), overall_day_summary_w_keel)
+summary(m4)
+anova(m4)
+
+m5 <- aov(keel_score ~ activity, overall_day_summary_w_keel)
+summary(m5)
+
+m5_means <- emmeans(m5, specs=list( actMean = ~activity))
+
+c1 <- c(-1,.5,.5)
+c2 <- c(0,-1,1)
+
+contrast(m5_means, method=list(low.vs.medHigh = c1,
+med.vs.high = c2),adjust="bonferroni")
+
+png("../figures/all_day/model_diag/keel_score_mean.png",width=5,height=3, units='in',res=300)
+plot(m5_means, horizontal = F,comparisons=T)
+dev.off()
+
+### End does Keel Score Differ based on activity level ###
+
+### Make Low Activity Daily Time Budget Plot ###
+
+# day_tbs_df
+# # A tibble: 580 × 6
+#    interval1           interval2             Bottom  Middle    Top tagname
+#    <dttm>              <dttm>                 <dbl>   <dbl>  <dbl>   <dbl>
+#  1 2021-03-10 04:00:00 2021-03-10 21:59:55 0        0.501   0.499     6925
+#  2 2021-03-11 04:00:00 2021-03-11 21:59:55 0        0.324   0.676     6925
+#  3 2021-03-12 04:00:00 2021-03-12 21:59:55 0        0.226   0.774     6925
+#  4 2021-03-13 04:00:00 2021-03-13 21:59:55 0        0.267   0.733     6925
+#  5 2021-03-14 04:00:00 2021-03-14 21:59:55 0        0.594   0.406     6925
+
+# Select the overall low activity bird ids
+
+low_activity_ids <- overall_low_act$tagname
+
+# read in the overall time budgets from low activity birds
+
+low_day_tb <- Sys.glob(paste0("../intermediate/all_rooms/*day_*",low_activity_ids,".csv"))
+low_day_df <- read_csv(low_day_tb)
+
+day_flat <- cbind(low_day_df[c(1:2,6)], stack(low_day_df[3:5]))
+
+day_flat$ind <- factor(day_flat$ind, levels=c("Top","Middle","Bottom"))
+
+datebreaks <- seq(as.Date(ymd_hms(head(unique(day_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1))), by="7 days")
+
+datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1))))
+
+all_datebreak <- seq(as.Date(ymd_hms(head(unique(day_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1))), by="1 days")
+
+y_lim <- length(unique(day_flat$tagname))+.001
+
+low_day_sb_plot <- ggplot(data = day_flat, aes(x = as.Date(interval1), y=values, fill=ind)) + 
+geom_bar(stat="identity") +
+theme_bw() +  
+xlab("Day of Study") + 
+ylab("Prop. of Time Spent in Zone") +
+scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
+theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+ggtitle("Daily Time Budget for Each Day for Low Activity Birds (n=10)") + 
+labs(fill = "Zone") +
+scale_y_continuous(limits=c(0, y_lim))
+
+
+ggsave(paste0("../figures/all_day/all_rooms/day_daily_time_budget_stack_bar_for_low_act",".png"), low_day_sb_plot,width = 5, height = 3, units = "in")
+
+### End Low Activity Daily Time Budget Plot ###
+
+### Make Medium Activity Daily Time Budget Plot ###
+
+# Select the overall low activity bird ids
+
+# n = 18
+med_activity_ids <- overall_med_act$tagname
+
+# read in the overall time budgets from low activity birds
+
+med_day_tb <- Sys.glob(paste0("../intermediate/all_rooms/*day_*",med_activity_ids,".csv"))
+med_day_df <- read_csv(med_day_tb)
+
+day_flat <- cbind(med_day_df[c(1:2,6)], stack(med_day_df[3:5]))
+
+day_flat$ind <- factor(day_flat$ind, levels=c("Top","Middle","Bottom"))
+
+datebreaks <- seq(as.Date(ymd_hms(head(unique(day_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1))), by="7 days")
+
+datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1))))
+
+all_datebreak <- seq(as.Date(ymd_hms(head(unique(day_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1))), by="1 days")
+
+y_lim <- length(unique(day_flat$tagname))+.001
+
+med_day_sb_plot <- ggplot(data = day_flat, aes(x = as.Date(interval1), y=values, fill=ind)) + 
+geom_bar(stat="identity") +
+theme_bw() +  
+xlab("Day of Study") + 
+ylab("Prop. of Time Spent in Zone") +
+scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
+theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+ggtitle("Daily Time Budget for Each Day for Medium Activity Birds (n=18)") + 
+labs(fill = "Zone") +
+scale_y_continuous(limits=c(0, y_lim))
+
+
+ggsave(paste0("../figures/all_day/all_rooms/day_daily_time_budget_stack_bar_for_med_act",".png"), med_day_sb_plot,width = 5, height = 3, units = "in")
+
+### End Medium Activity Daily Time Budget Plot ###
+
+### Make High Activity Daily Time Budget Plot ###
+
+# Select the overall low activity bird ids
+
+# n = 9
+high_activity_ids <- overall_high_act$tagname
+
+# read in the overall time budgets from low activity birds
+
+high_day_tb <- Sys.glob(paste0("../intermediate/all_rooms/*day_*",high_activity_ids,".csv"))
+high_day_df <- read_csv(high_day_tb)
+
+day_flat <- cbind(high_day_df[c(1:2,6)], stack(high_day_df[3:5]))
+
+day_flat$ind <- factor(day_flat$ind, levels=c("Top","Middle","Bottom"))
+
+datebreaks <- seq(as.Date(ymd_hms(head(unique(day_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1))), by="7 days")
+
+datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1))))
+
+all_datebreak <- seq(as.Date(ymd_hms(head(unique(day_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1))), by="1 days")
+
+y_lim <- length(unique(day_flat$tagname))+.001
+
+high_day_sb_plot <- ggplot(data = day_flat, aes(x = as.Date(interval1), y=values, fill=ind)) + 
+geom_bar(stat="identity") +
+theme_bw() +  
+xlab("Day of Study") + 
+ylab("Prop. of Time Spent in Zone") +
+scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
+theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+ggtitle("Daily Time Budget for Each Day for High Activity Birds (n=9)") + 
+labs(fill = "Zone") +
+scale_y_continuous(limits=c(0, y_lim))
+
+
+ggsave(paste0("../figures/all_day/all_rooms/day_daily_time_budget_stack_bar_for_high_act",".png"), high_day_sb_plot,width = 5, height = 3, units = "in")
+
+### End High Activity Daily Time Budget Plot ###
+
+### Make Low Activity Nightly Time Budget Plot ###
+
+# day_tbs_df
+# # A tibble: 580 × 6
+#    interval1           interval2             Bottom  Middle    Top tagname
+#    <dttm>              <dttm>                 <dbl>   <dbl>  <dbl>   <dbl>
+#  1 2021-03-10 04:00:00 2021-03-10 21:59:55 0        0.501   0.499     6925
+#  2 2021-03-11 04:00:00 2021-03-11 21:59:55 0        0.324   0.676     6925
+#  3 2021-03-12 04:00:00 2021-03-12 21:59:55 0        0.226   0.774     6925
+#  4 2021-03-13 04:00:00 2021-03-13 21:59:55 0        0.267   0.733     6925
+#  5 2021-03-14 04:00:00 2021-03-14 21:59:55 0        0.594   0.406     6925
+
+# Select the overall low activity bird ids
+
+low_activity_ids <- overall_low_act$tagname
+
+# read in the overall time budgets from low activity birds
+
+low_night_tb <- Sys.glob(paste0("../intermediate/all_rooms/*night_*",low_activity_ids,".csv"))
+low_night_df <- read_csv(low_night_tb)
+
+night_flat <- cbind(low_night_df[c(1:2,6)], stack(low_night_df[3:5]))
+
+night_flat$ind <- factor(night_flat$ind, levels=c("Top","Middle","Bottom"))
+
+datebreaks <- seq(as.Date(ymd_hms(head(unique(night_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(night_flat$interval1),n=1))), by="7 days")
+
+datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(night_flat$interval1),n=1))))
+
+all_datebreak <- seq(as.Date(ymd_hms(head(unique(night_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(night_flat$interval1),n=1))), by="1 days")
+
+y_lim <- length(unique(night_flat$tagname))+.001
+
+low_night_sb_plot <- ggplot(data = night_flat, aes(x = as.Date(interval1), y=values, fill=ind)) + 
+geom_bar(stat="identity") +
+theme_bw() +  
+xlab("Night of Study") + 
+ylab("Prop. of Time Spent in Zone") +
+scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
+theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+ggtitle("Daily Time Budget for Each Night for Low Activity Birds (n=10)") + 
+labs(fill = "Zone") +
+scale_y_continuous(limits=c(0, y_lim))
+
+
+ggsave(paste0("../figures/all_day/all_rooms/night_daily_time_budget_stack_bar_for_low_act",".png"), low_night_sb_plot,width = 5, height = 3, units = "in")
+
+### End Low Activity Nightly Time Budget Plot ###
+
+### Make Medium Activity Nightly Time Budget Plot ###
+
+# Select the overall low activity bird ids
+
+# n = 18
+med_activity_ids <- overall_med_act$tagname
+
+# read in the overall time budgets from low activity birds
+
+med_night_tb <- Sys.glob(paste0("../intermediate/all_rooms/*night_*",med_activity_ids,".csv"))
+med_night_df <- read_csv(med_night_tb)
+
+night_flat <- cbind(med_night_df[c(1:2,6)], stack(med_night_df[3:5]))
+
+night_flat$ind <- factor(night_flat$ind, levels=c("Top","Middle","Bottom"))
+
+datebreaks <- seq(as.Date(ymd_hms(head(unique(night_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(night_flat$interval1),n=1))), by="7 days")
+
+datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(night_flat$interval1),n=1))))
+
+all_datebreak <- seq(as.Date(ymd_hms(head(unique(night_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(night_flat$interval1),n=1))), by="1 days")
+
+y_lim <- length(unique(night_flat$tagname))+.001
+
+med_night_sb_plot <- ggplot(data = night_flat, aes(x = as.Date(interval1), y=values, fill=ind)) + 
+geom_bar(stat="identity") +
+theme_bw() +  
+xlab("Night of Study") + 
+ylab("Prop. of Time Spent in Zone") +
+scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
+theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+ggtitle("Daily Time Budget for Each Night for Medium Activity Birds (n=18)") + 
+labs(fill = "Zone") +
+scale_y_continuous(limits=c(0, y_lim))
+
+
+ggsave(paste0("../figures/all_day/all_rooms/night_daily_time_budget_stack_bar_for_med_act",".png"), med_night_sb_plot,width = 5, height = 3, units = "in")
+
+### End Medium Activity Nightly Time Budget Plot ###
+
+### Make High Activity Nightly Time Budget Plot ###
+
+# Select the overall low activity bird ids
+
+# n = 9
+high_activity_ids <- overall_high_act$tagname
+
+# read in the overall time budgets from low activity birds
+
+high_night_tb <- Sys.glob(paste0("../intermediate/all_rooms/*night_*",high_activity_ids,".csv"))
+high_night_df <- read_csv(high_night_tb)
+
+night_flat <- cbind(high_night_df[c(1:2,6)], stack(high_night_df[3:5]))
+
+night_flat$ind <- factor(night_flat$ind, levels=c("Top","Middle","Bottom"))
+
+datebreaks <- seq(as.Date(ymd_hms(head(unique(night_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(night_flat$interval1),n=1))), by="7 days")
+
+datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(night_flat$interval1),n=1))))
+
+all_datebreak <- seq(as.Date(ymd_hms(head(unique(night_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(night_flat$interval1),n=1))), by="1 days")
+
+y_lim <- length(unique(night_flat$tagname))+.001
+
+high_night_sb_plot <- ggplot(data = night_flat, aes(x = as.Date(interval1), y=values, fill=ind)) + 
+geom_bar(stat="identity") +
+theme_bw() +  
+xlab("Night of Study") + 
+ylab("Prop. of Time Spent in Zone") +
+scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
+theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
+ggtitle("Daily Time Budget for Each Night for High Activity Birds (n=9)") + 
+labs(fill = "Zone") +
+scale_y_continuous(limits=c(0, y_lim))
+
+
+ggsave(paste0("../figures/all_day/all_rooms/night_daily_time_budget_stack_bar_for_high_act",".png"), high_night_sb_plot,width = 5, height = 3, units = "in")
+
+### End High Activity Nightly Time Budget Plot ###
