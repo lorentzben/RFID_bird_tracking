@@ -738,6 +738,8 @@ library(emmeans)
 library(lme4)
 library(lmerTest)
 
+id_lookup <- unique(overall_org_table[,c(1,3)])
+
 day_tb_df$week <- week(day_tb_df$interval1)
 
 day_bottom_sum <- day_tb_df |>
@@ -756,12 +758,13 @@ overall_day_summary <- cbind(day_bottom_sum,day_middle_sum[,3],day_top_sum[,3])
 overall_day_summary <- data.frame(merge(overall_day_summary,overall_org_table[,c(1,4)], by="tagname"))
 overall_day_summary$activity <- factor(overall_day_summary$activity, levels=c("low","medium","high"))
 overall_day_summary$weekFac <- factor(overall_day_summary$week)
+overall_day_summary$rm <- id_lookup[match(overall_day_summary$tagname, id_lookup$tagname),2]$rm
 (unique(day_tb_df$interval1))
 (unique(day_tb_df$interval2))
 
 ### BEGINING OF BOTTOM ZONE ANALYSIS ###
 
-m1 <- lmer(bottom_mean ~ weekFac + activity + weekFac:activity + (1|tagname), overall_day_summary)
+m1 <- lmer(bottom_mean ~ weekFac + activity + weekFac:activity + (1|tagname) + (1|rm), overall_day_summary)
 summary(m1)
 anova(m1)
 m1.res <- resid(m1)
@@ -825,7 +828,7 @@ contrast(m1.bottom.means$actMeans,"poly")[2]
 
 ### BEGINING OF MIDDLE ZONE ANALYSIS ###
 
-m2 <- lmer(middle_mean ~ weekFac + activity + weekFac:activity + (1|tagname), overall_day_summary)
+m2 <- lmer(middle_mean ~ weekFac + activity + weekFac:activity + (1|tagname)+(1|rm), overall_day_summary)
 summary(m2)
 anova(m2)
 m2.res <- resid(m2)
@@ -890,7 +893,7 @@ test(contrast(m2.middle.means$weekMeans,"poly")[2:6],joint=TRUE)
 
 ### BEGINING OF TOP ZONE ANALYSIS ###
 
-m3 <- lmer(top_mean ~ weekFac + activity + weekFac:activity + (1|tagname), overall_day_summary)
+m3 <- lmer(top_mean ~ weekFac + activity + weekFac:activity + (1|tagname) + (1|rm), overall_day_summary)
 summary(m3)
 anova(m3)
 m3.res <- resid(m3)
@@ -975,7 +978,7 @@ print(unique(overall_day_summary_w_keel$tagname))
 
 
 
-m4 <- lmer(keel_score ~ activity + (1|tagname), overall_day_summary_w_keel)
+m4 <- lmer(keel_score ~ activity + (1|tagname) + (1|rm), overall_day_summary_w_keel)
 summary(m4)
 anova(m4)
 
