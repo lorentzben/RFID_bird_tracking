@@ -323,6 +323,8 @@ write.csv(overall_org_table, "../intermediate/all_rooms/overall_org_table.csv", 
 
 ### Compare overall low med high activity to day time classification ###
 
+#TODO make N's table for LMH activity
+
 rm_2_day$rm <- 2
 
 rm_3_day$rm <- 3
@@ -413,6 +415,8 @@ same <- intersect( sorted_overall_org[,c(1,4)], sorted_night_org[,c(1,4)])
 
 
 ### Where do the high low medium birds nest at night? ### 
+
+#TODO make 3x3 proportion table with BMT (zone) vs LMH (act)
 
 # read in time budget tables
 
@@ -764,6 +768,8 @@ overall_day_summary$rm <- id_lookup[match(overall_day_summary$tagname, id_lookup
 
 ### BEGINING OF BOTTOM ZONE ANALYSIS ###
 
+#TODO fix axis, axis labels and colors of Time v Week Plot
+
 m1 <- lmer(bottom_mean ~ weekFac + activity + weekFac:activity + (1|tagname) + (1|rm), overall_day_summary)
 summary(m1)
 anova(m1)
@@ -827,6 +833,8 @@ contrast(m1.bottom.means$actMeans,"poly")[2]
 ### END OF BOTTOM ZONE ANALYSIS ###
 
 ### BEGINING OF MIDDLE ZONE ANALYSIS ###
+
+#TODO fix axis, axis labels and colors of Time v Week Plot
 
 m2 <- lmer(middle_mean ~ weekFac + activity + weekFac:activity + (1|tagname)+(1|rm), overall_day_summary)
 summary(m2)
@@ -892,6 +900,8 @@ test(contrast(m2.middle.means$weekMeans,"poly")[2:6],joint=TRUE)
 ### END OF MIDDLE ZONE ANALYSIS ###
 
 ### BEGINING OF TOP ZONE ANALYSIS ###
+
+#TODO fix axis, axis labels and colors of Time v Week Plot
 
 m3 <- lmer(top_mean ~ weekFac + activity + weekFac:activity + (1|tagname) + (1|rm), overall_day_summary)
 summary(m3)
@@ -960,6 +970,8 @@ test(contrast(m3.top.means$weekMeans,"poly")[2:6],joint=TRUE)
 
 ### Does Keel Score differ based on activity level ###
 
+#TODO print N's for keel score in activity level
+
 keel_score <- read_csv('../data/keel_score/rfid_keel_scores_old_classification.csv')
 
 # join keel score to overall day summary table
@@ -976,9 +988,11 @@ overall_day_summary_w_keel$keel_score <- as.numeric(overall_day_summary_w_keel$k
 print("Tagnames Obeserved with Keel Score: ")
 print(unique(overall_day_summary_w_keel$tagname))
 
-
-
-m4 <- lmer(keel_score ~ activity + (1|tagname) + (1|rm), overall_day_summary_w_keel)
+# TODO update these to be better named
+tmp2 <- unique(overall_day_summary_w_keel %>% select(c(tagname,activity,rm,keel_score)))
+tmp2$tagname <- factor(tmp2$tagname,levels=tmp2$tagname)
+tmp2$tag <- as.numeric(tmp2$tagname)
+m4 <- lmer(keel_score ~ activity + (1|rm), tmp2)
 summary(m4)
 anova(m4)
 
@@ -1043,7 +1057,7 @@ ggtitle("Daily Time Budget for Each Day for Low Activity Birds (n=10)") +
 labs(fill = "Zone") +
 scale_y_continuous(limits=c(0, y_lim))
 
-
+#TODO send regmi this figure
 ggsave(paste0("../figures/all_day/all_rooms/day_daily_time_budget_stack_bar_for_low_act",".png"), low_day_sb_plot,width = 5, height = 3, units = "in")
 
 ### End Low Activity Daily Time Budget Plot ###
