@@ -802,7 +802,7 @@ overall_day_summary$rm <- id_lookup[match(overall_day_summary$tagname, id_lookup
 
 ### BEGINING OF BOTTOM ZONE ANALYSIS ###
 
-#TODO fix axis, axis labels and colors of Time v Week Plot
+
 
 m1 <- lmer(bottom_mean ~ weekFac + activity + weekFac:activity + (1|tagname) + (1|rm), overall_day_summary)
 summary(m1)
@@ -833,7 +833,19 @@ jointMeans=~weekFac:activity))
  
 # interaction plot of week on x
 png("../figures/all_day/model_diag/bottom_interaction_act_week.png")
-emmip(m1.bottom.means$jointMeans, activity~weekFac)
+emmip(m1.bottom.means$jointMeans, activity~weekFac) + 
+xlab("Age (Weeks)") + ylab("Predicted Proportion of Time in Zone") + 
+scale_x_discrete(labels=c("10" = "34", 
+                          "11" = "35",
+                          "12" = "36",
+                          "13" = "37",
+                          "14" = "38",
+                          "15" = "39",
+                          "16" = "40",
+                          "17" = "41",
+                          "18" = "42")) +
+scale_color_manual(values=c("#619CFF","#F8766D","#00BA38"))
+
 dev.off()
 
 # interaction plot of activity on x
@@ -868,7 +880,7 @@ contrast(m1.bottom.means$actMeans,"poly")[2]
 
 ### BEGINING OF MIDDLE ZONE ANALYSIS ###
 
-#TODO fix axis, axis labels and colors of Time v Week Plot
+
 
 m2 <- lmer(middle_mean ~ weekFac + activity + weekFac:activity + (1|tagname)+(1|rm), overall_day_summary)
 summary(m2)
@@ -899,7 +911,18 @@ jointMeans=~weekFac:activity))
  
 # interaction plot of week on x
 png("../figures/all_day/model_diag/middle_interaction_act_week.png")
-emmip(m2.middle.means$jointMeans, activity~weekFac)
+emmip(m2.middle.means$jointMeans, activity~weekFac) + 
+xlab("Age (Weeks)") + ylab("Predicted Proportion of Time in Zone") + 
+scale_x_discrete(labels=c("10" = "34", 
+                          "11" = "35",
+                          "12" = "36",
+                          "13" = "37",
+                          "14" = "38",
+                          "15" = "39",
+                          "16" = "40",
+                          "17" = "41",
+                          "18" = "42")) +
+scale_color_manual(values=c("#619CFF","#F8766D","#00BA38"))
 dev.off()
 
 # interaction plot of activity on x
@@ -909,7 +932,7 @@ dev.off()
 
 
 # I don't really see evidence of interaction so we could use marginal means
-#TODO Update the analyses below
+
 
 # does the mean time spent in the middle zone differ between bird activity levels?
 contrast(m2.middle.means$actMean, method=list(
@@ -935,7 +958,6 @@ test(contrast(m2.middle.means$weekMeans,"poly")[2:6],joint=TRUE)
 
 ### BEGINING OF TOP ZONE ANALYSIS ###
 
-#TODO fix axis, axis labels and colors of Time v Week Plot
 
 m3 <- lmer(top_mean ~ weekFac + activity + weekFac:activity + (1|tagname) + (1|rm), overall_day_summary)
 summary(m3)
@@ -966,7 +988,18 @@ jointMeans=~weekFac:activity))
  
 # interaction plot of week on x
 png("../figures/all_day/model_diag/top_interaction_act_week.png")
-emmip(m3.top.means$jointMeans, activity~weekFac)
+emmip(m3.top.means$jointMeans, activity~weekFac)+ 
+xlab("Age (Weeks)") + ylab("Predicted Proportion of Time in Zone") + 
+scale_x_discrete(labels=c("10" = "34", 
+                          "11" = "35",
+                          "12" = "36",
+                          "13" = "37",
+                          "14" = "38",
+                          "15" = "39",
+                          "16" = "40",
+                          "17" = "41",
+                          "18" = "42")) +
+scale_color_manual(values=c("#619CFF","#F8766D","#00BA38"))
 dev.off()
 
 # interaction plot of activity on x
@@ -976,7 +1009,7 @@ dev.off()
 
 
 # Some evidence of interaction week 13 to 16
-#TODO Update the analyses below
+
 
 # does the mean time spent in the top zone differ between bird activity levels?
 contrast(m3.top.means$actMean, method=list(
