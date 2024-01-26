@@ -409,7 +409,9 @@ n_activity <- data.frame(t(n_activity))
 colnames(n_activity) <- n_activity[1,]
 n_activity <- n_activity %>% select(low,medium,high,total)
 n_activity <- n_activity[2,]
-# TODO save this table to Disk
+
+write.csv(n_activity, "../intermediate/n_classified_activity.csv")
+
 
 
 # Differences
@@ -425,7 +427,7 @@ same <- intersect( sorted_overall_org[,c(1,4)], sorted_night_org[,c(1,4)])
 
 ### Where do the high low medium birds nest at night? ### 
 
-#TODO make 3x3 proportion table with BMT (zone) vs LMH (act)
+
 
 # read in time budget tables
 
@@ -493,6 +495,29 @@ low_act_nest <- low_act_night_tb |>
 
 print("Where do the low activity birds nest at night: ")
 (sort(table(low_act_nest$nest),decreasing=T))
+
+
+
+low_tab <- colSums(table(low_act_nest[,c(1,3)])[,c("Bottom","Middle","Top")])
+med_tab <- colSums(table(med_act_nest[,c(1,3)])[,c("Bottom","Middle","Top")])
+high_tab <- colSums(table(high_act_nest[,c(1,3)])[,c("Bottom","Middle","Top")])
+
+low_tot <- sum(low_tab)
+med_tot <- sum(med_tab)
+high_tot <- sum(high_tab)
+tot_tot <- sum(low_tot,med_tot,high_tot)
+
+absolute_nest <- data.frame(rbind(low_tab, med_tab, high_tab))
+rownames(absolute_nest) <- c("low","medium","high")
+absolute_nest$n <- c(low_tot,med_tot,high_tot)
+
+write.csv(absolute_nest, "../intermediate/absolute_nest.csv")
+
+relative_nest <- data.frame(rbind(low_tab/low_tot, med_tab/med_tot, high_tab/high_tot))
+rownames(relative_nest) <- c("low","medium","high")
+relative_nest$n <- c(low_tot,med_tot,high_tot)
+
+write.csv(relative_nest, "../intermediate/relative_nest.csv")
 
 ### END Activity classification with overall table ###
 
