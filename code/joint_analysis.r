@@ -409,6 +409,7 @@ n_activity <- data.frame(t(n_activity))
 colnames(n_activity) <- n_activity[1,]
 n_activity <- n_activity %>% select(low,medium,high,total)
 n_activity <- n_activity[2,]
+# TODO save this table to Disk
 
 
 # Differences
