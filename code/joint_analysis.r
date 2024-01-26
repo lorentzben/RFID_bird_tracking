@@ -1055,6 +1055,12 @@ overall_day_summary_w_keel$keel_score <- as.numeric(overall_day_summary_w_keel$k
 print("Tagnames Obeserved with Keel Score: ")
 print(unique(overall_day_summary_w_keel$tagname))
 
+
+raw_n_keel <-  data.frame(table(unique(overall_day_summary_w_keel[,c(1,6,9)])))
+(sum_n_keel <- raw_n_keel %>% group_by(activity,keel_score) %>%  summarise(n = sum(Freq)))
+
+write.csv(sum_n_keel, "../intermediate/n_keel.csv", row.names=F)
+
 # TODO update these to be better named
 tmp2 <- unique(overall_day_summary_w_keel %>% select(c(tagname,activity,rm,keel_score)))
 tmp2$tagname <- factor(tmp2$tagname,levels=tmp2$tagname)
