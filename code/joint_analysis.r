@@ -1069,6 +1069,18 @@ m4 <- lmer(keel_score ~ activity + (1|rm), tmp2)
 summary(m4)
 anova(m4)
 
+m4_means <- emmeans(m4, specs=list( actMean = ~activity))
+
+c1 <- c(-1,.5,.5)
+c2 <- c(0,-1,1)
+
+contrast(m4_means, method=list(low.vs.medHigh = c1,
+med.vs.high = c2),adjust="bonferroni")
+
+png("../figures/all_day/model_diag/keel_score_mean_m4.png",width=5,height=3, units='in',res=300)
+plot(m4_means, horizontal = F,comparisons=T)
+dev.off()
+
 m5 <- aov(keel_score ~ activity, overall_day_summary_w_keel)
 summary(m5)
 
