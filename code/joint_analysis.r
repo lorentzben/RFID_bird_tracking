@@ -323,8 +323,6 @@ write.csv(overall_org_table, "../intermediate/all_rooms/overall_org_table.csv", 
 
 ### Compare overall low med high activity to day time classification ###
 
-#TODO make N's table for LMH activity
-
 rm_2_day$rm <- 2
 
 rm_3_day$rm <- 3
@@ -402,6 +400,16 @@ night_org_table <- night_org_table[order(night_org_table$ntrans),]
 sorted_overall_org <- overall_org_table[order(overall_org_table$activity, overall_org_table$tagname),]
 
 sorted_night_org <- night_org_table[order(night_org_table$activity, night_org_table$tagname),]
+
+n_activity <- data.frame(table(sorted_day_org$activity))
+total <- sum(n_activity$Freq)
+n_activity$Var1 <- as.character(n_activity$Var1)
+n_activity[nrow(n_activity) + 1,] = c("total",total)
+n_activity <- data.frame(t(n_activity))
+colnames(n_activity) <- n_activity[1,]
+n_activity <- n_activity %>% select(low,medium,high,total)
+n_activity <- n_activity[2,]
+
 
 # Differences
 
