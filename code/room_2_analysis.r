@@ -9,6 +9,7 @@ library(tidyverse)
 library(tidyr)
 library(dplyr)
 library(tsibble)
+library(nplyr)
 
 room_2 <- read.csv("../data/set_2/DK20-03-RFID-R2-febmay-080423.csv")
 
@@ -84,12 +85,20 @@ room_2_all_analysis <- room_2_all_analysis |>
  filter(!is.na(slicedTsibble)) |> 
  filter(!(tagname %in% room_2_out$room_2_summary.tagname))
   
+
 # interpolate the rest of the intervals
+
+ tsibble(room_2_regular$near_5_df[[28]][!are_duplicated(room_2_regular$near_5_df[[28]]),])
+
 room_2_regular <- room_2_all_analysis |>
  select(c(tagname, slicedTsibble)) |>
  mutate(near_5 = map(slicedTsibble, ~ nice_start(.x, "5 seconds",5/60))) |>
- mutate(perSec = map(near_5, ~ fill_gaps(.x)))|>
+ mutate(near_5_df= map(near_5, ~tibble(.x))) |>
+ nest_mutate(near_5_df, datetime=round_date(datetime,"5 seconds"),value=value) |>
+ mutate(near_5_tsibble = map(near_5_df, ~tsibble(.x[!are_duplicated(.x),]))) |> 
+ mutate(perSec = map(near_5_tsibble, ~ fill_gaps(.x)))|>
  mutate(sampled = map(perSec, ~ na.locf(.x))) 
+
 
 room_2_dupes <- room_2_regular |>
   select(tagname, sampled) |> 
