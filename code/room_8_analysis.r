@@ -9,7 +9,7 @@ library(tidyverse)
 library(tidyr)
 library(dplyr)
 library(tsibble)
-
+library(nplyr)
 
 room_8 <- read.csv("../data/set_2/DK20-03-RFID-r8-febmay-080423.csv") %>% na.exclude()
 
@@ -117,16 +117,31 @@ room_8_interval |>
  write.csv(row.names=F,'../output/all_rooms/room_8_all_room_interval_tab.csv')
 
 
-for(i in 1:length(room_8_struct$tagname)){
+# for(i in 1:length(room_8_struct$tagname)){
 
-    current_tag <- room_8_struct$tagname[i]
+#     current_tag <- room_8_struct$tagname[i]
 
-    current_tsibble <- room_8_struct |>
+#     current_tsibble <- room_8_struct |>
+#         slice(i) |> 
+#         pull(tsibble) |> 
+#         pluck(1)
+
+#     current_tsibble$tagname <- rep(current_tag, length(current_tsibble$datetime))
+
+#     write.csv(current_tsibble, paste0("../intermediate/all_rooms/room_8_tsibble_",current_tag,".csv"),row.names=F)
+# }
+
+for(i in 1:length(room_8_regular$tagname)){
+
+    current_tag <- room_8_regular$tagname[i]
+
+    current_tsibble <- room_8_regular |>
         slice(i) |> 
-        pull(tsibble) |> 
+        pull(sampled) |> 
         pluck(1)
 
     current_tsibble$tagname <- rep(current_tag, length(current_tsibble$datetime))
+    colnames(current_tsibble) <- c("datetime",current_tag,"tagname")
 
     write.csv(current_tsibble, paste0("../intermediate/all_rooms/room_8_tsibble_",current_tag,".csv"),row.names=F)
 }

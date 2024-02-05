@@ -9,6 +9,7 @@ library(tidyverse)
 library(tidyr)
 library(dplyr)
 library(tsibble)
+library(nplyr)
 
 room_3 <- read.csv("../data/set_2/DK20-03-RFID-R3-febmay-080423.csv") %>% na.exclude()
 
@@ -91,7 +92,7 @@ room_3_regular <- room_3_all_analysis |>
  nest_mutate(near_5_df, datetime=round_date(datetime,"5 seconds"),value=value) |>
  mutate(near_5_tsibble = map(near_5_df, ~tsibble(.x[!are_duplicated(.x),]))) |> 
  mutate(perSec = map(near_5_tsibble, ~ fill_gaps(.x)))|>
- mutate(sampled = map(perSec, ~ na.locf(.x))) ) 
+ mutate(sampled = map(perSec, ~ na.locf(.x)))
 
 room_3_dupes <- room_3_regular |>
   select(tagname, sampled) |> 
@@ -115,20 +116,34 @@ room_3_interval |>
  write.csv(row.names=F,'../output/all_rooms/room_3_all_room_interval_tab.csv')
 
 
-for(i in 1:length(room_3_struct$tagname)){
+# for(i in 1:length(room_3_struct$tagname)){
 
-    current_tag <- room_3_struct$tagname[i]
+#     current_tag <- room_3_struct$tagname[i]
 
-    current_tsibble <- room_3_struct |>
+#     current_tsibble <- room_3_struct |>
+#         slice(i) |> 
+#         pull(tsibble) |> 
+#         pluck(1)
+
+#     current_tsibble$tagname <- rep(current_tag, length(current_tsibble$datetime))
+
+#     write.csv(current_tsibble, paste0("../intermediate/all_rooms/room_3_tsibble_",current_tag,".csv"),row.names=F)
+# }
+
+for(i in 1:length(room_3_regular$tagname)){
+
+    current_tag <- room_3_regular$tagname[i]
+
+    current_tsibble <- room_3_regular |>
         slice(i) |> 
-        pull(tsibble) |> 
+        pull(sampled) |> 
         pluck(1)
 
     current_tsibble$tagname <- rep(current_tag, length(current_tsibble$datetime))
+    colnames(current_tsibble) <- c("datetime",current_tag,"tagname")
 
     write.csv(current_tsibble, paste0("../intermediate/all_rooms/room_3_tsibble_",current_tag,".csv"),row.names=F)
 }
-
 
 
 # All Room room_3 Daily Time Budget Analysis

@@ -88,7 +88,7 @@ room_2_all_analysis <- room_2_all_analysis |>
 
 # interpolate the rest of the intervals
 
- tsibble(room_2_regular$near_5_df[[28]][!are_duplicated(room_2_regular$near_5_df[[28]]),])
+ 
 
 room_2_regular <- room_2_all_analysis |>
  select(c(tagname, slicedTsibble)) |>
@@ -122,16 +122,31 @@ room_2_interval |>
  write.csv(row.names=F,'../output/all_rooms/room_2_all_room_interval_tab.csv')
 
 
-for(i in 1:length(room_2_struct$tagname)){
+# for(i in 1:length(room_2_struct$tagname)){
 
-    current_tag <- room_2_struct$tagname[i]
+#     current_tag <- room_2_struct$tagname[i]
 
-    current_tsibble <- room_2_struct |>
+#     current_tsibble <- room_2_struct |>
+#         slice(i) |> 
+#         pull(tsibble) |> 
+#         pluck(1)
+
+#     current_tsibble$tagname <- rep(current_tag, length(current_tsibble$datetime))
+
+#     write.csv(current_tsibble, paste0("../intermediate/all_rooms/room_2_tsibble_",current_tag,".csv"),row.names=F)
+# }
+
+for(i in 1:length(room_2_regular$tagname)){
+
+    current_tag <- room_2_regular$tagname[i]
+
+    current_tsibble <- room_2_regular |>
         slice(i) |> 
-        pull(tsibble) |> 
+        pull(sampled) |> 
         pluck(1)
 
     current_tsibble$tagname <- rep(current_tag, length(current_tsibble$datetime))
+    colnames(current_tsibble) <- c("datetime",current_tag,"tagname")
 
     write.csv(current_tsibble, paste0("../intermediate/all_rooms/room_2_tsibble_",current_tag,".csv"),row.names=F)
 }
