@@ -80,6 +80,8 @@ rm_2_high_act$activity <- rep("high",length(rm_2_high_act$ntrans))
 
 rm_2_org_overall <- bind_rows(rm_2_low_act,rm_2_med_act, rm_2_high_act)
 
+write.csv(rm_2_org_overall, "../intermediate/rm_2_activity_class.csv", row.names=F)
+
 expect_equal(length(rm_2_org_overall$ntrans), length(rm_2_overall$ntrans))
 
 
@@ -149,6 +151,8 @@ rm_3_high_act$activity <- rep("high",length(rm_3_high_act$ntrans))
 
 rm_3_org_overall <- bind_rows(rm_3_low_act,rm_3_med_act, rm_3_high_act)
 
+write.csv(rm_3_org_overall, "../intermediate/rm_3_activity_class.csv", row.names=F)
+
 expect_equal(length(rm_3_org_overall$ntrans), length(rm_3_overall$ntrans))
 
 # # calc num trans room 8
@@ -216,6 +220,8 @@ rm_8_high_act$activity <- rep("high",length(rm_8_high_act$ntrans))
 
 rm_8_org_overall <- bind_rows(rm_8_low_act,rm_8_med_act, rm_8_high_act)
 
+write.csv(rm_8_org_overall, "../intermediate/rm_8_activity_class.csv", row.names=F)
+
 expect_equal(length(rm_8_org_overall$ntrans), length(rm_8_overall$ntrans))
 
 # # calc num trans room 11
@@ -282,6 +288,8 @@ rm_11_high_act <- rm_11_overall[(rm_11_overall$ntrans > m2h),]
 rm_11_high_act$activity <- rep("high",length(rm_11_high_act$ntrans))
 
 rm_11_org_overall <- bind_rows(rm_11_low_act,rm_11_med_act, rm_11_high_act)
+
+write.csv(rm_11_org_overall, "../intermediate/rm_11_activity_class.csv", row.names=F)
 
 expect_equal(length(rm_11_org_overall$ntrans), length(rm_11_overall$ntrans))
 
@@ -1355,3 +1363,20 @@ scale_y_continuous(limits=c(0, y_lim))
 ggsave(paste0("../figures/all_day/all_rooms/night_daily_time_budget_stack_bar_for_high_act",".png"), high_night_sb_plot,width = 5, height = 3, units = "in")
 
 ### End High Activity Nightly Time Budget Plot ###
+
+### K-Means Clustering ### 
+
+# Separate room ID n-trans
+
+
+
+# Joint Room ID n-trans
+
+# separate room ID Zone Duration
+
+# Joint room ID Zone Duration
+
+
+
+
+### END K-Means Clustering ###
