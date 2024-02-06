@@ -1368,15 +1368,82 @@ ggsave(paste0("../figures/all_day/all_rooms/night_daily_time_budget_stack_bar_fo
 
 # Separate room ID n-trans
 
+rm_2_org_overall[,1:2]
+
+rm_2 <- data.frame(rm_2_org_overall[,2])
+rownames(rm_2) <- rm_2_org_overall$tagname
+
+means <- apply(rm_2,2,mean)
+sds <- apply(rm_2,2,sd)
+nor <- scale(rm_2,center=means,scale=sds)
+
+set.seed(123)
+kc<-kmeans(nor,5)
+kc
+
+ot<-nor
+datadistshortset<-dist(ot,method = "euclidean")
+hc1 <- hclust(datadistshortset, method = "complete" )
+pamvshortset <- pam(datadistshortset,4, diss = FALSE)
+
+png("../figures/all_day/rm_2_cluster.png")
+clusplot(pamvshortset, shade = FALSE,labels=2,col.clus="blue",col.p="red",span=FALSE,main="Cluster Mapping",cex=1.2)
+dev.off()
+
+set.seed(123)
+kc<-kmeans(rm_2,37)
+kc
+
+ot<-nor
+datadistshortset<-dist(ot,method = "euclidean")
+hc1 <- hclust(datadistshortset, method = "complete" )
+pamvshortset <- pam(datadistshortset,4, diss = FALSE)
+
+png("../figures/all_day/rm_2_cluster.png")
+clusplot(pamvshortset, shade = FALSE,labels=2,col.clus="blue",col.p="red",span=FALSE,main="Cluster Mapping",cex=1.2)
+dev.off()
+
+
+rm_3_org_overall[,1:2]
+
+rm_8_org_overall[,1:2]
+
+rm_11_org_overall[,1:2]
 
 
 # Joint Room ID n-trans
 
+sorted_overall_org[,1:2]
+
 # separate room ID Zone Duration
+
+rm_2_int <- unnest(rm_2_nest_overall_int)
+rm_2_int$duration <-rm_2_int$t2 -rm_2_int$t1
+#rownames(dataframe(rm_2_int)) <- rm_2_int$tagname
+
+# TODO come back here to see if we can find multiple replicates for id
+
+rm_2_int[,5:6]
+rm_2_int$to_zone <- as.numeric(as.factor(rm_2_int$to_zone))
+
+set.seed(123)
+kc<-kmeans(rm_2_int[,5:6],37)
+kc
+
+ot<-nor
+datadistshortset<-dist(ot,method = "euclidean")
+hc1 <- hclust(datadistshortset, method = "complete" )
+pamvshortset <- pam(datadistshortset,4, diss = FALSE)
+
+png("../figures/all_day/rm_2_cluster.png")
+clusplot(pamvshortset, shade = FALSE,labels=2,col.clus="blue",col.p="red",span=FALSE,main="Cluster Mapping",cex=1.2)
+dev.off()
+
+rm_2_nest_overall_int$data[[1]]$duration <-rm_2_nest_overall_int$data[[1]]$t2 -rm_2_nest_overall_int$data[[1]]$t1
 
 # Joint room ID Zone Duration
 
-
+rm_2_nest_overall_int$data[[1]]$duration <-rm_2_nest_overall_int$data[[1]]$t2 -rm_2_nest_overall_int$data[[1]]$t1
 
 
 ### END K-Means Clustering ###
