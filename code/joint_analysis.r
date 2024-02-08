@@ -1369,40 +1369,8 @@ ggsave(paste0("../figures/all_day/all_rooms/night_daily_time_budget_stack_bar_fo
 
 # Separate room ID n-trans
 
-rm_2_org_overall[,1:2]
-
 rm_2 <- data.frame(rm_2_org_overall[,2])
 rownames(rm_2) <- rm_2_org_overall$tagname
-
-means <- apply(rm_2,2,mean)
-sds <- apply(rm_2,2,sd)
-nor <- scale(rm_2,center=means,scale=sds)
-
-set.seed(123)
-kc<-kmeans(nor,5)
-kc
-
-ot<-nor
-datadistshortset<-dist(ot,method = "euclidean")
-hc1 <- hclust(datadistshortset, method = "complete" )
-pamvshortset <- pam(datadistshortset,4, diss = FALSE)
-
-png("../figures/all_day/rm_2_cluster.png")
-clusplot(pamvshortset, shade = FALSE,labels=2,col.clus="blue",col.p="red",span=FALSE,main="Cluster Mapping",cex=1.2)
-dev.off()
-
-set.seed(123)
-kc<-kmeans(rm_2,37)
-kc
-
-ot<-nor
-datadistshortset<-dist(ot,method = "euclidean")
-hc1 <- hclust(datadistshortset, method = "complete" )
-pamvshortset <- pam(datadistshortset,4, diss = FALSE)
-
-png("../figures/all_day/rm_2_cluster.png")
-clusplot(pamvshortset, shade = FALSE,labels=2,col.clus="blue",col.p="red",span=FALSE,main="Cluster Mapping",cex=1.2)
-dev.off()
 
 png("../figures/all_day/rm_2_density.png")
 plot(density(rm_2[,1]))
@@ -1429,59 +1397,11 @@ sorted_overall_org[,1:2]
 
 # separate room ID Zone Duration
 
-rm_2_int <- rm_2_nest_overall_int |>
-nest_mutate(data, duration=(t2-t1), zone=to_zone, transition=1:length(to_zone))
 
-rm_2_int <- unnest(rm_2_int,cols=c("data"))
-
-rm_2_int$recordID <- paste0(rm_2_int$tagname,".",rm_2_int$transition)
-rm_2_int_clean <- rm_2_int %>%
-  select(recordID, zone, duration) %>%
-  data.frame()
-
-rm_2_int_clean$zone <- as.numeric(as.factor(rm_2_int_clean$zone))
-rownames(rm_2_int_clean) <- rm_2_int_clean$recordID
-
-rm_2_int_clean$recordID <- NULL
-
-
-# TODO come back here to see if we can find multiple replicates for id; just add a record number maybe?
-
-# rm_2_int[,5:6]
-# rm_2_int$to_zone <- as.numeric(as.factor(rm_2_int$to_zone))
-
-
-set.seed(123)
-kc<-kmeans(rm_2_int_clean,37,)
-kc
-
-# TODO add name to plot or color based off sample maybe
-
-#rm_2_int_clean$cluster_id <- factor(kc$cluster)
-ggplot(rm_2_int_clean, aes(zone, duration, color = cluster_id)) +
-    geom_point(alpha = 0.25) 
-
-ggplot(rm_2_int_clean, aes(duration, zone, color = cluster_id)) +
-    geom_point(alpha = 0.25)
-
-
-rm_2_int_clean[, c("zone", "duration")] = scale(rm_2_int_clean[, c("zone", "duration")])
-
-set.seed(123)
-km.out <- kmeans(rm_2_int_clean, centers = 37, nstart = 300)
-km.out
-
-rm_2_int_clean$cluster_id <- factor(km.out$cluster)
-ggplot(rm_2_int_clean, aes(zone, duration, color = cluster_id)) +
-    geom_point(alpha = 0.25) 
-
-ggsave("../figures/cluster.png")
-
-rm_2_nest_overall_int$data[[1]]$duration <-rm_2_nest_overall_int$data[[1]]$t2 -rm_2_nest_overall_int$data[[1]]$t1
 
 # Joint room ID Zone Duration
 
-rm_2_nest_overall_int$data[[1]]$duration <-rm_2_nest_overall_int$data[[1]]$t2 -rm_2_nest_overall_int$data[[1]]$t1
+
 
 
 ### END K-Means Clustering ###
