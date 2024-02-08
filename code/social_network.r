@@ -18,6 +18,8 @@ library(sna)
 library(readr)
 library(ggplot2)
 
+tagnames <- FALSE
+
 makeAdjMat <- function(record_tab){
   n_tags <- length(colnames(record_tab))-1
   tag_name <- colnames(record_tab)[1:n_tags+1]
@@ -74,11 +76,15 @@ rm_2_net <- network::network(rm_2_hr_median, directed=F)
 rm_2_act_class_quart <- read.csv("../intermediate/rm_2_activity_class.csv")
 
 rm_2_act_class_quart <- rm_2_act_class_quart[match(colnames(rm_2_hr), rm_2_act_class_quart$tagname),]
-#rm_2_act_class_quart$color <- ifelse(rm_2_act_class_quart$activity=="low","#F8766D", ifelse(rm_2_act_class_quart$activity=="medium","#00BA38","#619CFF"))
-rm_2_act_class_quart$color <- ifelse(rm_2_act_class_quart$activity=="low","red", ifelse(rm_2_act_class_quart$activity=="medium","green","blue"))
+rm_2_act_class_quart$color <- ifelse(rm_2_act_class_quart$activity=="low","#F8766D", ifelse(rm_2_act_class_quart$activity=="medium","#00BA38","#619CFF"))
+#rm_2_act_class_quart$color <- ifelse(rm_2_act_class_quart$activity=="low","red", ifelse(rm_2_act_class_quart$activity=="medium","green","blue"))
 
 png("../figures/all_day/rm_2_median_netmap_quart.png")
-plot(rm_2_net, main="Room 2 Social Network Quartile", displaylabels=T, vertex.col=rm_2_act_class_quart$color)
+plot(rm_2_net, main="Room 2 Social Network Quartile", displaylabels=tagnames, vertex.col=rm_2_act_class_quart$color)
+legend("topleft",
+       legend = c("low","medium","high"),
+       fill = c("#F8766D","#00BA38","#619CFF"),       # Color of the squares
+       border = "black") # Color of the border of the squares
 dev.off()
 
 rm_2.degree <- sna::degree(rm_2_net, gmode="graph")
@@ -127,11 +133,15 @@ rm_3_net <- network::network(rm_3_hr_median, directed=F)
 rm_3_act_class_quart <- read.csv("../intermediate/rm_3_activity_class.csv")
 
 rm_3_act_class_quart <- rm_3_act_class_quart[match(colnames(rm_3_hr), rm_3_act_class_quart$tagname),]
-#rm_3_act_class_quart$color <- ifelse(rm_3_act_class_quart$activity=="low","#F8766D", ifelse(rm_3_act_class_quart$activity=="medium","#00BA38","#619CFF"))
-rm_3_act_class_quart$color <- ifelse(rm_3_act_class_quart$activity=="low","red", ifelse(rm_3_act_class_quart$activity=="medium","green","blue"))
+rm_3_act_class_quart$color <- ifelse(rm_3_act_class_quart$activity=="low","#F8766D", ifelse(rm_3_act_class_quart$activity=="medium","#00BA38","#619CFF"))
+#rm_3_act_class_quart$color <- ifelse(rm_3_act_class_quart$activity=="low","red", ifelse(rm_3_act_class_quart$activity=="medium","green","blue"))
 
 png("../figures/all_day/rm_3_median_netmap_quart.png")
-plot(rm_3_net, main="Room 3 Social Network Quartile", displaylabels=T, vertex.col=rm_3_act_class_quart$color)
+plot(rm_3_net, main="Room 3 Social Network Quartile", displaylabels=tagnames, vertex.col=rm_3_act_class_quart$color)
+legend("topleft",
+       legend = c("low","medium","high"),
+       fill = c("#F8766D","#00BA38","#619CFF"),       # Color of the squares
+       border = "black") # Color of the border of the squares
 dev.off()
 
 rm_3.degree <- sna::degree(rm_3_net, gmode="graph")
@@ -180,11 +190,15 @@ rm_8_net <- network::network(rm_8_hr_median, directed=F)
 rm_8_act_class_quart <- read.csv("../intermediate/rm_8_activity_class.csv")
 
 rm_8_act_class_quart <- rm_8_act_class_quart[match(colnames(rm_8_hr), rm_8_act_class_quart$tagname),]
-#rm_8_act_class_quart$color <- ifelse(rm_8_act_class_quart$activity=="low","#F8766D", ifelse(rm_8_act_class_quart$activity=="medium","#00BA38","#619CFF"))
-rm_8_act_class_quart$color <- ifelse(rm_8_act_class_quart$activity=="low","red", ifelse(rm_8_act_class_quart$activity=="medium","green","blue"))
+rm_8_act_class_quart$color <- ifelse(rm_8_act_class_quart$activity=="low","#F8766D", ifelse(rm_8_act_class_quart$activity=="medium","#00BA38","#619CFF"))
+#rm_8_act_class_quart$color <- ifelse(rm_8_act_class_quart$activity=="low","red", ifelse(rm_8_act_class_quart$activity=="medium","green","blue"))
 
 png("../figures/all_day/rm_8_median_netmap_quart.png")
-plot(rm_8_net, main="Room 8 Social Network Quartile", displaylabels=T, vertex.col=rm_8_act_class_quart$color)
+plot(rm_8_net, main="Room 8 Social Network Quartile", displaylabels=tagnames, vertex.col=rm_8_act_class_quart$color)
+legend("topleft",
+       legend = c("low","medium","high"),
+       fill = c("#F8766D","#00BA38","#619CFF"),       # Color of the squares
+       border = "black") # Color of the border of the squares
 dev.off()
 
 rm_8.degree <- sna::degree(rm_8_net, gmode="graph")
@@ -234,11 +248,15 @@ rm_11_net <- network::network(rm_11_hr_median, directed=F)
 rm_11_act_class_quart <- read.csv("../intermediate/rm_11_activity_class.csv")
 
 rm_11_act_class_quart <- rm_11_act_class_quart[match(colnames(rm_11_hr), rm_11_act_class_quart$tagname),]
-#rm_11_act_class_quart$color <- ifelse(rm_11_act_class_quart$activity=="low","#F8766D", ifelse(rm_11_act_class_quart$activity=="medium","#00BA38","#619CFF"))
-rm_11_act_class_quart$color <- ifelse(rm_11_act_class_quart$activity=="low","red", ifelse(rm_11_act_class_quart$activity=="medium","green","blue"))
+rm_11_act_class_quart$color <- ifelse(rm_11_act_class_quart$activity=="low","#F8766D", ifelse(rm_11_act_class_quart$activity=="medium","#00BA38","#619CFF"))
+#rm_11_act_class_quart$color <- ifelse(rm_11_act_class_quart$activity=="low","red", ifelse(rm_11_act_class_quart$activity=="medium","green","blue"))
 
 png("../figures/all_day/rm_11_median_netmap_quart.png")
-plot(rm_11_net, main="Room 11 Social Network Quartile", displaylabels=T, vertex.col=rm_11_act_class_quart$color)
+plot(rm_11_net, main="Room 11 Social Network Quartile", displaylabels=tagnames, vertex.col=rm_11_act_class_quart$color)
+legend("topleft",
+       legend = c("low","medium","high"),
+       fill = c("#F8766D","#00BA38","#619CFF"),       # Color of the squares
+       border = "black") # Color of the border of the squares
 dev.off()
 
 rm_11.degree <- sna::degree(rm_11_net, gmode="graph")
