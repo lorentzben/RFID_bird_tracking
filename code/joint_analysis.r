@@ -1403,25 +1403,4 @@ rm_2$cluster_3_id <- factor(km.3$cluster)
 
 write.csv("../intermediate/rm_2_k_cluster.csv",row.name=T)
 
-
-rm_3_org_overall[,1:2]
-
-rm_8_org_overall[,1:2]
-
-rm_11_org_overall[,1:2]
-
-
-# Joint Room ID n-trans
-
-sorted_overall_org[,1:2]
-
-# separate room ID Zone Duration
-
-
-
-# Joint room ID Zone Duration
-
-
-
-
 ### END K-Means Clustering ###
