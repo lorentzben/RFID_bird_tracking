@@ -78,22 +78,47 @@ dev.off()
 rm_2_net <- network::network(rm_2_hr_median, directed=F)
 # color based on activity classification 
 
-rm_2_act_class <- read.csv("../intermediate/rm_2_activity_class.csv")
+rm_2_act_class_quart <- read.csv("../intermediate/rm_2_activity_class.csv")
 
-rm_2_act_class <- rm_2_act_class[match(colnames(rm_2_hr), rm_2_act_class$tagname),]
-rm_2_act_class$color <- ifelse(rm_2_act_class$activity=="low","#F8766D", ifelse(rm_2_act_class$activity=="medium","#00BA38","#619CFF"))
+rm_2_act_class_quart <- rm_2_act_class_quart[match(colnames(rm_2_hr), rm_2_act_class_quart$tagname),]
+#rm_2_act_class_quart$color <- ifelse(rm_2_act_class_quart$activity=="low","#F8766D", ifelse(rm_2_act_class_quart$activity=="medium","#00BA38","#619CFF"))
+rm_2_act_class_quart$color <- ifelse(rm_2_act_class_quart$activity=="low","red", ifelse(rm_2_act_class_quart$activity=="medium","green","blue"))
 
+rm_2_act_class_k <- read.csv("../intermediate/rm_2_k_cluster.csv")
 
-png("../figures/all_day/rm_2_median_netmap.png")
-plot(rm_2_net, main="Room 2 Social Network", displaylabels=T, vertex.col=rm_2_act_class$color)
+rm_2_act_class_3 <- rm_2_act_class_k[match(colnames(rm_2_hr), rm_2_act_class_k$X),]
+#rm_2_act_class_3$color <- ifelse(rm_2_act_class_3$cluster_3_id=="3","#F8766D", ifelse(rm_2_act_class_3$cluster_3_id=="2","#00BA38","#619CFF"))
+rm_2_act_class_3$color <- ifelse(rm_2_act_class_3$cluster_3_id=="3","red", ifelse(rm_2_act_class_3$cluster_3_id=="2","green","blue"))
+
+rm_2_act_class_5 <- rm_2_act_class_k[match(colnames(rm_2_hr), rm_2_act_class_k$X),]
+rm_2_act_class_5$color <- ifelse(rm_2_act_class_5$cluster_5_id=="4","red", ifelse(rm_2_act_class_5$cluster_5_id=="3","orange",ifelse(rm_2_act_class_5$cluster_5_id=="2","yellow",ifelse(rm_2_act_class_5$cluster_5_id=="1","green","blue"))))
+
+png("../figures/all_day/rm_2_median_netmap_quart.png")
+plot(rm_2_net, main="Room 2 Social Network Quartile", displaylabels=T, vertex.col=rm_2_act_class_quart$color)
+dev.off()
+
+png("../figures/all_day/rm_2_median_netmap_k3.png")
+plot(rm_2_net, main="Room 2 Social Network (k=3)", displaylabels=T, vertex.col=rm_2_act_class_3$color)
+dev.off()
+
+png("../figures/all_day/rm_2_median_netmap_k5.png")
+plot(rm_2_net, main="Room 2 Social Network (k=5)", displaylabels=T, vertex.col=rm_2_act_class_5$color)
 dev.off()
 
 rm_2_net_night <- network::network(rm_2_hr_night, directed=F)
 # color based on activity classification 
 
 
-png("../figures/all_day/rm_2_night_netmap.png")
-plot(rm_2_net_night, main="Room 2 Social Network", displaylabels=T,vertex.col=rm_2_act_class$color)
+png("../figures/all_day/rm_2_night_netmap_quart.png")
+plot(rm_2_net_night, main="Room 2 Social Network Quartile", displaylabels=T,vertex.col=rm_2_act_class_quart$color)
+dev.off()
+
+png("../figures/all_day/rm_2_night_netmap_k3.png")
+plot(rm_2_net_night, main="Room 2 Social Network (k=3)", displaylabels=T,vertex.col=rm_2_act_class_3$color)
+dev.off()
+
+png("../figures/all_day/rm_2_night_netmap_k5.png")
+plot(rm_2_net_night, main="Room 2 Social Network (k=5)", displaylabels=T,vertex.col=rm_2_act_class_5$color)
 dev.off()
 
 # read in room 3 tables

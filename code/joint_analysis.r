@@ -1372,16 +1372,36 @@ ggsave(paste0("../figures/all_day/all_rooms/night_daily_time_budget_stack_bar_fo
 rm_2 <- data.frame(rm_2_org_overall[,2])
 rownames(rm_2) <- rm_2_org_overall$tagname
 
+
 png("../figures/all_day/rm_2_density.png")
 plot(density(rm_2[,1]))
 dev.off()
 
+png("../figures/rm_2_elbow.png")
+k.max <- 10 # Maximal number of clusters
+data <- rm_2
+wss <- sapply(1:k.max, 
+        function(k){kmeans(data, k, nstart=10 )$tot.withinss})
+plot(1:k.max, wss,
+       type="b", pch = 19, frame = FALSE, 
+       xlab="Number of clusters K",
+       ylab="Total within-clusters sum of squares")
+abline(v = 3, lty =2)
+dev.off()
+
 set.seed(123)
-km.out <- kmeans(rm_2, 5)
-km.out
+km.5 <- kmeans(rm_2, 5)
+km.5
 
-rm_2$cluster_id <- factor(km.out$cluster)
+rm_2$cluster_5_id <- factor(km.5$cluster)
 
+set.seed(123)
+km.3 <- kmeans(rm_2, 3)
+km.3
+
+rm_2$cluster_3_id <- factor(km.3$cluster)
+
+write.csv("../intermediate/rm_2_k_cluster.csv",row.name=T)
 
 
 rm_3_org_overall[,1:2]
