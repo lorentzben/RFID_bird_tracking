@@ -10,6 +10,7 @@ library(tidyr)
 library(dplyr)
 library(tsibble)
 library(testthat)
+library(cluster)
 
 # read in room 2 tables
 library(readr)
@@ -1403,6 +1404,17 @@ png("../figures/all_day/rm_2_cluster.png")
 clusplot(pamvshortset, shade = FALSE,labels=2,col.clus="blue",col.p="red",span=FALSE,main="Cluster Mapping",cex=1.2)
 dev.off()
 
+png("../figures/all_day/rm_2_density.png")
+plot(density(rm_2[,1]))
+dev.off()
+
+set.seed(123)
+km.out <- kmeans(rm_2, 5)
+km.out
+
+rm_2$cluster_id <- factor(km.out$cluster)
+
+
 
 rm_3_org_overall[,1:2]
 
@@ -1417,27 +1429,53 @@ sorted_overall_org[,1:2]
 
 # separate room ID Zone Duration
 
-rm_2_int <- unnest(rm_2_nest_overall_int)
-rm_2_int$duration <-rm_2_int$t2 -rm_2_int$t1
-#rownames(dataframe(rm_2_int)) <- rm_2_int$tagname
+rm_2_int <- rm_2_nest_overall_int |>
+nest_mutate(data, duration=(t2-t1), zone=to_zone, transition=1:length(to_zone))
 
-# TODO come back here to see if we can find multiple replicates for id
+rm_2_int <- unnest(rm_2_int,cols=c("data"))
 
-rm_2_int[,5:6]
-rm_2_int$to_zone <- as.numeric(as.factor(rm_2_int$to_zone))
+rm_2_int$recordID <- paste0(rm_2_int$tagname,".",rm_2_int$transition)
+rm_2_int_clean <- rm_2_int %>%
+  select(recordID, zone, duration) %>%
+  data.frame()
+
+rm_2_int_clean$zone <- as.numeric(as.factor(rm_2_int_clean$zone))
+rownames(rm_2_int_clean) <- rm_2_int_clean$recordID
+
+rm_2_int_clean$recordID <- NULL
+
+
+# TODO come back here to see if we can find multiple replicates for id; just add a record number maybe?
+
+# rm_2_int[,5:6]
+# rm_2_int$to_zone <- as.numeric(as.factor(rm_2_int$to_zone))
+
 
 set.seed(123)
-kc<-kmeans(rm_2_int[,5:6],37)
+kc<-kmeans(rm_2_int_clean,37,)
 kc
 
-ot<-nor
-datadistshortset<-dist(ot,method = "euclidean")
-hc1 <- hclust(datadistshortset, method = "complete" )
-pamvshortset <- pam(datadistshortset,4, diss = FALSE)
+# TODO add name to plot or color based off sample maybe
 
-png("../figures/all_day/rm_2_cluster.png")
-clusplot(pamvshortset, shade = FALSE,labels=2,col.clus="blue",col.p="red",span=FALSE,main="Cluster Mapping",cex=1.2)
-dev.off()
+#rm_2_int_clean$cluster_id <- factor(kc$cluster)
+ggplot(rm_2_int_clean, aes(zone, duration, color = cluster_id)) +
+    geom_point(alpha = 0.25) 
+
+ggplot(rm_2_int_clean, aes(duration, zone, color = cluster_id)) +
+    geom_point(alpha = 0.25)
+
+
+rm_2_int_clean[, c("zone", "duration")] = scale(rm_2_int_clean[, c("zone", "duration")])
+
+set.seed(123)
+km.out <- kmeans(rm_2_int_clean, centers = 37, nstart = 300)
+km.out
+
+rm_2_int_clean$cluster_id <- factor(km.out$cluster)
+ggplot(rm_2_int_clean, aes(zone, duration, color = cluster_id)) +
+    geom_point(alpha = 0.25) 
+
+ggsave("../figures/cluster.png")
 
 rm_2_nest_overall_int$data[[1]]$duration <-rm_2_nest_overall_int$data[[1]]$t2 -rm_2_nest_overall_int$data[[1]]$t1
 
