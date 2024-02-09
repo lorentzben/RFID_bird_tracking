@@ -853,8 +853,7 @@ scale_x_discrete(labels=c("10" = "34",
                           "16" = "40",
                           "17" = "41",
                           "18" = "42")) +
-scale_color_manual(values=c("#619CFF","#F8766D","#00BA38"))
-
+scale_color_manual(values=c("low" ="#F8766D","medium"="#00BA38","high"="#619CFF"),breaks=c("low","medium","high"))
 dev.off()
 
 # interaction plot of activity on x
@@ -876,7 +875,6 @@ contrast(m1.bottom.means$actMean, method=list(
 contrast(m1.bottom.means$weekMeans, method=list(
   first.vs.last = c(-1,0,0,0,0,0,0,0,1),
   fhalf.vs.lhalf = c(-1,-1,-1,-1,0,1,1,1,1)), adjust="bonferroni")
-
 # Examine if there is a linear/non-linear effect of week on time spent in bottom zone
 
 contrast(m1.bottom.means$weekMeans,"poly")[1]
@@ -931,7 +929,7 @@ scale_x_discrete(labels=c("10" = "34",
                           "16" = "40",
                           "17" = "41",
                           "18" = "42")) +
-scale_color_manual(values=c("#619CFF","#F8766D","#00BA38"))
+scale_color_manual(values=c("low" ="#F8766D","medium"="#00BA38","high"="#619CFF"),breaks=c("low","medium","high"))
 dev.off()
 
 # interaction plot of activity on x
@@ -1008,7 +1006,7 @@ scale_x_discrete(labels=c("10" = "34",
                           "16" = "40",
                           "17" = "41",
                           "18" = "42")) +
-scale_color_manual(values=c("#619CFF","#F8766D","#00BA38"))
+scale_color_manual(values=c("low" ="#F8766D","medium"="#00BA38","high"="#619CFF"),breaks=c("low","medium","high"))
 dev.off()
 
 # interaction plot of activity on x
@@ -1404,3 +1402,23 @@ rm_2$cluster_3_id <- factor(km.3$cluster)
 write.csv("../intermediate/rm_2_k_cluster.csv",row.name=T)
 
 ### END K-Means Clustering ###
+
+### Make Weekly Transitions of Most Active Bird ###
+
+### END Make Weekly Transitions of Most Active Bird ###
+
+### Make Weekly Transitions of Least Active Bird ###
+
+### END Make Weekly Transitions of Least Active Bird ###
+
+### Make Weekly Transitions of Low Activity Birds ###
+
+### END Make Weekly Transitions of Low Activity Birds ###
+
+### Make Weekly Transitions of  Medium Activity Birds ###
+
+### END Make Weekly Transitions of Medium Activity Birds ###
+
+### Make Weekly Transitions of High Activity Birds ###
+
+### END Make Weekly Transitions of High Activity Birds ###
