@@ -1405,20 +1405,57 @@ write.csv("../intermediate/rm_2_k_cluster.csv",row.name=T)
 
 ### Make Weekly Transitions of Most Active Bird ###
 
+# identify most active bird
+overall_table[order(overall_table$ntrans, decreasing=T),]
+
+#6905 | 3
+
+high_bird_1 <- rm_3_day_int_df[rm_3_day_int_df$tagname == "6905",]
+high_bird_1$w_start <- week(as.POSIXct(high_bird_1$t1,origin=origin))
+
+# turn into weeks, and then calculate ntrans per week
+
+high_bird_1 <- high_bird_1 |> nest(data = -w_start) |>
+  mutate(ntrans = map(data, ~length(.x$t1)-1)) |>
+  select(c(w_start,ntrans)) |>
+  unnest(ntrans)
+
+
+#6998 | 3
+high_bird_2 <- rm_3_day_int_df[rm_3_day_int_df$tagname == "6998",]
+high_bird_2$w_start <- week(as.POSIXct(high_bird_2$t1,origin=origin))
+
+
+high_bird_2 <- high_bird_2 |> nest(data = -w_start) |>
+  mutate(ntrans = map(data, ~length(.x$t1)-1)) |>
+  select(c(w_start,ntrans)) |>
+  unnest(ntrans)
+
+
 ### END Make Weekly Transitions of Most Active Bird ###
 
-### Make Weekly Transitions of Least Active Bird ###
+### Make Weekly Transitions of Least Active Bird ###\
+
+# identify least active bird
+
+overall_table[order(overall_table$ntrans, decreasing=F),]
+#6929 | 8 
+
 
 ### END Make Weekly Transitions of Least Active Bird ###
 
 ### Make Weekly Transitions of Low Activity Birds ###
 
+low_bird_ids <- overall_org_table[overall_org_table$activity == "low",]
+
 ### END Make Weekly Transitions of Low Activity Birds ###
 
 ### Make Weekly Transitions of  Medium Activity Birds ###
+med_bird_ids <- overall_org_table[overall_org_table$activity == "medium",]
 
 ### END Make Weekly Transitions of Medium Activity Birds ###
 
 ### Make Weekly Transitions of High Activity Birds ###
+high_bird_ids <- overall_org_table[overall_org_table$activity == "high",]
 
 ### END Make Weekly Transitions of High Activity Birds ###
