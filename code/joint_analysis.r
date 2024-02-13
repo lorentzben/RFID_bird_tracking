@@ -1415,10 +1415,44 @@ high_bird_1$w_start <- week(as.POSIXct(high_bird_1$t1,origin=origin))
 
 # turn into weeks, and then calculate ntrans per week
 
-high_bird_1 <- high_bird_1 |> nest(data = -w_start) |>
-  mutate(ntrans = map(data, ~length(.x$t1)-1)) |>
-  select(c(w_start,ntrans)) |>
-  unnest(ntrans)
+high_bird_1_sum <- high_bird_1 |> nest(data = -w_start) |>
+  mutate(nbot = map(data, ~length(.x[.x$to_zone == "bottom",]$t1))) |>
+  mutate(nmid = map(data, ~length(.x[.x$to_zone == "middle",]$t1))) |>
+  mutate(ntop = map(data, ~length(.x[.x$to_zone == "top",]$t1))) |>
+  select(c(w_start,nbot,nmid,ntop)) |>
+  unnest(c(nbot,nmid,ntop))
+
+high_bird_1_long <- pivot_longer(high_bird_1_sum,col=c('nbot','nmid','ntop'))
+
+high_bird_1_long$w_start <- as.factor(high_bird_1_long$w_start)
+high_bird_1_long$name <- as.factor(high_bird_1_long$name)
+
+hb_1 <- ggplot(data=high_bird_1_long, aes(x=w_start, y=value, group=name)) +
+  geom_line()+
+  geom_point() + 
+  xlab("Age (Weeks)") + ylab("Number of transitions into zone") + 
+  scale_x_discrete(labels=c("10" = "34", 
+                          "11" = "35",
+                          "12" = "36",
+                          "13" = "37",
+                          "14" = "38",
+                          "15" = "39",
+                          "16" = "40",
+                          "17" = "41",
+                          "18" = "42")) +
+  geom_line(aes(color=name))+
+  geom_point(aes(color=name))+
+  scale_color_manual("Transition into zone",
+                      values=c("nbot" ="#F8766D","nmid"="#00BA38","ntop"="#619CFF"),
+                      breaks=c("ntop","nmid","nbot"), 
+                      labels=c("Top","Middle","Bottom"))+
+  scale_fill_discrete("Transition into zone",
+                      breaks=c("ntop","nmid","nbot"), 
+                      labels=c("Top","Middle","Bottom"))+
+  labs(title="Number of Transitions Most Active (6905, n=1)")
+
+
+ggsave(paste0("../figures/all_day/6905_most_active_trans_per_week",".png"), hb_1,width = 5, height = 3, units = "in")
 
 
 #6998 | 3
