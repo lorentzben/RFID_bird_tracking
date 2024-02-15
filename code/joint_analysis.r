@@ -1058,33 +1058,32 @@ test(contrast(m3.top.means$weekMeans,"poly")[2:6],joint=TRUE)
 
 #TODO print N's for keel score in activity level
 
-keel_score <- read_csv('../data/keel_score/rfid_keel_scores_old_classification.csv')
+keel_score <- read_table('../data/keel_score/keel-scores-2-14-2024.tsv')
 
 # join keel score to overall day summary table
 
 unique(overall_day_summary$tagname) %in% keel_score$tag
 
 
-overall_day_summary_w_keel <- data.frame(merge(overall_day_summary,keel_score[,c(1,4)], by.x="tagname",by.y="tag"))
-
-overall_day_summary_w_keel <- overall_day_summary_w_keel[overall_day_summary_w_keel$keel_score != ".",]
+overall_day_summary_w_keel <- data.frame(merge(overall_day_summary,keel_score, by.x="tagname",by.y="tag"))
 
 overall_day_summary_w_keel$keel_score <- as.numeric(overall_day_summary_w_keel$keel_score)
 
 print("Tagnames Obeserved with Keel Score: ")
-print(unique(overall_day_summary_w_keel$tagname))
+print(unique(na.exclude(overall_day_summary_w_keel[,c(1,9)])))
+print(length(unique(na.exclude(overall_day_summary_w_keel[,c(1,9)]))[,1]))
 
 
 raw_n_keel <-  data.frame(table(unique(overall_day_summary_w_keel[,c(1,6,9)])))
-(sum_n_keel <- raw_n_keel %>% group_by(activity,keel_score) %>%  summarise(n = sum(Freq)))
+(sum_n_keel <- raw_n_keel %>% group_by(activity,keelScore) %>%  summarise(n = sum(Freq)))
 
 write.csv(sum_n_keel, "../intermediate/n_keel.csv", row.names=F)
 
 # TODO update these to be better named
-tmp2 <- unique(overall_day_summary_w_keel %>% select(c(tagname,activity,rm,keel_score)))
+tmp2 <- unique(overall_day_summary_w_keel %>% select(c(tagname,activity,rm,keelScore)))
 tmp2$tagname <- factor(tmp2$tagname,levels=tmp2$tagname)
 tmp2$tag <- as.numeric(tmp2$tagname)
-m4 <- lmer(keel_score ~ activity + (1|rm), tmp2)
+m4 <- lmer(keelScore ~ activity + (1|rm), tmp2)
 summary(m4)
 anova(m4)
 
