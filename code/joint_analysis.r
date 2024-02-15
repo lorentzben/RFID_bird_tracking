@@ -853,7 +853,11 @@ scale_x_discrete(labels=c("10" = "34",
                           "16" = "40",
                           "17" = "41",
                           "18" = "42")) +
-scale_color_manual(values=c("low" ="#F8766D","medium"="#00BA38","high"="#619CFF"),breaks=c("low","medium","high"))
+scale_color_manual("Activity Level",
+  values=c("low" ="#F8766D","medium"="#00BA38","high"="#619CFF"),
+  breaks=c("low","medium","high"),
+  labels=c("Low","Medium","High")) +
+labs(title="Estimated Prop. Time Spent in Bottom Zone by Activity Level")
 dev.off()
 
 # interaction plot of activity on x
@@ -929,7 +933,11 @@ scale_x_discrete(labels=c("10" = "34",
                           "16" = "40",
                           "17" = "41",
                           "18" = "42")) +
-scale_color_manual(values=c("low" ="#F8766D","medium"="#00BA38","high"="#619CFF"),breaks=c("low","medium","high"))
+scale_color_manual("Activity Level",
+                  values=c("low" ="#F8766D","medium"="#00BA38","high"="#619CFF"),
+                  breaks=c("low","medium","high"),
+                  labels=c("Low","Medium","High")) +
+labs(title="Estimated Prop. Time Spent in Middle Zone by Activity Level")
 dev.off()
 
 # interaction plot of activity on x
@@ -1006,7 +1014,11 @@ scale_x_discrete(labels=c("10" = "34",
                           "16" = "40",
                           "17" = "41",
                           "18" = "42")) +
-scale_color_manual(values=c("low" ="#F8766D","medium"="#00BA38","high"="#619CFF"),breaks=c("low","medium","high"))
+scale_color_manual("Activity Level",
+  values=c("low" ="#F8766D","medium"="#00BA38","high"="#619CFF"),
+  breaks=c("low","medium","high"),
+  labels=c("Low","Medium","High")) +
+labs(title="Estimated Prop. Time Spent in Top Zone by Activity Level")
 dev.off()
 
 # interaction plot of activity on x
@@ -1399,7 +1411,7 @@ km.3
 
 rm_2$cluster_3_id <- factor(km.3$cluster)
 
-write.csv("../intermediate/rm_2_k_cluster.csv",row.name=T)
+write.csv(rm_2,"../intermediate/rm_2_k_cluster.csv",row.name=T)
 
 ### END K-Means Clustering ###
 
@@ -1749,3 +1761,205 @@ ggsave(paste0("../figures/all_day/transition_plots/most_active_birds_trans_per_w
 
 
 ### END Make Weekly Transitions of High Activity Birds ###
+
+### Make Ave. Weekly Transitions ###
+
+low_bird_ids <- overall_org_table[overall_org_table$activity == "low","tagname"][[1]]
+
+# get low act int from room 2
+
+low_act_bird <- rm_2_day_int_df[rm_2_day_int_df$tagname %in% low_bird_ids,]
+
+# get low act int from room 3
+low_act_bird <- rbind(low_act_bird, rm_3_day_int_df[rm_3_day_int_df$tagname %in% low_bird_ids,])
+
+# get low act int from room 8
+low_act_bird <- rbind(low_act_bird, rm_8_day_int_df[rm_8_day_int_df$tagname %in% low_bird_ids,])
+
+# get low act int from room 11
+low_act_bird <- rbind(low_act_bird, rm_11_day_int_df[rm_11_day_int_df$tagname %in% low_bird_ids,])
+
+# turn into weekly tables and calc num trans
+low_act_bird$w_start <- week(as.POSIXct(low_act_bird$t1,origin=origin))
+
+
+low_act_bird_sum <- low_act_bird |> nest(data = -w_start) |>
+  mutate(nbot = map(data, ~length(.x[.x$to_zone == "bottom",]$t1))) |>
+  mutate(nmid = map(data, ~length(.x[.x$to_zone == "middle",]$t1))) |>
+  mutate(ntop = map(data, ~length(.x[.x$to_zone == "top",]$t1))) |>
+  select(c(w_start,nbot,nmid,ntop)) |>
+  unnest(c(nbot,nmid,ntop))
+
+low_act_bird_ave <- round(low_act_bird_sum[,c(2:4)]/length(low_bird_ids),2)
+low_act_bird_ave$w_start <- low_act_bird_sum$w_start
+
+low_act_bird_long <- pivot_longer(low_act_bird_ave,col=c('nbot','nmid','ntop'))
+
+low_act_bird_long$w_start <- as.factor(low_act_bird_long$w_start)
+low_act_bird_long$name <- as.factor(low_act_bird_long$name)
+
+lab <- ggplot(data=low_act_bird_long, aes(x=w_start, y=value, group=name)) +
+  geom_line()+
+  geom_point() + 
+  xlab("Age (Weeks)") + ylab("Number of Average transitions into zone") + 
+  scale_x_discrete(labels=c("10" = "34", 
+                          "11" = "35",
+                          "12" = "36",
+                          "13" = "37",
+                          "14" = "38",
+                          "15" = "39",
+                          "16" = "40",
+                          "17" = "41",
+                          "18" = "42")) +
+  geom_line(aes(color=name))+
+  geom_point(aes(color=name))+
+  scale_color_manual("Transition into zone",
+                      values=c("nbot" ="#F8766D","nmid"="#00BA38","ntop"="#619CFF"),
+                      breaks=c("ntop","nmid","nbot"), 
+                      labels=c("Top","Middle","Bottom"))+
+  scale_fill_discrete("Transition into zone",
+                      breaks=c("ntop","nmid","nbot"), 
+                      labels=c("Top","Middle","Bottom"))+
+  labs(title=paste("Number of Transitions Least Active Birds (n=",length(low_bird_ids) ,")")) +
+  ylim(0,135)
+
+
+ggsave(paste0("../figures/all_day/transition_plots/least_active_birds_average_trans_per_week",".png"), lab,width = 5, height = 3, units = "in")
+
+
+### END Make Weekly Transitions of Low Activity Birds ###
+
+### Make Weekly Transitions of  Medium Activity Birds ###
+
+med_bird_ids <- overall_org_table[overall_org_table$activity == "medium","tagname"][[1]]
+
+# get med act int from room 2
+
+med_act_bird <- rm_2_day_int_df[rm_2_day_int_df$tagname %in% med_bird_ids,]
+
+# get med act int from room 3
+med_act_bird <- rbind(med_act_bird, rm_3_day_int_df[rm_3_day_int_df$tagname %in% med_bird_ids,])
+
+# get med act int from room 8
+med_act_bird <- rbind(med_act_bird, rm_8_day_int_df[rm_8_day_int_df$tagname %in% med_bird_ids,])
+
+# get med act int from room 11
+med_act_bird <- rbind(med_act_bird, rm_11_day_int_df[rm_11_day_int_df$tagname %in% med_bird_ids,])
+
+# turn into weekly tables and calc num trans
+med_act_bird$w_start <- week(as.POSIXct(med_act_bird$t1,origin=origin))
+
+
+med_act_bird_sum <- med_act_bird |> nest(data = -w_start) |>
+  mutate(nbot = map(data, ~length(.x[.x$to_zone == "bottom",]$t1))) |>
+  mutate(nmid = map(data, ~length(.x[.x$to_zone == "middle",]$t1))) |>
+  mutate(ntop = map(data, ~length(.x[.x$to_zone == "top",]$t1))) |>
+  select(c(w_start,nbot,nmid,ntop)) |>
+  unnest(c(nbot,nmid,ntop))
+
+
+med_act_bird_ave <- round(med_act_bird_sum[,c(2:4)]/length(med_bird_ids),2)
+med_act_bird_ave$w_start <- med_act_bird_sum$w_start
+
+
+med_act_bird_long <- pivot_longer(med_act_bird_ave,col=c('nbot','nmid','ntop'))
+
+med_act_bird_long$w_start <- as.factor(med_act_bird_long$w_start)
+med_act_bird_long$name <- as.factor(med_act_bird_long$name)
+
+mab <- ggplot(data=med_act_bird_long, aes(x=w_start, y=value, group=name)) +
+  geom_line()+
+  geom_point() + 
+  xlab("Age (Weeks)") + ylab("Average Number of transitions into zone") + 
+  scale_x_discrete(labels=c("10" = "34", 
+                          "11" = "35",
+                          "12" = "36",
+                          "13" = "37",
+                          "14" = "38",
+                          "15" = "39",
+                          "16" = "40",
+                          "17" = "41",
+                          "18" = "42")) +
+  geom_line(aes(color=name))+
+  geom_point(aes(color=name))+
+  scale_color_manual("Transition into zone",
+                      values=c("nbot" ="#F8766D","nmid"="#00BA38","ntop"="#619CFF"),
+                      breaks=c("ntop","nmid","nbot"), 
+                      labels=c("Top","Middle","Bottom"))+
+  scale_fill_discrete("Transition into zone",
+                      breaks=c("ntop","nmid","nbot"), 
+                      labels=c("Top","Middle","Bottom"))+
+  labs(title=paste("Number of Transitions Medium Active Birds (n=",length(med_bird_ids),")"))+
+  ylim(0,135)
+
+
+ggsave(paste0("../figures/all_day/transition_plots/medium_active_birds_average_trans_per_week",".png"), mab,width = 5, height = 3, units = "in")
+
+
+
+### END Make Weekly Transitions of Medium Activity Birds ###
+
+### Make Weekly Transitions of High Activity Birds ###
+high_bird_ids <- overall_org_table[overall_org_table$activity == "high","tagname"][[1]]
+
+# get high act int from room 2
+
+high_act_bird <- rm_2_day_int_df[rm_2_day_int_df$tagname %in% high_bird_ids,]
+
+# get high act int from room 3
+high_act_bird <- rbind(high_act_bird, rm_3_day_int_df[rm_3_day_int_df$tagname %in% high_bird_ids,])
+
+# get high act int from room 8
+high_act_bird <- rbind(high_act_bird, rm_8_day_int_df[rm_8_day_int_df$tagname %in% high_bird_ids,])
+
+# get high act int from room 11
+high_act_bird <- rbind(high_act_bird, rm_11_day_int_df[rm_11_day_int_df$tagname %in% high_bird_ids,])
+
+# turn into weekly tables and calc num trans
+high_act_bird$w_start <- week(as.POSIXct(high_act_bird$t1,origin=origin))
+
+
+high_act_bird_sum <- high_act_bird |> nest(data = -w_start) |>
+  mutate(nbot = map(data, ~length(.x[.x$to_zone == "bottom",]$t1))) |>
+  mutate(nmid = map(data, ~length(.x[.x$to_zone == "middle",]$t1))) |>
+  mutate(ntop = map(data, ~length(.x[.x$to_zone == "top",]$t1))) |>
+  select(c(w_start,nbot,nmid,ntop)) |>
+  unnest(c(nbot,nmid,ntop))
+
+high_act_bird_ave <- round(high_act_bird_sum[,c(2:4)]/length(high_bird_ids),2)
+high_act_bird_ave$w_start <- high_act_bird_sum$w_start
+
+high_act_bird_long <- pivot_longer(high_act_bird_ave,col=c('nbot','nmid','ntop'))
+
+high_act_bird_long$w_start <- as.factor(high_act_bird_long$w_start)
+high_act_bird_long$name <- as.factor(high_act_bird_long$name)
+
+hab <- ggplot(data=high_act_bird_long, aes(x=w_start, y=value, group=name)) +
+  geom_line()+
+  geom_point() + 
+  xlab("Age (Weeks)") + ylab("Average Number of transitions into zone") + 
+  scale_x_discrete(labels=c("10" = "34", 
+                          "11" = "35",
+                          "12" = "36",
+                          "13" = "37",
+                          "14" = "38",
+                          "15" = "39",
+                          "16" = "40",
+                          "17" = "41",
+                          "18" = "42")) +
+  geom_line(aes(color=name))+
+  geom_point(aes(color=name))+
+  scale_color_manual("Transition into zone",
+                      values=c("nbot" ="#F8766D","nmid"="#00BA38","ntop"="#619CFF"),
+                      breaks=c("ntop","nmid","nbot"), 
+                      labels=c("Top","Middle","Bottom"))+
+  scale_fill_discrete("Transition into zone",
+                      breaks=c("ntop","nmid","nbot"), 
+                      labels=c("Top","Middle","Bottom"))+
+  labs(title=paste("Number of Transitions Most Active Birds (n=",length(high_bird_ids),")"))+
+  ylim(0,135)
+
+
+ggsave(paste0("../figures/all_day/transition_plots/most_active_birds_average_trans_per_week",".png"), hab,width = 5, height = 3, units = "in")
+
+### END Make ave. Weekly Transitions of High Activity Birds ###
