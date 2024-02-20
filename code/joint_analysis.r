@@ -1067,7 +1067,7 @@ unique(overall_day_summary$tagname) %in% keel_score$tag
 
 overall_day_summary_w_keel <- data.frame(merge(overall_day_summary,keel_score, by.x="tagname",by.y="tag"))
 
-overall_day_summary_w_keel$keel_score <- as.numeric(overall_day_summary_w_keel$keel_score)
+overall_day_summary_w_keel$keel_score <- as.numeric(overall_day_summary_w_keel$keelScore)
 
 print("Tagnames Obeserved with Keel Score: ")
 print(unique(na.exclude(overall_day_summary_w_keel[,c(1,9)])))
@@ -1962,3 +1962,145 @@ hab <- ggplot(data=high_act_bird_long, aes(x=w_start, y=value, group=name)) +
 ggsave(paste0("../figures/all_day/transition_plots/most_active_birds_average_trans_per_week",".png"), hab,width = 5, height = 3, units = "in")
 
 ### END Make ave. Weekly Transitions of High Activity Birds ###
+
+### Make Ave. Daily Transitions ###
+
+low_bird_ids <- overall_org_table[overall_org_table$activity == "low","tagname"][[1]]
+
+# get low act int from room 2
+
+low_act_bird <- rm_2_day_int_df[rm_2_day_int_df$tagname %in% low_bird_ids,]
+
+# get low act int from room 3
+low_act_bird <- rbind(low_act_bird, rm_3_day_int_df[rm_3_day_int_df$tagname %in% low_bird_ids,])
+
+# get low act int from room 8
+low_act_bird <- rbind(low_act_bird, rm_8_day_int_df[rm_8_day_int_df$tagname %in% low_bird_ids,])
+
+# get low act int from room 11 
+low_act_bird <- rbind(low_act_bird, rm_11_day_int_df[rm_11_day_int_df$tagname %in% low_bird_ids,])
+
+# turn into daily tables and calc num trans
+date_to_day <- data.frame(cbind(unique(date(as.POSIXct(low_act_bird$t1,origin=origin))),1:length(unique(date(as.POSIXct(low_act_bird$t1,origin=origin))))))
+colnames(date_to_day) <- c("date","day")
+low_act_bird$date <- date(as.POSIXct(low_act_bird$t1,origin=origin))
+low_act_bird <- data.frame(merge(low_act_bird,date_to_day, by.x="date",by.y="date"))
+
+overall_day_summary <- data.frame(merge(overall_day_summary,overall_org_table[,c(1,4)], by="tagname"))
+
+low_act_bird_sum <- low_act_bird |> nest(data = -day) |>
+  mutate(nbot = map(data, ~length(.x[.x$to_zone == "bottom",]$t1))) |>
+  mutate(nmid = map(data, ~length(.x[.x$to_zone == "middle",]$t1))) |>
+  mutate(ntop = map(data, ~length(.x[.x$to_zone == "top",]$t1))) |>
+  select(c(day,nbot,nmid,ntop)) |>
+  unnest(c(nbot,nmid,ntop))
+
+low_act_bird_ave <- round(low_act_bird_sum[,c(2:4)]/length(low_bird_ids),2)
+low_act_bird_ave$d_start <- low_act_bird_sum$day
+
+low_act_bird_long <- pivot_longer(low_act_bird_ave,col=c('nbot','nmid','ntop'))
+
+low_act_bird_long$d_start <- as.factor(low_act_bird_long$d_start)
+low_act_bird_long$name <- as.factor(low_act_bird_long$name)
+
+low_act <- aggregate(low_act_bird_long$value, list(low_act_bird_long$name), FUN=mean) 
+low_med_act <- aggregate(low_act_bird_long$value, list(low_act_bird_long$name), FUN=median) 
+
+### END Make Daily Transitions of Low Activity Birds ###
+
+### Make Daily Transitions of  Medium Activity Birds ###
+
+med_bird_ids <- overall_org_table[overall_org_table$activity == "medium","tagname"][[1]]
+
+# get med act int from room 2
+
+med_act_bird <- rm_2_day_int_df[rm_2_day_int_df$tagname %in% med_bird_ids,]
+
+# get med act int from room 3
+med_act_bird <- rbind(med_act_bird, rm_3_day_int_df[rm_3_day_int_df$tagname %in% med_bird_ids,])
+
+# get med act int from room 8
+med_act_bird <- rbind(med_act_bird, rm_8_day_int_df[rm_8_day_int_df$tagname %in% med_bird_ids,])
+
+# get med act int from room 11
+med_act_bird <- rbind(med_act_bird, rm_11_day_int_df[rm_11_day_int_df$tagname %in% med_bird_ids,])
+
+# turn into daily tables and calc num trans
+med_act_bird$date <- date(as.POSIXct(med_act_bird$t1,origin=origin))
+med_act_bird <- data.frame(merge(med_act_bird,date_to_day, by.x="date",by.y="date"))
+
+
+med_act_bird_sum <- med_act_bird |> nest(data = -day) |>
+  mutate(nbot = map(data, ~length(.x[.x$to_zone == "bottom",]$t1))) |>
+  mutate(nmid = map(data, ~length(.x[.x$to_zone == "middle",]$t1))) |>
+  mutate(ntop = map(data, ~length(.x[.x$to_zone == "top",]$t1))) |>
+  select(c(day,nbot,nmid,ntop)) |>
+  unnest(c(nbot,nmid,ntop))
+
+
+med_act_bird_ave <- round(med_act_bird_sum[,c(2:4)]/length(med_bird_ids),2)
+med_act_bird_ave$d_start <- med_act_bird_sum$day
+
+
+med_act_bird_long <- pivot_longer(med_act_bird_ave,col=c('nbot','nmid','ntop'))
+
+med_act_bird_long$d_start <- as.factor(med_act_bird_long$d_start)
+med_act_bird_long$name <- as.factor(med_act_bird_long$name)
+
+med_act <- aggregate(med_act_bird_long$value, list(med_act_bird_long$name), FUN=mean) 
+med_med_act <- aggregate(med_act_bird_long$value, list(med_act_bird_long$name), FUN=median)
+
+### END Make Daily Transitions of Medium Activity Birds ###
+
+### Make Daily Transitions of High Activity Birds ###
+high_bird_ids <- overall_org_table[overall_org_table$activity == "high","tagname"][[1]]
+
+# get high act int from room 2
+
+high_act_bird <- rm_2_day_int_df[rm_2_day_int_df$tagname %in% high_bird_ids,]
+
+# get high act int from room 3
+high_act_bird <- rbind(high_act_bird, rm_3_day_int_df[rm_3_day_int_df$tagname %in% high_bird_ids,])
+
+# get high act int from room 8
+high_act_bird <- rbind(high_act_bird, rm_8_day_int_df[rm_8_day_int_df$tagname %in% high_bird_ids,])
+
+# get high act int from room 11
+high_act_bird <- rbind(high_act_bird, rm_11_day_int_df[rm_11_day_int_df$tagname %in% high_bird_ids,])
+
+# turn into daily tables and calc num trans
+high_act_bird$date <- date(as.POSIXct(high_act_bird$t1,origin=origin))
+high_act_bird <- data.frame(merge(high_act_bird,date_to_day, by.x="date",by.y="date"))
+
+high_act_bird_sum <- high_act_bird |> nest(data = -day) |>
+  mutate(nbot = map(data, ~length(.x[.x$to_zone == "bottom",]$t1))) |>
+  mutate(nmid = map(data, ~length(.x[.x$to_zone == "middle",]$t1))) |>
+  mutate(ntop = map(data, ~length(.x[.x$to_zone == "top",]$t1))) |>
+  select(c(day,nbot,nmid,ntop)) |>
+  unnest(c(nbot,nmid,ntop))
+
+high_act_bird_ave <- round(high_act_bird_sum[,c(2:4)]/length(high_bird_ids),2)
+high_act_bird_ave$d_start <- high_act_bird_sum$d_start
+
+high_act_bird_long <- pivot_longer(high_act_bird_ave,col=c('nbot','nmid','ntop'))
+
+high_act_bird_long$d_start <- as.factor(high_act_bird_long$d_start)
+high_act_bird_long$name <- as.factor(high_act_bird_long$name)
+
+high_act <- aggregate(high_act_bird_long$value, list(high_act_bird_long$name), FUN=mean) 
+high_med_act <- aggregate(high_act_bird_long$value, list(high_act_bird_long$name), FUN=median) 
+
+
+### END Make ave. Daily Transitions of High Activity Birds ###
+
+### Make Ave. Daily Transition Table ###
+
+activity_trans_table <- cbind(low_act, med_act[,2], high_act[,2])
+colnames(activity_trans_table) <- c("Zone","Low","Medium","High")
+
+write.csv(activity_trans_table,"../output/daily_ave_transitions_by_activity.csv",row.names=F)
+
+activity_med_trans_table <- cbind(low_med_act, med_med_act[,2], high_med_act[,2])
+colnames(activity_med_trans_table) <- c("Zone","Low","Medium","High")
+
+write.csv(activity_med_trans_table,"../output/daily_median_transitions_by_activity.csv",row.names=F)
