@@ -1,5 +1,19 @@
 #!/usr/bin/env bash
 
+#SBATCH --partition=batch
+#SBATCH --job-name=RFID
+#SBATCH --ntasks=1
+#SBATCH --cpus-per-task=8
+#SBATCH --nodes=1
+#SBATCH --time=96:00:00
+#SBATCH --mem=16gb
+
+#Replace this with your UGA email to get notified on completion
+#SBATCH --mail-user="bjl34716@uga.edu"
+#SBATCH --mail-type=BEGIN,END
+
+cd /scratch/bjl34716/RFID_bird_tracking/code
+
 TS=`date +%Y-%m-%d_%H-%M-%S`
 
 BASEDIR=$PWD
