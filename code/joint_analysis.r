@@ -1983,24 +1983,27 @@ low_act_bird <- rbind(low_act_bird, rm_11_day_int_df[rm_11_day_int_df$tagname %i
 # turn into daily tables and calc num trans
 date_to_day <- data.frame(cbind(unique(date(as.POSIXct(low_act_bird$t1,origin=origin))),1:length(unique(date(as.POSIXct(low_act_bird$t1,origin=origin))))))
 colnames(date_to_day) <- c("date","day")
+low_act_bird$w_start <- week(as.POSIXct(low_act_bird$t1,origin=origin))
 low_act_bird$date <- date(as.POSIXct(low_act_bird$t1,origin=origin))
 low_act_bird <- data.frame(merge(low_act_bird,date_to_day, by.x="date",by.y="date"))
 
 overall_day_summary <- data.frame(merge(overall_day_summary,overall_org_table[,c(1,4)], by="tagname"))
 
-low_act_bird_sum <- low_act_bird |> nest(data = -day) |>
+low_act_bird_sum <- low_act_bird |> nest(data = -c(day,w_start)) |>
   mutate(nbot = map(data, ~length(.x[.x$to_zone == "bottom",]$t1))) |>
   mutate(nmid = map(data, ~length(.x[.x$to_zone == "middle",]$t1))) |>
   mutate(ntop = map(data, ~length(.x[.x$to_zone == "top",]$t1))) |>
-  select(c(day,nbot,nmid,ntop)) |>
+  select(c(day,w_start,nbot,nmid,ntop)) |>
   unnest(c(nbot,nmid,ntop))
 
-low_act_bird_ave <- round(low_act_bird_sum[,c(2:4)]/length(low_bird_ids),2)
+low_act_bird_ave <- round(low_act_bird_sum[,c(3:5)]/length(low_bird_ids),2)
 low_act_bird_ave$d_start <- low_act_bird_sum$day
+low_act_bird_ave$w_start <- low_act_bird_sum$w_start
 
 low_act_bird_long <- pivot_longer(low_act_bird_ave,col=c('nbot','nmid','ntop'))
 
-low_act_bird_long$d_start <- as.factor(low_act_bird_long$d_start)
+low_act_bird_long$d_start <- as.numeric(low_act_bird_long$d_start)
+low_act_bird_long$w_start <- as.numeric(low_act_bird_long$w_start)
 low_act_bird_long$name <- as.factor(low_act_bird_long$name)
 
 low_act <- aggregate(low_act_bird_long$value, list(low_act_bird_long$name), FUN=mean) 
@@ -2027,24 +2030,27 @@ med_act_bird <- rbind(med_act_bird, rm_11_day_int_df[rm_11_day_int_df$tagname %i
 
 # turn into daily tables and calc num trans
 med_act_bird$date <- date(as.POSIXct(med_act_bird$t1,origin=origin))
+med_act_bird$w_start <- week(as.POSIXct(med_act_bird$t1,origin=origin))
 med_act_bird <- data.frame(merge(med_act_bird,date_to_day, by.x="date",by.y="date"))
 
 
-med_act_bird_sum <- med_act_bird |> nest(data = -day) |>
+med_act_bird_sum <- med_act_bird |> nest(data = -c(day,w_start)) |>
   mutate(nbot = map(data, ~length(.x[.x$to_zone == "bottom",]$t1))) |>
   mutate(nmid = map(data, ~length(.x[.x$to_zone == "middle",]$t1))) |>
   mutate(ntop = map(data, ~length(.x[.x$to_zone == "top",]$t1))) |>
-  select(c(day,nbot,nmid,ntop)) |>
+  select(c(day,w_start,nbot,nmid,ntop)) |>
   unnest(c(nbot,nmid,ntop))
 
 
-med_act_bird_ave <- round(med_act_bird_sum[,c(2:4)]/length(med_bird_ids),2)
+med_act_bird_ave <- round(med_act_bird_sum[,c(3:5)]/length(med_bird_ids),2)
 med_act_bird_ave$d_start <- med_act_bird_sum$day
+med_act_bird_ave$w_start <- med_act_bird_sum$w_start
 
 
 med_act_bird_long <- pivot_longer(med_act_bird_ave,col=c('nbot','nmid','ntop'))
 
-med_act_bird_long$d_start <- as.factor(med_act_bird_long$d_start)
+med_act_bird_long$d_start <- as.numeric(med_act_bird_long$d_start)
+med_act_bird_long$w_start <- as.numeric(med_act_bird_long$w_start)
 med_act_bird_long$name <- as.factor(med_act_bird_long$name)
 
 med_act <- aggregate(med_act_bird_long$value, list(med_act_bird_long$name), FUN=mean) 
@@ -2070,21 +2076,24 @@ high_act_bird <- rbind(high_act_bird, rm_11_day_int_df[rm_11_day_int_df$tagname 
 
 # turn into daily tables and calc num trans
 high_act_bird$date <- date(as.POSIXct(high_act_bird$t1,origin=origin))
+high_act_bird$w_start <- week(as.POSIXct(high_act_bird$t1,origin=origin))
 high_act_bird <- data.frame(merge(high_act_bird,date_to_day, by.x="date",by.y="date"))
 
-high_act_bird_sum <- high_act_bird |> nest(data = -day) |>
+high_act_bird_sum <- high_act_bird |> nest(data = -c(day,w_start)) |>
   mutate(nbot = map(data, ~length(.x[.x$to_zone == "bottom",]$t1))) |>
   mutate(nmid = map(data, ~length(.x[.x$to_zone == "middle",]$t1))) |>
   mutate(ntop = map(data, ~length(.x[.x$to_zone == "top",]$t1))) |>
-  select(c(day,nbot,nmid,ntop)) |>
+  select(c(day,w_start,nbot,nmid,ntop)) |>
   unnest(c(nbot,nmid,ntop))
 
-high_act_bird_ave <- round(high_act_bird_sum[,c(2:4)]/length(high_bird_ids),2)
-high_act_bird_ave$d_start <- high_act_bird_sum$d_start
+high_act_bird_ave <- round(high_act_bird_sum[,c(3:5)]/length(high_bird_ids),2)
+high_act_bird_ave$d_start <- high_act_bird_sum$day
+high_act_bird_ave$w_start <- high_act_bird_sum$w_start
 
 high_act_bird_long <- pivot_longer(high_act_bird_ave,col=c('nbot','nmid','ntop'))
 
-high_act_bird_long$d_start <- as.factor(high_act_bird_long$d_start)
+high_act_bird_long$d_start <- as.numeric(high_act_bird_long$d_start)
+high_act_bird_long$w_start <- as.numeric(high_act_bird_long$w_start)
 high_act_bird_long$name <- as.factor(high_act_bird_long$name)
 
 high_act <- aggregate(high_act_bird_long$value, list(high_act_bird_long$name), FUN=mean) 
@@ -2104,3 +2113,85 @@ activity_med_trans_table <- cbind(low_med_act, med_med_act[,2], high_med_act[,2]
 colnames(activity_med_trans_table) <- c("Zone","Low","Medium","High")
 
 write.csv(activity_med_trans_table,"../output/daily_median_transitions_by_activity.csv",row.names=F)
+
+### END make average trans tables ###
+
+### Make Daily Transition Plots ###
+
+
+low_breaks <- rbind(low_act_bird_long[1,],low_act_bird_long[which(low_act_bird_long$w_start != dplyr::lag(low_act_bird_long$w_start)),])
+
+
+lab <- ggplot(data=low_act_bird_long, aes(x=d_start, y=value, group=name)) +
+  geom_line()+
+  geom_point() + 
+  xlab("Age (Weeks)") + ylab("Number of Average transitions into zone") + 
+  scale_x_continuous(breaks=low_breaks$d_start, 
+                          labels=as.numeric(low_breaks$w_start)+24) +
+  geom_line(aes(color=name))+
+  geom_point(aes(color=name))+
+  scale_color_manual("Transition into zone",
+                      values=c("nbot" ="#F8766D","nmid"="#00BA38","ntop"="#619CFF"),
+                      breaks=c("ntop","nmid","nbot"), 
+                      labels=c("Top","Middle","Bottom"))+
+  scale_fill_discrete("Transition into zone",
+                      breaks=c("ntop","nmid","nbot"), 
+                      labels=c("Top","Middle","Bottom"))+
+  labs(title=paste("Ave Daily Transitions Least Active Birds (n=",length(low_bird_ids) ,")")) +
+  ylim(0,25)
+
+
+ggsave(paste0("../figures/all_day/transition_plots/least_active_birds_average_trans_per_day",".png"), lab)
+
+
+med_breaks <- rbind(med_act_bird_long[1,],med_act_bird_long[which(med_act_bird_long$w_start != dplyr::lag(med_act_bird_long$w_start)),])
+
+
+mab <- ggplot(data=med_act_bird_long, aes(x=d_start, y=value, group=name)) +
+  geom_line()+
+  geom_point() + 
+  xlab("Age (Weeks)") + ylab("Average Number of transitions into zone") + 
+  scale_x_continuous(breaks=med_breaks$d_start, 
+                          labels=as.numeric(med_breaks$w_start)+24) +
+  geom_line(aes(color=name))+
+  geom_point(aes(color=name))+
+  scale_color_manual("Transition into zone",
+                      values=c("nbot" ="#F8766D","nmid"="#00BA38","ntop"="#619CFF"),
+                      breaks=c("ntop","nmid","nbot"), 
+                      labels=c("Top","Middle","Bottom"))+
+  scale_fill_discrete("Transition into zone",
+                      breaks=c("ntop","nmid","nbot"), 
+                      labels=c("Top","Middle","Bottom"))+
+  labs(title=paste("Average Daily Transitions Medium Active Birds (n=",length(med_bird_ids),")"))+
+  ylim(0,25)
+
+
+ggsave(paste0("../figures/all_day/transition_plots/medium_active_birds_average_trans_per_day",".png"), mab)
+
+
+high_breaks <- rbind(high_act_bird_long[1,],high_act_bird_long[which(high_act_bird_long$w_start != dplyr::lag(high_act_bird_long$w_start)),])
+
+
+
+hab <- ggplot(data=high_act_bird_long, aes(x=d_start, y=value, group=name)) +
+  geom_line()+
+  geom_point() + 
+  xlab("Age (Weeks)") + ylab("Average Number of transitions into zone") + 
+  scale_x_continuous(breaks=high_breaks$d_start, 
+                          labels=as.numeric(high_breaks$w_start)+33) +
+  geom_line(aes(color=name))+
+  geom_point(aes(color=name))+
+  scale_color_manual("Transition into zone",
+                      values=c("nbot" ="#F8766D","nmid"="#00BA38","ntop"="#619CFF"),
+                      breaks=c("ntop","nmid","nbot"), 
+                      labels=c("Top","Middle","Bottom"))+
+  scale_fill_discrete("Transition into zone",
+                      breaks=c("ntop","nmid","nbot"), 
+                      labels=c("Top","Middle","Bottom"))+
+  labs(title=paste("Averag Daily Transitions Most Active Birds (n=",length(high_bird_ids),")"))+
+  ylim(0,25)
+
+
+ggsave(paste0("../figures/all_day/transition_plots/most_active_birds_average_trans_per_day",".png"), hab)
+
+### END make daily plots ###
