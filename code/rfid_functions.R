@@ -79,7 +79,7 @@ getTimeBudgetProp <- function(data) {
   if(all.equal(colnames(data),c("t1","t2","from_zone","to_zone"))){
     # store inteval as minutes
     TBStag<- data.frame(t = (as.numeric(data$t2) - as.numeric(data$t1)) / 60, to_zone=data$to_zone)
-    Interval <- c(my_ymd_hms(as.POSIXct.numeric(as.numeric(head(data,n=1)$t1),origin=origin)),my_ymd_hms(as.POSIXct.numeric(as.numeric(tail(data,n=1)$t2),origin=origin)))
+    Interval <- c(my_ymd_hms(as.POSIXct.numeric(as.numeric(head(data,n=1)$t1),origin="1970-01-01")),my_ymd_hms(as.POSIXct.numeric(as.numeric(tail(data,n=1)$t2),origin="1970-01-01")))
 
     TBbot<-sum(TBStag[which(TBStag$to_zone == "bottom"),]$t)/sum(TBStag$t)
         
@@ -95,7 +95,7 @@ getTimeBudgetProp <- function(data) {
       # store inteval as minutes
     TBStag<- data.frame(t = (as.numeric(data$t2) - as.numeric(data$t1)) / 60, zone=data$zone)
 
-    Interval <- c(my_ymd_hms(as.POSIXct.numeric(as.numeric(head(data,n=1)$t1),origin=origin)),my_ymd_hms(as.POSIXct.numeric(as.numeric(tail(data,n=1)$t2),origin=origin)))
+    Interval <- c(my_ymd_hms(as.POSIXct.numeric(as.numeric(head(data,n=1)$t1),origin="1970-01-01")),my_ymd_hms(as.POSIXct.numeric(as.numeric(tail(data,n=1)$t2),origin="1970-01-01")))
 
     TBbot<-sum(TBStag[which(TBStag$zone == "bottom"),]$t)/sum(TBStag$t)
         
