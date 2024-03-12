@@ -234,11 +234,11 @@ sb_data <- cbind(nest_day_tbs$data[[i]][1:2], stack(nest_day_tbs$data[[i]][3:5])
 
 sb_data$ind <- factor(sb_data$ind, levels=c("Top","Middle","Bottom"))
 
-datebreaks <- seq(as.Date(ymd_hms(head(unique(sb_data$interval1),n=1))), as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))), by="7 days")
+datebreaks <- seq(as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(head(unique(sb_data$interval1),n=1)),origin="1970-01-01",tz="UTC"))), as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(tail(unique(sb_data$interval1),n=1)),origin="1970-01-01",tz="UTC"))), by="7 days")
 
-datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))))
+datebreaks <- c(datebreaks, ymd_hms(as.POSIXct.numeric(as.numeric(tail(unique(sb_data$interval1),n=1)),origin="1970-01-01",tz="UTC")))
 
-all_datebreak <- seq(as.Date(ymd_hms(head(unique(sb_data$interval1),n=1))), as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))), by="1 days")
+all_datebreak <- seq(as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(head(unique(sb_data$interval1),n=1)),origin="1970-01-01",tz="UTC"))), as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(tail(unique(sb_data$interval1),n=1)),origin="1970-01-01",tz="UTC"))), by="1 days")
 
 # day_3_plot <- ggplot(data= sb_data, aes(x = as.Date(interval1), y= values, group=ind, color=ind)) +
 #   geom_point() + 
@@ -266,7 +266,7 @@ all_datebreak <- seq(as.Date(ymd_hms(head(unique(sb_data$interval1),n=1))), as.D
 
 #ggsave(paste0("../figures/all_day/day_daily_time_budget_line_for_", nest_day_tbs[i,1],".png"), day_3_plot_line)
 
-day_3_sb_plot <- ggplot(data = sb_data, aes(x = as.Date(interval1), y=values, fill=ind)) + 
+day_3_sb_plot <- ggplot(data = sb_data, aes(x = as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(interval1),origin="1970-01-01"))), y=values, fill=ind)) + 
 geom_bar(stat="identity") +
 theme_bw() +  
 xlab("Day of Study") + 
@@ -288,11 +288,11 @@ sb_data <- cbind(nest_night_tbs$data[[i]][1:2], stack(nest_night_tbs$data[[i]][3
 
 sb_data$ind <- factor(sb_data$ind, levels=c("Top","Middle","Bottom"))
 
-datebreaks <- seq(as.Date(ymd_hms(head(unique(sb_data$interval1),n=1))), as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))), by="7 days")
+datebreaks <- seq(as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(head(unique(sb_data$interval1),n=1)),origin="1970-01-01",tz="UTC"))), as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(tail(unique(sb_data$interval1),n=1)),origin="1970-01-01",tz="UTC"))), by="7 days")
 
-datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))))
+datebreaks <- c(datebreaks, ymd_hms(as.POSIXct.numeric(as.numeric(tail(unique(sb_data$interval1),n=1)),origin="1970-01-01",tz="UTC")))
 
-all_datebreak <- seq(as.Date(ymd_hms(head(unique(sb_data$interval1),n=1))), as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))), by="1 days")
+all_datebreak <- seq(as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(head(unique(sb_data$interval1),n=1)),origin="1970-01-01",tz="UTC"))), as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(tail(unique(sb_data$interval1),n=1)),origin="1970-01-01",tz="UTC"))), by="1 days")
 
 # day_3_plot <- ggplot(data= sb_data, aes(x = as.Date(interval1), y= values, group=ind, color=ind)) +
 #   geom_point() + 
@@ -320,7 +320,7 @@ all_datebreak <- seq(as.Date(ymd_hms(head(unique(sb_data$interval1),n=1))), as.D
 
 #ggsave(paste0("../figures/all_day/night_daily_time_budget_line_for_", nest_day_tbs[i,1],".png"), day_3_plot_line)
 
-day_3_sb_plot <- ggplot(data = sb_data, aes(x = as.Date(interval1), y=values, fill=ind)) + 
+day_3_sb_plot <- ggplot(data = sb_data, aes(x =as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(interval1),origin="1970-01-01"))), y=values, fill=ind)) + 
 geom_bar(stat="identity") +
 theme_bw() +  
 xlab("Day of Study") + 
@@ -341,11 +341,11 @@ day_flat <- cbind(day_tbs_df[c(1:2,6)], stack(day_tbs_df[3:5]))
 
 day_flat$ind <- factor(day_flat$ind, levels=c("Top","Middle","Bottom"))
 
-datebreaks <- seq(as.Date(ymd_hms(head(unique(day_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1))), by="7 days")
+datebreaks <- seq(ymd_hms(as.POSIXct.numeric(as.numeric(head(unique(day_flat$interval1),n=1)),origin="1970-01-01",tz="UTC")), ymd_hms(as.POSIXct.numeric(as.numeric(tail(unique(day_flat$interval1),n=1)),origin="1970-01-01",tz="UTC")), by="7 days")
 
 datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1))))
 
-all_datebreak <- seq(as.Date(ymd_hms(head(unique(day_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1))), by="1 days")
+all_datebreak <- seq(ymd_hms(as.POSIXct.numeric(as.numeric(head(unique(day_flat$interval1),n=1)),origin="1970-01-01",tz="UTC")), ymd_hms(as.POSIXct.numeric(as.numeric(tail(unique(day_flat$interval1),n=1)),origin="1970-01-01",tz="UTC")), by="1 days")
 
 y_lim <- length(unique(day_flat$tagname))+.001
 
@@ -375,11 +375,12 @@ night_flat <- cbind(night_tbs_df[c(1:2,6)], stack(night_tbs_df[3:5]))
 
 night_flat$ind <- factor(night_flat$ind, levels=c("Top","Middle","Bottom"))
 
-datebreaks <- seq(as.Date(ymd_hms(head(unique(night_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(night_flat$interval1),n=1))), by="7 days")
+             
+datebreaks <- seq(ymd_hms(as.POSIXct.numeric(as.numeric(head(unique(night_flat$interval1),n=1)),origin="1970-01-01",tz="UTC")), ymd_hms(as.POSIXct.numeric(as.numeric(tail(unique(night_flat$interval1),n=1)),origin="1970-01-01",tz="UTC")), by="7 days")
 
 datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(night_flat$interval1),n=1))))
-
-all_datebreak <- seq(as.Date(ymd_hms(head(unique(night_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(night_flat$interval1),n=1))), by="1 days")
+                 
+all_datebreak <- seq(ymd_hms(as.POSIXct.numeric(as.numeric(head(unique(night_flat$interval1),n=1)),origin="1970-01-01",tz="UTC")), ymd_hms(as.POSIXct.numeric(as.numeric(tail(unique(night_flat$interval1),n=1)),origin="1970-01-01",tz="UTC")), by="1 days")
 
 # TODO  Still having a problem
 room_2_sb_night_plot <- ggplot(data = night_flat, aes(x = as.Date(interval1), y=values, fill=ind)) + 
