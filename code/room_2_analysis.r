@@ -271,7 +271,7 @@ geom_bar(stat="identity") +
 theme_bw() +  
 xlab("Day of Study") + 
 ylab("Prop. of Time Spent in Zone") +
-scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
+scale_x_date(breaks= as.Date(datebreaks), minor_breaks=as.Date(all_datebreak)) + 
 theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
 ggtitle(paste0("Daily Time Budget for Each Day for Bird ID: ", nest_day_tbs[i,1])) + 
 labs(fill = "Zone") + 
@@ -343,19 +343,21 @@ day_flat$ind <- factor(day_flat$ind, levels=c("Top","Middle","Bottom"))
 
 datebreaks <- seq(ymd_hms(as.POSIXct.numeric(as.numeric(head(unique(day_flat$interval1),n=1)),origin="1970-01-01",tz="UTC")), ymd_hms(as.POSIXct.numeric(as.numeric(tail(unique(day_flat$interval1),n=1)),origin="1970-01-01",tz="UTC")), by="7 days")
 
-datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1))))
+datebreaks <- c(datebreaks, ymd_hms(as.POSIXct(tail(day_flat$interval1,n=1),origin="1970-01-01",tz="UTC")))
 
 all_datebreak <- seq(ymd_hms(as.POSIXct.numeric(as.numeric(head(unique(day_flat$interval1),n=1)),origin="1970-01-01",tz="UTC")), ymd_hms(as.POSIXct.numeric(as.numeric(tail(unique(day_flat$interval1),n=1)),origin="1970-01-01",tz="UTC")), by="1 days")
 
 y_lim <- length(unique(day_flat$tagname))+.001
 
+day_flat$date <- as.Date(ymd_hms(as.POSIXct(day_flat$interval1,origin="1970-01-01")))
+
 # TODO  Still having a problem
-room_2_sb_plot <- ggplot(data = day_flat, aes(x = as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(interval1),origin="1970-01-01"))), y=values, fill=ind)) + 
+room_2_sb_plot <- ggplot(data = day_flat, aes(x = date, y=values, fill=ind)) + 
 geom_bar(stat="identity") +
 theme_bw() +  
 xlab("Day of Study") + 
 ylab("Prop. of Time Spent in Zone") +
-scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
+scale_x_date(breaks= as.Date(datebreaks), minor_breaks=as.Date(all_datebreak)) + 
 theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
 ggtitle("Daily Time Budget for Each Day for Room 2") + 
 labs(fill = "Zone") +
@@ -378,7 +380,7 @@ night_flat$ind <- factor(night_flat$ind, levels=c("Top","Middle","Bottom"))
              
 datebreaks <- seq(ymd_hms(as.POSIXct.numeric(as.numeric(head(unique(night_flat$interval1),n=1)),origin="1970-01-01",tz="UTC")), ymd_hms(as.POSIXct.numeric(as.numeric(tail(unique(night_flat$interval1),n=1)),origin="1970-01-01",tz="UTC")), by="7 days")
 
-datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(night_flat$interval1),n=1))))
+datebreaks <- c(datebreaks, as.Date(ymd_hms(as.POSIXct(tail(night_flat$interval1,n=1),origin="1970-01-01",tz="UTC"))))
                  
 all_datebreak <- seq(ymd_hms(as.POSIXct.numeric(as.numeric(head(unique(night_flat$interval1),n=1)),origin="1970-01-01",tz="UTC")), ymd_hms(as.POSIXct.numeric(as.numeric(tail(unique(night_flat$interval1),n=1)),origin="1970-01-01",tz="UTC")), by="1 days")
 
@@ -388,7 +390,7 @@ geom_bar(stat="identity") +
 theme_bw() +  
 xlab("Day of Study") + 
 ylab("Prop. of Time Spent in Zone") +
-scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
+scale_x_date(breaks= as.Date(datebreaks), minor_breaks=as.Date(all_datebreak)) + 
 theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
 ggtitle("Daily Time Budget for Each Night for Room 2") + 
 labs(fill = "Zone") +
