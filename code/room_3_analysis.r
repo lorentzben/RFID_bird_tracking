@@ -177,12 +177,12 @@ for(i in 1:length(room_3_all_room_time_budget$tagname)){
         pull(daily_tb) |> 
         pluck(1)
 
-    current_day_tb_df <- do.call(rbind, current_day_tb)
+    current_day_tb_df <- data.frame(matrix(unlist(current_day_tb), nrow=length(current_day_tb), byrow=T))
     columns = c("interval1","interval2","Bottom","Middle","Top")
 
     colnames(current_day_tb_df) <- columns
 
-    current_day_tb_df$tagname <- rep(current_tag, length(current_day_tb_df$interval1))
+    current_day_tb_df$tagname <- data.frame(matrix(unlist(current_night_tb), nrow=length(current_night_tb), byrow=T))
 
     write.csv(current_day_tb_df, paste0("../intermediate/all_rooms/room_3_day_time_budget_",current_tag,".csv"),row.names=F)
 
@@ -228,7 +228,7 @@ sb_data <- cbind(nest_day_tbs$data[[i]][1:2], stack(nest_day_tbs$data[[i]][3:5])
 
 sb_data$ind <- factor(sb_data$ind, levels=c("Top","Middle","Bottom"))
 
-datebreaks <- seq(as.Date(ymd_hms(head(unique(sb_data$interval1),n=1))), as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))), by="7 days")
+datebreaks <- seq(as.Date(ymd_hms(as.POSIXct.numeric(head(unique(sb_data$interval1),n=1),origin="1970-01-01",tz="UTC"))), as.Date(ymd_hms(as.POSIXct.numeric(tail(unique(sb_data$interval1),n=1),origin="1970-01-01",tz="UTC"))), by="7 days")
 
 datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))))
 
