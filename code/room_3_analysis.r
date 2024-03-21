@@ -240,7 +240,7 @@ geom_bar(stat="identity") +
 theme_bw() +  
 xlab("Day of Study") + 
 ylab("Prop. of Time Spent in Zone") +
-scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
+scale_x_date(breaks= as.Date(datebreaks), minor_breaks=as.Date(all_datebreak)) + 
 theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
 ggtitle(paste0("Daily Time Budget for Each Day for Bird ID: ", nest_day_tbs[i,1])) + 
 labs(fill = "Zone") + 
@@ -268,7 +268,7 @@ geom_bar(stat="identity") +
 theme_bw() +  
 xlab("Day of Study") + 
 ylab("Prop. of Time Spent in Zone") +
-scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
+scale_x_date(breaks= as.Date(datebreaks), minor_breaks=as.Date(all_datebreak)) + 
 theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
 ggtitle(paste0("Daily Time Budget for Each Night for Bird ID: ", nest_day_tbs[i,1])) + 
 labs(fill = "Zone") + 
@@ -316,7 +316,7 @@ geom_bar(stat="identity") +
 theme_bw() +  
 xlab("Day of Study") + 
 ylab("Prop. of Time Spent in Zone") +
-scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
+scale_x_date(breaks= as.Date(datebreaks), minor_breaks=as.Date(all_datebreak)) + 
 theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
 ggtitle("Daily Time Budget for Each Night for Room 3") + 
 labs(fill = "Zone") +
@@ -330,7 +330,7 @@ geom_bar(stat="identity") +
 theme_bw() +  
 xlab("Day of Study") + 
 ylab("Prop. of Time Spent in Zone") +
-scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
+scale_x_date(breaks= as.Date(datebreaks), minor_breaks=as.Date(all_datebreak)) + 
 theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
 ggtitle("Daily Time Budget for Each Day for Room 3") + 
 labs(fill = "Zone") +
