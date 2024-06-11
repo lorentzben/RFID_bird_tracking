@@ -1,15 +1,16 @@
 ######## Room 8 Individual Analysis ########
 
-source("./rfid_functions.R")
+#source("./rfid_functions.R")
 
 # Generate Transition tables from Room 8
-library(xts)
-library(lubridate)
-library(tidyverse)
-library(tidyr)
-library(dplyr)
-library(tsibble)
-library(nplyr)
+# library(xts)
+# library(lubridate)
+# library(tidyverse)
+# library(tidyr)
+# library(dplyr)
+# library(tsibble)
+# library(nplyr)
+library(LTS)
 
 room_8 <- read.csv("../data/set_2/DK20-03-RFID-r8-febmay-080423.csv") %>% na.exclude()
 
@@ -69,7 +70,7 @@ room_8_struct <- room_8 |> nest(data = - tagname) |>
  mutate(tsibble = map(cleaned, ~tsibble(datetime = ymd_hms(.x$accessdate), value = .x$subzone, index = datetime) ))
 
 room_8_all_analysis <- room_8_struct |>
- mutate(slicedTsibble = map(tsibble, ~ sliceTsibble(.x, "2021-03-10 T04:00:00", "2021-05-06 T22:00:00")))
+ mutate(slicedTsibble = map(tsibble, ~ slice_tsibble(.x, "2021-03-10 T04:00:00", "2021-05-06 T22:00:00")))
 
 (room_8_boundries <- data.frame(room_8_summary$tagname, room_8_summary$first_rec, room_8_summary$last_rec))
 
@@ -100,11 +101,11 @@ room_8_dupes <- room_8_regular |>
   mutate(duplicates = map(sampled, ~duplicates(.x)))
 
 room_8_interval <- room_8_regular |>
-  mutate(interval = map(sampled, ~timeToIntervals(.x))) 
+  mutate(interval = map(sampled, ~time_to_intervals(.x))) 
 
 # TODO need to set start and end timepoints for this dataset.
 room_8_all_room_time_budget <- room_8_interval |>
-  mutate(tb = map(interval, ~ getTimeBudgetProp(.x))) |>
+  mutate(tb = map(interval, ~ get_time_budget_prop(.x))) |>
   unnest(tb) 
 
 room_8_all_room_time_budget |>
@@ -153,21 +154,21 @@ for(i in 1:length(room_8_regular$tagname)){
 # Make day and night "raw data" tables
 
 room_8_all_room_day <- room_8_interval |>
-  mutate(day = map(sampled, ~ getDayRecords(.x,"04:00","22:00"))) |>
-  mutate(night = map(sampled, ~ getNightRecords(.x,"04:00","22:00"))) 
+  mutate(day = map(sampled, ~ get_day_records(.x,"04:00","22:00"))) |>
+  mutate(night = map(sampled, ~ get_night_records(.x,"04:00","22:00"))) 
 
 # Turn day and night tables into daily interval tables
 
 room_8_all_room_day <- room_8_all_room_day |>
-  mutate(day_int = map(day, ~ nestedTimeToIntervals(.x))) |>
-  mutate(night_int = map(night, ~ nestedTimeToIntervals(.x)))
+  mutate(day_int = map(day, ~ nested_time_to_intervals(.x))) |>
+  mutate(night_int = map(night, ~ nested_time_to_intervals(.x)))
 
 
 # Run getTimeBudgetProp for each daily interval tables
 
  room_8_all_room_time_budget <- room_8_all_room_day |>
-  mutate(daily_tb = map(day_int, ~ map(.x$daily_int, ~ getTimeBudgetProp(.x)))) |>
-  mutate(night_tb = map(night_int, ~ map(.x$daily_int, ~ getTimeBudgetProp(.x))))
+  mutate(daily_tb = map(day_int, ~ map(.x$daily_int, ~ get_time_budget_prop(.x)))) |>
+  mutate(night_tb = map(night_int, ~ map(.x$daily_int, ~ get_time_budget_prop(.x))))
 
 
 for(i in 1:length(room_8_all_room_time_budget$tagname)){
@@ -361,7 +362,7 @@ for(i in 1:length( room_8_interval$tagname)){
 # Daily 
 
 room_8_day_int <- room_8_all_room_day |>
-  mutate(daily_int = map(day, ~timeToIntervals(.x)))
+  mutate(daily_int = map(day, ~time_to_intervals(.x)))
 
 for(i in 1:length(room_8_day_int$tagname)){
 
@@ -380,7 +381,7 @@ for(i in 1:length(room_8_day_int$tagname)){
 # Nightly
 
 room_8_night_int <- room_8_all_room_day |>
-  mutate(nightly_int = map(night, ~timeToIntervals(.x)))
+  mutate(nightly_int = map(night, ~time_to_intervals(.x)))
 
 for(i in 1:length(room_8_night_int$tagname)){
 

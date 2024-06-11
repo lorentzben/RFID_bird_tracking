@@ -1,23 +1,25 @@
 #### All Room: 2,3,8,11 Dynamic Time Warping Analysis ####
 
-source("./rfid_functions.R")
+#source("./rfid_functions.R")
 
 # Generate Transition tables from Room 11
-library(xts)
-library(lubridate)
-library(tidyverse)
-library(tidyr)
-library(dplyr)
-library(tsibble)
-library(testthat)
-library(data.table)
-library(network)
-library(sna)
+# library(xts)
+# library(lubridate)
+# library(tidyverse)
+# library(tidyr)
+# library(dplyr)
+# library(tsibble)
+# library(testthat)
+# library(data.table)
+# library(network)
+# library(sna)
 
-# read in room 2 tables
-library(readr)
-library(ggplot2)
-library(dtwclust)
+# # read in room 2 tables
+# library(readr)
+# library(ggplot2)
+# library(dtwclust)
+
+library(LTS)
 
 rm_2_records <- Sys.glob("../intermediate/all_rooms/room_2_tsibble_*")
 

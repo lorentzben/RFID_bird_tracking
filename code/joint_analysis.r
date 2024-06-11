@@ -1,20 +1,22 @@
 #### All Room: 2,3,8,11 Joint analysis ####
 
-source("./rfid_functions.R")
+#source("./rfid_functions.R")
 
 # Generate Transition tables from Room 11
-library(xts)
-library(lubridate)
-library(tidyverse)
-library(tidyr)
-library(dplyr)
-library(tsibble)
-library(testthat)
+# library(xts)
+# library(lubridate)
+# library(tidyverse)
+# library(tidyr)
+# library(dplyr)
+# library(tsibble)
+# library(testthat)
 library(cluster)
 
+library(LTS)
+
 # read in room 2 tables
-library(readr)
-library(ggplot2)
+# library(readr)
+# library(ggplot2)
 
 rm_2_overall_int <- Sys.glob("../intermediate/all_rooms/overall_interval/room_2_interval_*")
 
@@ -311,9 +313,9 @@ overall_table <- bind_rows(rm_2_overall, rm_3_overall, rm_8_overall, rm_11_overa
 
 summary_overall <- summary(overall_table$ntrans)
 
-l2m <- summary_overall[2]
+(l2m <- summary_overall[2])
 
-m2h <- summary_overall[5]
+(m2h <- summary_overall[5])
 
 overall_low_act <- overall_table[overall_table$ntrans <= l2m,]
 overall_low_act$activity <- rep("low",length(overall_low_act$ntrans))
@@ -468,9 +470,16 @@ overall_high <- overall_org_table[overall_org_table$activity == "high",]
 # select high time budgets based on ids
 
 high_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% overall_high$tagname,]
+high_act_day_tb <- nest_day_tb[nest_day_tb$tagname %in% overall_high$tagname,]
+
 
 high_act_nest <- high_act_night_tb |> 
-  mutate(nest = map(data, ~nightZoneFromTB(.x))) |>
+  mutate(nest = map(data, ~night_zone_from_TB(.x))) |>
+  unnest(nest)
+
+
+high_act_nest_day <- high_act_day_tb |> 
+  mutate(nest = map(data, ~night_zone_from_TB(.x))) |>
   unnest(nest)
 
 print("Where do the high activity birds nest at night: ")
@@ -482,9 +491,14 @@ overall_med <- overall_org_table[overall_org_table$activity == "medium",]
 # select med time budgets based on ids
 
 med_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% overall_med$tagname,]
+med_act_day_tb <- nest_day_tb[nest_day_tb$tagname %in% overall_med$tagname,]
 
 med_act_nest <- med_act_night_tb |> 
-  mutate(nest = map(data, ~nightZoneFromTB(.x))) |>
+  mutate(nest = map(data, ~night_zone_from_TB(.x))) |>
+  unnest(nest)
+
+med_act_nest_day <- med_act_day_tb |> 
+  mutate(nest = map(data, ~night_zone_from_TB(.x))) |>
   unnest(nest)
 
 
@@ -497,9 +511,14 @@ overall_low <- overall_org_table[overall_org_table$activity == "low",]
 # select low time budgets based on ids
 
 low_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% overall_low$tagname,]
+low_act_day_tb <- nest_day_tb[nest_day_tb$tagname %in% overall_low$tagname,]
+
+low_act_nest_day <- low_act_day_tb |> 
+  mutate(nest = map(data, ~night_zone_from_TB(.x))) |>
+  unnest(nest)
 
 low_act_nest <- low_act_night_tb |> 
-  mutate(nest = map(data, ~nightZoneFromTB(.x))) |>
+  mutate(nest = map(data, ~night_zone_from_TB(.x))) |>
   unnest(nest)
 
 print("Where do the low activity birds nest at night: ")
@@ -528,7 +547,105 @@ relative_nest$n <- c(low_tot,med_tot,high_tot)
 
 write.csv(relative_nest, "../intermediate/relative_nest.csv")
 
+low_tab_day <- colSums(table(low_act_nest_day[,c(1,3)])[,c("Bottom","Middle","Top")])
+med_tab_day <- colSums(table(med_act_nest_day[,c(1,3)])[,c("Bottom","Middle","Top")])
+high_tab_day <- colSums(table(high_act_nest_day[,c(1,3)])[,c("Bottom","Middle","Top")])
+
+low_tot_day <- sum(low_tab_day)
+med_tot_day <- sum(med_tab_day)
+high_tot_day <- sum(high_tab_day)
+tot_tot_day <- sum(low_tot_day,med_tot_day,high_tot_day)
+
+absolute_nest_day <- data.frame(rbind(low_tab_day, med_tab_day, high_tab_day))
+rownames(absolute_nest_day) <- c("low","medium","high")
+absolute_nest_day$n <- c(low_tot_day,med_tot_day,high_tot_day)
+
+write.csv(absolute_nest_day, "../intermediate/absolute_nest_day.csv")
+
+relative_nest_day <- data.frame(rbind(low_tab_day/low_tot_day, med_tab_day/med_tot_day, high_tab_day/high_tot_day))
+rownames(relative_nest_day) <- c("low","medium","high")
+relative_nest_day$n <- c(low_tot_day,med_tot_day,high_tot_day)
+
+write.csv(relative_nest_day, "../intermediate/relative_nest_day.csv")
+
 ### END Activity classification with overall table ###
+
+### Find prop of time spent in zones over whole study ###
+
+
+high_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% overall_high$tagname,]
+high_act_day_tb <- nest_day_tb[nest_day_tb$tagname %in% overall_high$tagname,]
+
+
+high_act_tb_night <- high_act_night_tb |> 
+  mutate(botProp = map(data, ~colMeans(na.omit(.x[,3])))) |>
+  mutate(midProp = map(data, ~colMeans(na.omit(.x[,4])))) |>
+  mutate(topProp = map(data, ~colMeans(na.omit(.x[,5])))) |>
+  unnest(c(botProp,midProp,topProp))
+
+
+high_act_tb_day <- high_act_day_tb |> 
+  mutate(botProp = map(data, ~colMeans(na.omit(.x[,3])))) |>
+  mutate(midProp = map(data, ~colMeans(na.omit(.x[,4])))) |>
+  mutate(topProp = map(data, ~colMeans(na.omit(.x[,5])))) |>
+  unnest(c(botProp,midProp,topProp))
+
+# select med activity birds
+overall_med <- overall_org_table[overall_org_table$activity == "medium",]
+
+# select med time budgets based on ids
+
+med_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% overall_med$tagname,]
+med_act_day_tb <- nest_day_tb[nest_day_tb$tagname %in% overall_med$tagname,]
+
+med_act_tb_night <- med_act_night_tb |> 
+  mutate(botProp = map(data, ~colMeans(na.omit(.x[,3])))) |>
+  mutate(midProp = map(data, ~colMeans(na.omit(.x[,4])))) |>
+  mutate(topProp = map(data, ~colMeans(na.omit(.x[,5])))) |>
+  unnest(c(botProp,midProp,topProp))
+
+
+med_act_tb_day <- med_act_day_tb |> 
+  mutate(botProp = map(data, ~colMeans(na.omit(.x[,3])))) |>
+  mutate(midProp = map(data, ~colMeans(na.omit(.x[,4])))) |>
+  mutate(topProp = map(data, ~colMeans(na.omit(.x[,5])))) |>
+  unnest(c(botProp,midProp,topProp))
+
+
+
+print("Where do the medium activity birds nest at night: ")
+(sort(table(med_act_nest$nest),decreasing=T))
+
+# select low activity birds
+overall_low <- overall_org_table[overall_org_table$activity == "low",]
+
+# select low time budgets based on ids
+
+low_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% overall_low$tagname,]
+low_act_day_tb <- nest_day_tb[nest_day_tb$tagname %in% overall_low$tagname,]
+
+low_act_tb_day <- low_act_day_tb |> 
+  mutate(botProp = map(data, ~colMeans(na.omit(.x[,3])))) |>
+  mutate(midProp = map(data, ~colMeans(na.omit(.x[,4])))) |>
+  mutate(topProp = map(data, ~colMeans(na.omit(.x[,5])))) |>
+  unnest(c(botProp,midProp,topProp))
+
+
+low_act_tb_night <- low_act_night_tb |> 
+  mutate(botProp = map(data, ~colMeans(na.omit(.x[,3])))) |>
+  mutate(midProp = map(data, ~colMeans(na.omit(.x[,4])))) |>
+  mutate(topProp = map(data, ~colMeans(na.omit(.x[,5])))) |>
+  unnest(c(botProp,midProp,topProp))
+
+low_night <- colMeans(low_act_tb_night[,3:5])
+med_night <- colMeans(med_act_tb_night[,3:5])
+high_night <- colMeans(high_act_tb_night[,3:5])
+
+low_day <- colMeans(low_act_tb_day[,3:5])
+med_day <- colMeans(med_act_tb_day[,3:5])
+high_day <- colMeans(high_act_tb_day[,3:5])
+
+### END find prop time spent in zone over whole study ###
 
 
 ### Activity Classification of room 2 ###
@@ -559,7 +676,7 @@ rm_2_org_table <- rm_2_org_table[order(rm_2_org_table$ntrans),]
 high_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% rm_2_high_act$tagname,]
 
 high_act_nest <- high_act_night_tb |> 
-  mutate(nest = map(data, ~nightZoneFromTB(.x))) |>
+  mutate(nest = map(data, ~night_zone_from_TB(.x))) |>
   unnest(nest)
 
 print("Where do the high activity birds nest at night: ")
@@ -571,7 +688,7 @@ print("Where do the high activity birds nest at night: ")
 med_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% rm_2_med_act$tagname,]
 
 med_act_nest <- med_act_night_tb |> 
-  mutate(nest = map(data, ~nightZoneFromTB(.x))) |>
+  mutate(nest = map(data, ~night_zone_from_TB(.x))) |>
   unnest(nest)
 
 
@@ -584,7 +701,7 @@ print("Where do the medium activity birds nest at night: ")
 low_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% rm_2_low_act$tagname,]
 
 low_act_nest <- low_act_night_tb |> 
-  mutate(nest = map(data, ~nightZoneFromTB(.x))) |>
+  mutate(nest = map(data, ~night_zone_from_TB(.x))) |>
   unnest(nest)
 
 print("Where do the low activity birds nest at night: ")
@@ -620,7 +737,7 @@ rm_3_org_table <- rm_3_org_table[order(rm_3_org_table$ntrans),]
 high_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% rm_3_high_act$tagname,]
 
 high_act_nest <- high_act_night_tb |> 
-  mutate(nest = map(data, ~nightZoneFromTB(.x))) |>
+  mutate(nest = map(data, ~night_zone_from_TB(.x))) |>
   unnest(nest)
 
 print("Where do the high activity birds nest at night: ")
@@ -632,7 +749,7 @@ print("Where do the high activity birds nest at night: ")
 med_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% rm_3_med_act$tagname,]
 
 med_act_nest <- med_act_night_tb |> 
-  mutate(nest = map(data, ~nightZoneFromTB(.x))) |>
+  mutate(nest = map(data, ~night_zone_from_TB(.x))) |>
   unnest(nest)
 
 
@@ -645,7 +762,7 @@ print("Where do the medium activity birds nest at night: ")
 low_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% rm_3_low_act$tagname,]
 
 low_act_nest <- low_act_night_tb |> 
-  mutate(nest = map(data, ~nightZoneFromTB(.x))) |>
+  mutate(nest = map(data, ~night_zone_from_TB(.x))) |>
   unnest(nest)
 
 print("Where do the low activity birds nest at night: ")
@@ -681,7 +798,7 @@ rm_8_org_table <- rm_8_org_table[order(rm_8_org_table$ntrans),]
 high_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% rm_8_high_act$tagname,]
 
 high_act_nest <- high_act_night_tb |> 
-  mutate(nest = map(data, ~nightZoneFromTB(.x))) |>
+  mutate(nest = map(data, ~night_zone_from_TB(.x))) |>
   unnest(nest)
 
 print("Where do the high activity birds nest at night: ")
@@ -693,7 +810,7 @@ print("Where do the high activity birds nest at night: ")
 med_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% rm_8_med_act$tagname,]
 
 med_act_nest <- med_act_night_tb |> 
-  mutate(nest = map(data, ~nightZoneFromTB(.x))) |>
+  mutate(nest = map(data, ~night_zone_from_TB(.x))) |>
   unnest(nest)
 
 
@@ -706,7 +823,7 @@ print("Where do the medium activity birds nest at night: ")
 low_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% rm_8_low_act$tagname,]
 
 low_act_nest <- low_act_night_tb |> 
-  mutate(nest = map(data, ~nightZoneFromTB(.x))) |>
+  mutate(nest = map(data, ~night_zone_from_TB(.x))) |>
   unnest(nest)
 
 print("Where do the low activity birds nest at night: ")
@@ -742,7 +859,7 @@ rm_11_org_table <- rm_11_org_table[order(rm_11_org_table$ntrans),]
 high_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% rm_11_high_act$tagname,]
 
 high_act_nest <- high_act_night_tb |> 
-  mutate(nest = map(data, ~nightZoneFromTB(.x))) |>
+  mutate(nest = map(data, ~night_zone_from_TB(.x))) |>
   unnest(nest)
 
 print("Where do the high activity birds nest at night: ")
@@ -754,7 +871,7 @@ print("Where do the high activity birds nest at night: ")
 med_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% rm_11_med_act$tagname,]
 
 med_act_nest <- med_act_night_tb |> 
-  mutate(nest = map(data, ~nightZoneFromTB(.x))) |>
+  mutate(nest = map(data, ~night_zone_from_TB(.x))) |>
   unnest(nest)
 
 
@@ -767,7 +884,7 @@ print("Where do the medium activity birds nest at night: ")
 low_act_night_tb <- nest_night_tb[nest_night_tb$tagname %in% rm_11_low_act$tagname,]
 
 low_act_nest <- low_act_night_tb |> 
-  mutate(nest = map(data, ~nightZoneFromTB(.x))) |>
+  mutate(nest = map(data, ~night_zone_from_TB(.x))) |>
   unnest(nest)
 
 print("Where do the low activity birds nest at night: ")
@@ -1083,9 +1200,15 @@ write.csv(sum_n_keel, "../intermediate/n_keel.csv", row.names=F)
 tmp2 <- unique(overall_day_summary_w_keel %>% select(c(tagname,activity,rm,keelScore)))
 tmp2$tagname <- factor(tmp2$tagname,levels=tmp2$tagname)
 tmp2$tag <- as.numeric(tmp2$tagname)
+
+
+
 m4 <- lmer(keelScore ~ activity + (1|rm), tmp2)
 summary(m4)
 anova(m4)
+
+# TODO implement kruskal
+kruskal.test()
 
 m4_means <- emmeans(m4, specs=list( actMean = ~activity))
 
@@ -1099,8 +1222,15 @@ png("../figures/all_day/model_diag/keel_score_mean_m4.png",width=5,height=3, uni
 plot(m4_means, horizontal = F,comparisons=T)
 dev.off()
 
+kruskal.test(keel_score ~ activity, overall_day_summary_w_keel)
+
 m5 <- aov(keel_score ~ activity, overall_day_summary_w_keel)
 summary(m5)
+
+png("../figures/all_day/model_diag/keel_score_qq.png")
+qqnorm(m5)
+qqline(m5)
+dev.off()
 
 m5_means <- emmeans(m5, specs=list( actMean = ~activity))
 
