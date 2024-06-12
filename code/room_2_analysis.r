@@ -4,13 +4,13 @@
 
 # Generate Transition tables from Room 2
 #TODO check if we need these imports or if LTS handles them
-# library(xts)
-# library(lubridate)
-# library(tidyverse)
-# library(tidyr)
-# library(dplyr)
-# library(tsibble)
-# library(nplyr)
+library(xts)
+library(lubridate)
+library(tidyverse)
+library(tidyr)
+library(dplyr)
+library(tsibble)
+library(nplyr)
 library(LTS)
 
 room_2 <- read.csv("../data/set_2/DK20-03-RFID-R2-febmay-080423.csv")

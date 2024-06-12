@@ -3,13 +3,13 @@
 #source("./rfid_functions.R")
 
 # Generate Transition tables from Room 8
-# library(xts)
-# library(lubridate)
-# library(tidyverse)
-# library(tidyr)
-# library(dplyr)
-# library(tsibble)
-# library(nplyr)
+library(xts)
+library(lubridate)
+library(tidyverse)
+library(tidyr)
+library(dplyr)
+library(tsibble)
+library(nplyr)
 library(LTS)
 
 room_8 <- read.csv("../data/set_2/DK20-03-RFID-r8-febmay-080423.csv") %>% na.exclude()

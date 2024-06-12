@@ -3,13 +3,13 @@
 #source("./rfid_functions.R")
 
 # Generate Transition tables from Room 11
-# library(xts)
-# library(lubridate)
-# library(tidyverse)
-# library(tidyr)
-# library(dplyr)
-# library(tsibble)
-# library(testthat)
+library(xts)
+library(lubridate)
+library(tidyverse)
+library(tidyr)
+library(dplyr)
+library(tsibble)
+library(testthat)
 library(cluster)
 
 library(LTS)
