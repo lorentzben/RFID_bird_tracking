@@ -116,7 +116,7 @@ room_2_all_room_time_budget <- room_2_interval |>
   mutate(tb = map(interval, ~ get_time_budget_prop(.x))) |>
   unnest(tb) 
 
-print(room_2_all_room_time_budget$tb[1])
+print(room_2_all_room_time_budget)
 
 room_2_all_room_time_budget |>
  select(c(tagname, Interval.1., Interval.2., X1, X2, X3)) |> 
