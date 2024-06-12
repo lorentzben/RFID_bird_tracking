@@ -57,20 +57,20 @@ fi
 
 singularity run docker://lorentzb/rfid:2.1 Rscript room_2_analysis.r > ../logs/"$TS"_rm2.log
 
-# # Run Room 3 Individual Analysis 
+# Run Room 3 Individual Analysis 
 
-# singularity run docker://lorentzb/rfid:2.1 Rscript room_3_analysis.r > ../logs/"$TS"_rm3.log
+singularity run docker://lorentzb/rfid:2.1 Rscript room_3_analysis.r > ../logs/"$TS"_rm3.log
 
-# # Run Room 8 Individual Analysis
+# Run Room 8 Individual Analysis
 
-# singularity run docker://lorentzb/rfid:2.1 Rscript room_8_analysis.r > ../logs/"$TS"_rm8.log
+singularity run docker://lorentzb/rfid:2.1 Rscript room_8_analysis.r > ../logs/"$TS"_rm8.log
 
-# # Run Room 11 Individual Analysis
+# Run Room 11 Individual Analysis
 
-# singularity run docker://lorentzb/rfid:2.1 Rscript room_11_analysis.r > ../logs/"$TS"_rm11.log
+singularity run docker://lorentzb/rfid:2.1 Rscript room_11_analysis.r > ../logs/"$TS"_rm11.log
 
-# # Run All Room Joint Analysis
+# Run All Room Joint Analysis
 
-# singularity run docker://lorentzb/rfid:2.1 Rscript joint_analysis.r > ../logs/"$TS"_joint.log
+singularity run docker://lorentzb/rfid:2.1 Rscript joint_analysis.r > ../logs/"$TS"_joint.log
 
 echo "Script finished"
