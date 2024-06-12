@@ -163,8 +163,8 @@ for(i in 1:length(room_2_regular$tagname)){
 # Make day and night "raw data" tables
 
 room_2_all_room_day <- room_2_interval |>
-  mutate(day = map(sampled, ~ get_day_records(.x,"04:00","22:00"))) |>
-  mutate(night = map(sampled, ~ get_night_records(.x,"04:00","22:00"))) 
+  mutate(day = map(sampled, ~ get_day_records(.x,"04:00:00","22:00:00"))) |>
+  mutate(night = map(sampled, ~ get_night_records(.x,"04:00:00","22:00:00"))) 
 
 # Turn day and night tables into daily interval tables
 
