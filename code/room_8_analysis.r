@@ -110,7 +110,7 @@ room_8_all_room_time_budget <- room_8_interval |>
   unnest(tb) 
 
 room_8_all_room_time_budget |>
- select(c(tagname, Interval.1., Interval.2., X1, X2, X3)) |> 
+ select(c(tagname, Interval.1., Interval.2., bottom, middle, top)) |> 
  write.csv(row.names=F, '../output/all_rooms/room_8_all_room_time_budget.csv')
 
 room_8_interval |> 
