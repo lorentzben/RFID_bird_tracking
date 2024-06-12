@@ -109,7 +109,7 @@ room_2_dupes <- room_2_regular |>
   mutate(duplicates = map(sampled, ~duplicates(.x)))
 
 room_2_interval <- room_2_regular |>
-  mutate(interval = map(sampled, ~timeToIntervals(.x))) 
+  mutate(interval = map(sampled, ~time_to_intervals(.x))) 
 
 # TODO need to set start and end timepoints for this dataset.
 room_2_all_room_time_budget <- room_2_interval |>
@@ -423,7 +423,7 @@ for(i in 1:length( room_2_interval$tagname)){
 # Daily 
 
 room_2_day_int <- room_2_all_room_day |>
-  mutate(daily_int = map(day, ~timeToIntervals(.x)))
+  mutate(daily_int = map(day, ~time_to_intervals(.x)))
 
 for(i in 1:length(room_2_day_int$tagname)){
 
@@ -442,7 +442,7 @@ for(i in 1:length(room_2_day_int$tagname)){
 # Nightly
 
 room_2_night_int <- room_2_all_room_day |>
-  mutate(nightly_int = map(night, ~timeToIntervals(.x)))
+  mutate(nightly_int = map(night, ~time_to_intervals(.x)))
 
 for(i in 1:length(room_2_night_int$tagname)){
 
