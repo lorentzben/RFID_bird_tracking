@@ -11,7 +11,9 @@ library(tidyr)
 library(dplyr)
 library(tsibble)
 library(nplyr)
+library(purrr)
 library(LTS)
+
 
 room_2 <- read.csv("../data/set_2/DK20-03-RFID-R2-febmay-080423.csv")
 

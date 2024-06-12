@@ -11,12 +11,12 @@ library(dplyr)
 library(tsibble)
 library(testthat)
 library(cluster)
-
+library(purrr)
 library(LTS)
 
 # read in room 2 tables
-# library(readr)
-# library(ggplot2)
+library(readr)
+library(ggplot2)
 
 rm_2_overall_int <- Sys.glob("../intermediate/all_rooms/overall_interval/room_2_interval_*")
 

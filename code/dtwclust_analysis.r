@@ -13,6 +13,7 @@ library(testthat)
 library(data.table)
 library(network)
 library(sna)
+library(purrr)
 
 # # read in room 2 tables
 library(readr)
