@@ -185,7 +185,7 @@ for(i in 1:length(room_3_all_room_time_budget$tagname)){
 
     colnames(current_day_tb_df) <- columns
 
-    current_day_tb_df$tagname <- data.frame(matrix(unlist(current_day_tb_df), nrow=length(current_day_tb_df), byrow=T))
+    #current_day_tb_df$tagname <- data.frame(matrix(unlist(current_day_tb_df), nrow=length(current_day_tb_df), byrow=T))
 
     write.csv(current_day_tb_df, paste0("../intermediate/all_rooms/room_3_day_time_budget_",current_tag,".csv"),row.names=F)
 
