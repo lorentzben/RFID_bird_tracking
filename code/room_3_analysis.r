@@ -102,7 +102,7 @@ room_3_dupes <- room_3_regular |>
   mutate(duplicates = map(sampled, ~duplicates(.x)))
 
 room_3_interval <- room_3_regular |>
-  mutate(interval = map(sampled, ~timeToIntervals(.x))) 
+  mutate(interval = map(sampled, ~time_to_intervals(.x))) 
 
 # TODO need to set start and end timepoints for this dataset.
 room_3_all_room_time_budget <- room_3_interval |>
@@ -231,11 +231,18 @@ sb_data <- cbind(nest_day_tbs$data[[i]][1:2], stack(nest_day_tbs$data[[i]][3:5])
 
 sb_data$ind <- factor(sb_data$ind, levels=c("Top","Middle","Bottom"))
 
-datebreaks <- seq(as.Date(ymd_hms(as.POSIXct.numeric(head(unique(sb_data$interval1),n=1),origin="1970-01-01",tz="UTC"))), as.Date(ymd_hms(as.POSIXct.numeric(tail(unique(sb_data$interval1),n=1),origin="1970-01-01",tz="UTC"))), by="7 days")
+# datebreaks <- seq(as.Date(ymd_hms(as.POSIXct.numeric(head(unique(sb_data$interval1),n=1),origin="1970-01-01",tz="UTC"))), as.Date(ymd_hms(as.POSIXct.numeric(tail(unique(sb_data$interval1),n=1),origin="1970-01-01",tz="UTC"))), by="7 days")
 
-datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))))
+# datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))))
 
-all_datebreak <- seq(as.Date(ymd_hms(head(unique(sb_data$interval1),n=1))), as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))), by="1 days")
+# all_datebreak <- seq(as.Date(ymd_hms(head(unique(sb_data$interval1),n=1))), as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))), by="1 days")
+
+
+datebreaks <- seq(as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(head(unique(sb_data$interval1),n=1)),origin="1970-01-01",tz="UTC"))), as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(tail(unique(sb_data$interval1),n=1)),origin="1970-01-01",tz="UTC"))), by="7 days")
+
+datebreaks <- c(datebreaks, ymd_hms(as.POSIXct.numeric(as.numeric(tail(unique(sb_data$interval1),n=1)),origin="1970-01-01",tz="UTC")))
+
+all_datebreak <- seq(as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(head(unique(sb_data$interval1),n=1)),origin="1970-01-01",tz="UTC"))), as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(tail(unique(sb_data$interval1),n=1)),origin="1970-01-01",tz="UTC"))), by="1 days")
 
 
 day_3_sb_plot <- ggplot(data = sb_data, aes(x = as.Date(interval1), y=values, fill=ind)) + 
