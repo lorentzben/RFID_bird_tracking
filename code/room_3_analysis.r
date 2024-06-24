@@ -239,11 +239,18 @@ sb_data$ind <- factor(sb_data$ind, levels=c("Top","Middle","Bottom"))
 # all_datebreak <- seq(as.Date(ymd_hms(head(unique(sb_data$interval1),n=1))), as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))), by="1 days")
 
 
-datebreaks <- seq(as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(head(unique(sb_data$interval1),n=1)),origin="1970-01-01",tz="UTC"))), as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(tail(unique(sb_data$interval1),n=1)),origin="1970-01-01",tz="UTC"))), by="7 days")
+# datebreaks <- seq(as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(head(unique(sb_data$interval1),n=1)),origin="1970-01-01",tz="UTC"))), as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(tail(unique(sb_data$interval1),n=1)),origin="1970-01-01",tz="UTC"))), by="7 days")
 
-datebreaks <- c(datebreaks, ymd_hms(as.POSIXct.numeric(as.numeric(tail(unique(sb_data$interval1),n=1)),origin="1970-01-01",tz="UTC")))
+# datebreaks <- c(datebreaks, ymd_hms(as.POSIXct.numeric(as.numeric(tail(unique(sb_data$interval1),n=1)),origin="1970-01-01",tz="UTC")))
 
-all_datebreak <- seq(as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(head(unique(sb_data$interval1),n=1)),origin="1970-01-01",tz="UTC"))), as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(tail(unique(sb_data$interval1),n=1)),origin="1970-01-01",tz="UTC"))), by="1 days")
+# all_datebreak <- seq(as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(head(unique(sb_data$interval1),n=1)),origin="1970-01-01",tz="UTC"))), as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(tail(unique(sb_data$interval1),n=1)),origin="1970-01-01",tz="UTC"))), by="1 days")
+
+datebreaks <- seq(as.Date(as.POSIXct.numeric(head(unique(sb_data$interval1),n=1),origin="1970-01-01")), as.Date(as.POSIXct.numeric(tail(unique(sb_data$interval1),n=1),origin="1970-01-01")), by="7 days")
+
+datebreaks <- c(datebreaks, as.Date(as.POSIXct.numeric(tail(unique(sb_data$interval1),n=1),origin="1970-01-01")))
+
+all_datebreak <- seq(as.Date(as.POSIXct.numeric(head(unique(sb_data$interval1),n=1),origin="1970-01-01")), as.Date(as.POSIXct.numeric(tail(unique(sb_data$interval1),n=1),origin="1970-01-01")), by="1 days")
+
 
 
 day_3_sb_plot <- ggplot(data = sb_data, aes(x = as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(interval1),origin="1970-01-01"))), y=values, fill=ind)) + 
@@ -268,11 +275,11 @@ sb_data <- cbind(nest_night_tbs$data[[i]][1:2], stack(nest_night_tbs$data[[i]][3
 
 sb_data$ind <- factor(sb_data$ind, levels=c("Top","Middle","Bottom"))
 
-datebreaks <- seq(as.Date(ymd_hms(head(unique(sb_data$interval1),n=1))), as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))), by="7 days")
+datebreaks <- seq(as.Date(as.POSIXct.numeric(head(unique(sb_data$interval1),n=1),origin="1970-01-01")), as.Date(as.POSIXct.numeric(tail(unique(sb_data$interval1),n=1),origin="1970-01-01")), by="7 days")
 
-datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))))
+datebreaks <- c(datebreaks, as.Date(as.POSIXct.numeric(tail(unique(sb_data$interval1),n=1),origin="1970-01-01")))
 
-all_datebreak <- seq(as.Date(ymd_hms(head(unique(sb_data$interval1),n=1))), as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))), by="1 days")
+all_datebreak <- seq(as.Date(as.POSIXct.numeric(head(unique(sb_data$interval1),n=1),origin="1970-01-01")), as.Date(as.POSIXct.numeric(tail(unique(sb_data$interval1),n=1),origin="1970-01-01")), by="1 days")
 
 day_3_sb_plot <- ggplot(data = sb_data, aes(x = as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(interval1),origin="1970-01-01"))), y=values, fill=ind)) + 
 geom_bar(stat="identity") +
@@ -294,11 +301,11 @@ day_flat <- cbind(day_tbs_df[c(1:2,6)], stack(day_tbs_df[3:5]))
 
 day_flat$ind <- factor(day_flat$ind, levels=c("Top","Middle","Bottom"))
 
-datebreaks <- seq(as.Date(ymd_hms(head(unique(day_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1))), by="7 days")
+datebreaks <- seq(as.Date(as.POSIXct.numeric(head(unique(day_flat$interval1),n=1),origin="1970-01-01")), as.Date(as.POSIXct.numeric(tail(unique(day_flat$interval1),n=1),origin="1970-01-01")), by="7 days")
 
-datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1))))
+datebreaks <- c(datebreaks, as.Date(as.POSIXct.numeric(tail(unique(day_flat$interval1),n=1),origin="1970-01-01")))
 
-all_datebreak <- seq(as.Date(ymd_hms(head(unique(day_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(day_flat$interval1),n=1))), by="1 days")
+all_datebreak <- seq(as.Date(as.POSIXct.numeric(head(unique(day_flat$interval1),n=1),origin="1970-01-01")), as.Date(as.POSIXct.numeric(tail(unique(day_flat$interval1),n=1),origin="1970-01-01")), by="1 days")
 
 
 
@@ -314,11 +321,12 @@ night_flat <- cbind(night_tbs_df[c(1:2,6)], stack(night_tbs_df[3:5]))
 
 night_flat$ind <- factor(night_flat$ind, levels=c("Top","Middle","Bottom"))
 
-datebreaks <- seq(as.Date(ymd_hms(head(unique(night_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(night_flat$interval1),n=1))), by="7 days")
+datebreaks <- seq(as.Date(as.POSIXct.numeric(head(unique(night_flat$interval1),n=1),origin="1970-01-01")), as.Date(as.POSIXct.numeric(tail(unique(night_flat$interval1),n=1),origin="1970-01-01")), by="7 days")
 
-datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(night_flat$interval1),n=1))))
+datebreaks <- c(datebreaks, as.Date(as.POSIXct.numeric(tail(unique(night_flat$interval1),n=1),origin="1970-01-01")))
 
-all_datebreak <- seq(as.Date(ymd_hms(head(unique(night_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(night_flat$interval1),n=1))), by="1 days")
+all_datebreak <- seq(as.Date(as.POSIXct.numeric(head(unique(night_flat$interval1),n=1),origin="1970-01-01")), as.Date(as.POSIXct.numeric(tail(unique(night_flat$interval1),n=1),origin="1970-01-01")), by="1 days")
+
 
 y_lim <- length(unique(day_flat$tagname))+.001
 
