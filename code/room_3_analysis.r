@@ -253,7 +253,7 @@ all_datebreak <- seq(as.Date(as.POSIXct.numeric(head(unique(sb_data$interval1),n
 
 
 
-day_3_sb_plot <- ggplot(data = sb_data, aes(x = as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(interval1),origin="1970-01-01"))), y=values, fill=ind)) + 
+day_3_sb_plot <- ggplot(data = sb_data, aes(x = as.Date(as.POSIXct.numeric(as.numeric(interval1),origin="1970-01-01")), y=values, fill=ind)) + 
 geom_bar(stat="identity") +
 theme_bw() +  
 xlab("Day of Study") + 
@@ -281,7 +281,7 @@ datebreaks <- c(datebreaks, as.Date(as.POSIXct.numeric(tail(unique(sb_data$inter
 
 all_datebreak <- seq(as.Date(as.POSIXct.numeric(head(unique(sb_data$interval1),n=1),origin="1970-01-01")), as.Date(as.POSIXct.numeric(tail(unique(sb_data$interval1),n=1),origin="1970-01-01")), by="1 days")
 
-day_3_sb_plot <- ggplot(data = sb_data, aes(x = as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(interval1),origin="1970-01-01"))), y=values, fill=ind)) + 
+day_3_sb_plot <- ggplot(data = sb_data, aes(x = as.Date(as.POSIXct.numeric(as.numeric(interval1),origin="1970-01-01")), y=values, fill=ind)) + 
 geom_bar(stat="identity") +
 theme_bw() +  
 xlab("Day of Study") + 
@@ -331,7 +331,7 @@ all_datebreak <- seq(as.Date(as.POSIXct.numeric(head(unique(night_flat$interval1
 
 y_lim <- length(unique(day_flat$tagname))+.001
 
-room_3_sb_night_plot <- ggplot(data = night_flat, aes(x = as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(interval1),origin="1970-01-01"))), y=values, fill=ind)) + 
+room_3_sb_night_plot <- ggplot(data = night_flat, aes(x = as.Date(as.POSIXct.numeric(as.numeric(interval1),origin="1970-01-01")), y=values, fill=ind)) + 
 geom_bar(stat="identity") +
 theme_bw() +  
 xlab("Day of Study") + 
