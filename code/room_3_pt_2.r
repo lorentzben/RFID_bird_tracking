@@ -123,7 +123,7 @@ night_flat <- cbind(night_tbs_df[c(1:2,6)], stack(night_tbs_df[3:5]))
 
 night_flat$ind <- factor(night_flat$ind, levels=c("Top","Middle","Bottom"))
 
-datebreaks <- seq(as.Date(as.POSIXct.numeric(head(unique(night_flat$interval1),n=1),origin="1970-01-01")), as.Date(as.POSIXct.numeric(tail(unique(night_flat$interval1)),origin="1970-01-01")), by="7 days")
+datebreaks <- seq(as.Date(as.POSIXct.numeric(head(unique(night_flat$interval1),n=1),origin="1970-01-01")), as.Date(as.POSIXct.numeric(tail(unique(night_flat$interval1),n=1),origin="1970-01-01")), by="7 days")
 
 datebreaks <- c(datebreaks, as.Date(as.POSIXct.numeric(tail(unique(night_flat$interval1),n=1),origin="1970-01-01")))
 
