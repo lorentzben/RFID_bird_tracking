@@ -205,19 +205,7 @@ for(i in 1:length(room_3_all_room_time_budget$tagname)){
     write.csv(current_night_tb_df, paste0("../intermediate/all_rooms/room_3_night_time_budget_",current_tag,".csv"),row.names=F)
 }
 
-Read in generated time budgets and plot 
-
-library(readr)
-library(ggplot2)
-library(xts)
-library(lubridate)
-library(tidyverse)
-library(tidyr)
-library(dplyr)
-library(tsibble)
-library(nplyr)
-library(purrr)
-library(LTS)
+#Read in generated time budgets and plot 
 
 library(readr)
 library(ggplot2)
