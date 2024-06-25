@@ -195,7 +195,7 @@ for(i in 1:length(room_3_all_room_time_budget$tagname)){
         pull(night_tb) |> 
         pluck(1)
 
-    current_night_tb_df <- do.call(rbind, current_night_tb)
+    current_night_tb_df <- data.frame(matrix(unlist(current_night_tb), nrow=length(current_night_tb), byrow=T))
     columns = c("interval1","interval2","Bottom","Middle","Top")
 
     colnames(current_night_tb_df) <- columns
