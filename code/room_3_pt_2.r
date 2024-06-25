@@ -163,7 +163,7 @@ ggsave(paste0("../figures/all_day/room3/day_daily_time_budget_stack_bar_for_room
 
 # Overall
 
-for(i in 1:length( room_3_interval$tagname)){
+for(i in 1:length(room_3_interval$tagname)){
 
     current_tag <- room_3_interval$tagname[i]
 
