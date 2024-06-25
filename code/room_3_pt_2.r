@@ -76,11 +76,11 @@ sb_data <- cbind(nest_night_tbs$data[[i]][1:2], stack(nest_night_tbs$data[[i]][3
 
 sb_data$ind <- factor(sb_data$ind, levels=c("Top","Middle","Bottom"))
 
-datebreaks <- seq(as.Date(ymd_hms(head(unique(sb_data$interval1),n=1))), as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))), by="7 days")
+datebreaks <- seq(as.Date(as.POSIXct.numeric(head(unique(sb_data$interval1),n=1),origin="1970-01-01")), as.Date(as.POSIXct.numeric(tail(unique(sb_data$interval1),n=1),origin="1970-01-01")), by="7 days")
 
-datebreaks <- c(datebreaks, as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))))
+datebreaks <- c(datebreaks, as.Date(as.POSIXct.numeric(tail(unique(sb_data$interval1),n=1),origin="1970-01-01")))
 
-all_datebreak <- seq(as.Date(ymd_hms(head(unique(sb_data$interval1),n=1))), as.Date(ymd_hms(tail(unique(sb_data$interval1),n=1))), by="1 days")
+all_datebreak <- seq(as.Date(as.POSIXct.numeric(head(unique(sb_data$interval1),n=1),origin="1970-01-01")), as.Date(as.POSIXct.numeric(tail(unique(sb_data$interval1),n=1),origin="1970-01-01")), by="1 days")
 
 day_3_sb_plot <- ggplot(data = sb_data, aes(x = as.Date(as.POSIXct.numeric(as.numeric(interval1),origin="1970-01-01")), y=values, fill=ind)) + 
 geom_bar(stat="identity") +
