@@ -132,7 +132,7 @@ all_datebreak <- seq(as.Date(as.POSIXct.numeric(head(unique(night_flat$interval1
 
 y_lim <- length(unique(night_flat$tagname))+.001
 
-room_3_sb_night_plot <- ggplot(data = night_flat, aes(x = as.Date(ymd_hms(as.numeric(interval1))), y=values, fill=ind)) + 
+room_3_sb_night_plot <- ggplot(data = night_flat, aes(x = as.Date(as.POSIXct.numeric(as.numeric(interval1),origin="1970-01-01")), y=values, fill=ind)) + 
 geom_bar(stat="identity") +
 theme_bw() +  
 xlab("Day of Study") + 
