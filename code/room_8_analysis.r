@@ -337,7 +337,7 @@ datebreaks <- c(datebreaks, as.Date(as.POSIXct.numeric(tail(unique(night_flat$in
 all_datebreak <- seq(as.Date(as.POSIXct.numeric(head(unique(night_flat$interval1),n=1),origin="1970-01-01")), as.Date(as.POSIXct.numeric(tail(unique(night_flat$interval1),n=1),origin="1970-01-01")), by="1 days")
 
 # TODO  Check Limits
-room_8_sb_night_plot <- ggplot(data = night_flat, aes(x = as.Date(ymd_hms(as.numeric(interval1))),origin="1970-01-01")), y=values, fill=ind)) + 
+room_8_sb_night_plot <- ggplot(data = night_flat, aes(x = as.Date(as.POSIXct.numeric(as.numeric(interval1),origin="1970-01-01")), y=values, fill=ind)) + 
 geom_bar(stat="identity") +
 theme_bw() +  
 xlab("Day of Study") + 
@@ -350,7 +350,7 @@ scale_y_continuous(limits=c(0, y_lim))
 
 ggsave(paste0("../figures/all_day/room8/night_daily_time_budget_stack_bar_for_room_8",".png"), room_8_sb_night_plot)
 
-room_8_sb_day_plot <- ggplot(data = day_flat, aes(x = as.Date(ymd_hms(as.numeric(interval1))), y=values, fill=ind)) + 
+room_8_sb_day_plot <- ggplot(data = day_flat, aes(x = as.Date(as.POSIXct.numeric(as.numeric(interval1),origin="1970-01-01")), y=values, fill=ind)) + 
 geom_bar(stat="identity") +
 theme_bw() +  
 xlab("Day of Study") + 
