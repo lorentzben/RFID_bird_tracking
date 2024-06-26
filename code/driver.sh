@@ -59,11 +59,11 @@ fi
 
 # Run Room 3 Individual Analysis 
 
-singularity run docker://lorentzb/rfid:2.1 Rscript room_3_analysis.r > ../logs/"$TS"_rm3.log
+# singularity run docker://lorentzb/rfid:2.1 Rscript room_3_analysis.r > ../logs/"$TS"_rm3.log
 
 # Run Room 8 Individual Analysis
 
-# singularity run docker://lorentzb/rfid:2.1 Rscript room_8_analysis.r > ../logs/"$TS"_rm8.log
+singularity run docker://lorentzb/rfid:2.1 Rscript room_8_analysis.r > ../logs/"$TS"_rm8.log
 
 # # Run Room 11 Individual Analysis
 
