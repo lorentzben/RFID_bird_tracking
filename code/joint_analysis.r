@@ -1562,7 +1562,7 @@ overall_table[order(overall_table$ntrans, decreasing=T),]
 #6905 | 3
 
 high_bird_1 <- rm_3_day_int_df[rm_3_day_int_df$tagname == "6905",]
-high_bird_1$w_start <- week(as.POSIXct(high_bird_1$t1,origin=origin))
+high_bird_1$w_start <- week(as.POSIXct(high_bird_1$t1,origin="1970-01-01"))
 
 # turn into weeks, and then calculate ntrans per week
 
@@ -1608,7 +1608,7 @@ ggsave(paste0("../figures/all_day/transition_plots/6905_most_active_trans_per_we
 
 #6998 | 3
 high_bird_2 <- rm_3_day_int_df[rm_3_day_int_df$tagname == "6998",]
-high_bird_2$w_start <- week(as.POSIXct(high_bird_2$t1,origin=origin))
+high_bird_2$w_start <- week(as.POSIXct(high_bird_2$t1,origin="1970-01-01"))
 
 # turn into weeks, and then calculate ntrans per week
 
@@ -1663,7 +1663,7 @@ overall_table[order(overall_table$ntrans, decreasing=F),]
 #6929 | 8 
 
 low_bird <- rm_8_day_int_df[rm_8_day_int_df$tagname == "6929",]
-low_bird$w_start <- week(as.POSIXct(low_bird$t1,origin=origin))
+low_bird$w_start <- week(as.POSIXct(low_bird$t1,origin="1970-01-01"))
 
 # turn into weeks, and then calculate ntrans per week
 
@@ -1726,7 +1726,7 @@ low_act_bird <- rbind(low_act_bird, rm_8_day_int_df[rm_8_day_int_df$tagname %in%
 low_act_bird <- rbind(low_act_bird, rm_11_day_int_df[rm_11_day_int_df$tagname %in% low_bird_ids,])
 
 # turn into weekly tables and calc num trans
-low_act_bird$w_start <- week(as.POSIXct(low_act_bird$t1,origin=origin))
+low_act_bird$w_start <- week(as.POSIXct(low_act_bird$t1,origin="1970-01-01"))
 
 
 low_act_bird_sum <- low_act_bird |> nest(data = -w_start) |>
@@ -1790,7 +1790,7 @@ med_act_bird <- rbind(med_act_bird, rm_8_day_int_df[rm_8_day_int_df$tagname %in%
 med_act_bird <- rbind(med_act_bird, rm_11_day_int_df[rm_11_day_int_df$tagname %in% med_bird_ids,])
 
 # turn into weekly tables and calc num trans
-med_act_bird$w_start <- week(as.POSIXct(med_act_bird$t1,origin=origin))
+med_act_bird$w_start <- week(as.POSIXct(med_act_bird$t1,origin="1970-01-01"))
 
 
 med_act_bird_sum <- med_act_bird |> nest(data = -w_start) |>
@@ -1854,7 +1854,7 @@ high_act_bird <- rbind(high_act_bird, rm_8_day_int_df[rm_8_day_int_df$tagname %i
 high_act_bird <- rbind(high_act_bird, rm_11_day_int_df[rm_11_day_int_df$tagname %in% high_bird_ids,])
 
 # turn into weekly tables and calc num trans
-high_act_bird$w_start <- week(as.POSIXct(high_act_bird$t1,origin=origin))
+high_act_bird$w_start <- week(as.POSIXct(high_act_bird$t1,origin="1970-01-01"))
 
 
 high_act_bird_sum <- high_act_bird |> nest(data = -w_start) |>
@@ -1919,7 +1919,7 @@ low_act_bird <- rbind(low_act_bird, rm_8_day_int_df[rm_8_day_int_df$tagname %in%
 low_act_bird <- rbind(low_act_bird, rm_11_day_int_df[rm_11_day_int_df$tagname %in% low_bird_ids,])
 
 # turn into weekly tables and calc num trans
-low_act_bird$w_start <- week(as.POSIXct(low_act_bird$t1,origin=origin))
+low_act_bird$w_start <- week(as.POSIXct(low_act_bird$t1,origin="1970-01-01"))
 
 
 low_act_bird_sum <- low_act_bird |> nest(data = -w_start) |>
@@ -1986,7 +1986,7 @@ med_act_bird <- rbind(med_act_bird, rm_8_day_int_df[rm_8_day_int_df$tagname %in%
 med_act_bird <- rbind(med_act_bird, rm_11_day_int_df[rm_11_day_int_df$tagname %in% med_bird_ids,])
 
 # turn into weekly tables and calc num trans
-med_act_bird$w_start <- week(as.POSIXct(med_act_bird$t1,origin=origin))
+med_act_bird$w_start <- week(as.POSIXct(med_act_bird$t1,origin="1970-01-01"))
 
 
 med_act_bird_sum <- med_act_bird |> nest(data = -w_start) |>
@@ -2055,7 +2055,7 @@ high_act_bird <- rbind(high_act_bird, rm_8_day_int_df[rm_8_day_int_df$tagname %i
 high_act_bird <- rbind(high_act_bird, rm_11_day_int_df[rm_11_day_int_df$tagname %in% high_bird_ids,])
 
 # turn into weekly tables and calc num trans
-high_act_bird$w_start <- week(as.POSIXct(high_act_bird$t1,origin=origin))
+high_act_bird$w_start <- week(as.POSIXct(high_act_bird$t1,origin="1970-01-01"))
 
 
 high_act_bird_sum <- high_act_bird |> nest(data = -w_start) |>
@@ -2121,10 +2121,10 @@ low_act_bird <- rbind(low_act_bird, rm_8_day_int_df[rm_8_day_int_df$tagname %in%
 low_act_bird <- rbind(low_act_bird, rm_11_day_int_df[rm_11_day_int_df$tagname %in% low_bird_ids,])
 
 # turn into daily tables and calc num trans
-date_to_day <- data.frame(cbind(unique(date(as.POSIXct(low_act_bird$t1,origin=origin))),1:length(unique(date(as.POSIXct(low_act_bird$t1,origin=origin))))))
+date_to_day <- data.frame(cbind(unique(date(as.POSIXct(low_act_bird$t1,origin="1970-01-01"))),1:length(unique(date(as.POSIXct(low_act_bird$t1,origin=origin))))))
 colnames(date_to_day) <- c("date","day")
-low_act_bird$w_start <- week(as.POSIXct(low_act_bird$t1,origin=origin))
-low_act_bird$date <- date(as.POSIXct(low_act_bird$t1,origin=origin))
+low_act_bird$w_start <- week(as.POSIXct(low_act_bird$t1,origin="1970-01-01"))
+low_act_bird$date <- date(as.POSIXct(low_act_bird$t1,origin="1970-01-01"))
 low_act_bird <- data.frame(merge(low_act_bird,date_to_day, by.x="date",by.y="date"))
 
 overall_day_summary <- data.frame(merge(overall_day_summary,overall_org_table[,c(1,4)], by="tagname"))
@@ -2169,8 +2169,8 @@ med_act_bird <- rbind(med_act_bird, rm_8_day_int_df[rm_8_day_int_df$tagname %in%
 med_act_bird <- rbind(med_act_bird, rm_11_day_int_df[rm_11_day_int_df$tagname %in% med_bird_ids,])
 
 # turn into daily tables and calc num trans
-med_act_bird$date <- date(as.POSIXct(med_act_bird$t1,origin=origin))
-med_act_bird$w_start <- week(as.POSIXct(med_act_bird$t1,origin=origin))
+med_act_bird$date <- date(as.POSIXct(med_act_bird$t1,origin="1970-01-01"))
+med_act_bird$w_start <- week(as.POSIXct(med_act_bird$t1,origin="1970-01-01"))
 med_act_bird <- data.frame(merge(med_act_bird,date_to_day, by.x="date",by.y="date"))
 
 
@@ -2215,8 +2215,8 @@ high_act_bird <- rbind(high_act_bird, rm_8_day_int_df[rm_8_day_int_df$tagname %i
 high_act_bird <- rbind(high_act_bird, rm_11_day_int_df[rm_11_day_int_df$tagname %in% high_bird_ids,])
 
 # turn into daily tables and calc num trans
-high_act_bird$date <- date(as.POSIXct(high_act_bird$t1,origin=origin))
-high_act_bird$w_start <- week(as.POSIXct(high_act_bird$t1,origin=origin))
+high_act_bird$date <- date(as.POSIXct(high_act_bird$t1,origin="1970-01-01"))
+high_act_bird$w_start <- week(as.POSIXct(high_act_bird$t1,origin="1970-01-01"))
 high_act_bird <- data.frame(merge(high_act_bird,date_to_day, by.x="date",by.y="date"))
 
 high_act_bird_sum <- high_act_bird |> nest(data = -c(day,w_start)) |>
