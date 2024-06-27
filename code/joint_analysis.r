@@ -904,7 +904,7 @@ library(lmerTest)
 
 id_lookup <- unique(overall_org_table[,c(1,3)])
 
-day_tb_df$week <- week(day_tb_df$interval1)
+day_tb_df$week <- week(as.POSIXct(day_tb_df$interval1,origin="1970-01-01"))
 
 day_bottom_sum <- day_tb_df |>
   group_by(tagname,week) |>
