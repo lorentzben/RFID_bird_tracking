@@ -33,6 +33,8 @@ if [ ! -d "../figures/all_day" ]; then
     mkdir -p ../figures/all_day/room8
     mkdir -p ../figures/all_day/room11
     mkdir -p ../figures/all_day/all_rooms
+    mkdir -p ../figures/all_day/model_diag
+    mkdir -p ../figures/all_day/transition_plots
 fi
 
 
@@ -55,21 +57,21 @@ fi
 
 # Run Room 2 Individual Analysis
 
-# singularity run docker://lorentzb/rfid:2.1 Rscript room_2_analysis.r > ../logs/"$TS"_rm2.log
+singularity run docker://lorentzb/rfid:2.1 Rscript room_2_analysis.r > ../logs/"$TS"_rm2.log
 
 # Run Room 3 Individual Analysis 
 
-# singularity run docker://lorentzb/rfid:2.1 Rscript room_3_analysis.r > ../logs/"$TS"_rm3.log
+singularity run docker://lorentzb/rfid:2.1 Rscript room_3_analysis.r > ../logs/"$TS"_rm3.log
 
 # Run Room 8 Individual Analysis
 
-#singularity run docker://lorentzb/rfid:2.1 Rscript room_8_analysis.r > ../logs/"$TS"_rm8.log
+singularity run docker://lorentzb/rfid:2.1 Rscript room_8_analysis.r > ../logs/"$TS"_rm8.log
 
-# # Run Room 11 Individual Analysis
+# Run Room 11 Individual Analysis
 
-# singularity run docker://lorentzb/rfid:2.1 Rscript room_11_analysis.r > ../logs/"$TS"_rm11.log
+singularity run docker://lorentzb/rfid:2.1 Rscript room_11_analysis.r > ../logs/"$TS"_rm11.log
 
-# # Run All Room Joint Analysis
+# Run All Room Joint Analysis
 
 singularity run docker://lorentzb/rfid:2.1 Rscript joint_analysis.r > ../logs/"$TS"_joint.log
 
