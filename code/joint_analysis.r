@@ -1207,8 +1207,8 @@ m4 <- lmer(keelScore ~ activity + (1|rm), tmp2)
 summary(m4)
 anova(m4)
 
-# TODO implement kruskal
-kruskal.test()
+# # TODO implement kruskal
+# kruskal.test()
 
 m4_means <- emmeans(m4, specs=list( actMean = ~activity))
 
