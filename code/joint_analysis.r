@@ -1226,10 +1226,11 @@ kruskal.test(keel_score ~ activity, overall_day_summary_w_keel)
 
 m5 <- aov(keel_score ~ activity, overall_day_summary_w_keel)
 summary(m5)
+m5.res <- resid(m5)
 
 png("../figures/all_day/model_diag/keel_score_qq.png")
-qqnorm(m5)
-qqline(m5)
+qqnorm(m5.res)
+qqline(m5.res)
 dev.off()
 
 m5_means <- emmeans(m5, specs=list( actMean = ~activity))
