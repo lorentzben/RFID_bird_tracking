@@ -75,4 +75,8 @@ singularity run docker://lorentzb/rfid:2.1 Rscript room_11_analysis.r > ../logs/
 
 singularity run docker://lorentzb/rfid:2.1 Rscript joint_analysis.r > ../logs/"$TS"_joint.log
 
+# Run Social Network Analysis
+
+singularity run docker://lorentzb/rfid:2.1 Rscript social_network.r > ../logs/"$TS"_network.log
+
 echo "Script finished"

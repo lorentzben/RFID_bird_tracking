@@ -89,7 +89,16 @@ dev.off()
 
 rm_2.degree <- sna::degree(rm_2_net, gmode="graph")
 rm_2.closeness <- sna::closeness(rm_2_net, gmode="graph")
-rm_2.betweenness <- sna::closeness(rm_2_net, gmode="graph")
+rm_2.betweenness <- sna::betweenness(rm_2_net, gmode="graph")
+
+rm_2_all <- data.frame(network.vertex.names(rm_2_net),rm_2.degree,rm_2.closeness,rm_2.betweenness)
+colnames(rm_2_all) <- c("tagname","degree","closeness","betweenness")
+rm_2_all <- merge(rm_2_act_class_quart[,c(1,3)],rm_2_all)
+
+(rm_2_all.low <- summary(rm_2_all[rm_2_all$activity == "low",][,c(3:5)]))
+(rm_2_all.med <-summary(rm_2_all[rm_2_all$activity == "medium",][,c(3:5)]))
+(rm_2_all.high <-summary(rm_2_all[rm_2_all$activity == "high",][,c(3:5)]))
+(rm_2_all.overall <- summary(rm_2_all[,c(3:5)]))
 
 png("../figures/all_day/rm_2_graph_characteristics.png")
 {par(mfrow=c(1,3))
@@ -146,7 +155,16 @@ dev.off()
 
 rm_3.degree <- sna::degree(rm_3_net, gmode="graph")
 rm_3.closeness <- sna::closeness(rm_3_net, gmode="graph")
-rm_3.betweenness <- sna::closeness(rm_3_net, gmode="graph")
+rm_3.betweenness <- sna::betweenness(rm_3_net, gmode="graph")
+
+rm_3_all <- data.frame(network.vertex.names(rm_3_net),rm_3.degree,rm_3.closeness,rm_3.betweenness)
+colnames(rm_3_all) <- c("tagname","degree","closeness","betweenness")
+rm_3_all <- merge(rm_3_act_class_quart[,c(1,3)],rm_3_all)
+
+(rm_3_all.low <- summary(rm_3_all[rm_3_all$activity == "low",][,c(3:5)]))
+(rm_3_all.med <-summary(rm_3_all[rm_3_all$activity == "medium",][,c(3:5)]))
+(rm_3_all.high <-summary(rm_3_all[rm_3_all$activity == "high",][,c(3:5)]))
+(rm_3_all.overall <- summary(rm_3_all[,c(3:5)]))
 
 png("../figures/all_day/rm_3_graph_characteristics.png")
 {par(mfrow=c(1,3))
@@ -203,7 +221,16 @@ dev.off()
 
 rm_8.degree <- sna::degree(rm_8_net, gmode="graph")
 rm_8.closeness <- sna::closeness(rm_8_net, gmode="graph")
-rm_8.betweenness <- sna::closeness(rm_8_net, gmode="graph")
+rm_8.betweenness <- sna::betweenness(rm_8_net, gmode="graph")
+
+rm_8_all <- data.frame(network.vertex.names(rm_8_net),rm_8.degree,rm_8.closeness,rm_8.betweenness)
+colnames(rm_8_all) <- c("tagname","degree","closeness","betweenness")
+rm_8_all <- merge(rm_8_act_class_quart[,c(1,3)],rm_8_all)
+
+(rm_8_all.low <- summary(rm_8_all[rm_8_all$activity == "low",][,c(3:5)]))
+(rm_8_all.med <-summary(rm_8_all[rm_8_all$activity == "medium",][,c(3:5)]))
+(rm_8_all.high <-summary(rm_8_all[rm_8_all$activity == "high",][,c(3:5)]))
+(rm_8_all.overall <- summary(rm_8_all[,c(3:5)]))
 
 png("../figures/all_day/rm_8_graph_characteristics.png")
 {par(mfrow=c(1,3))
@@ -261,7 +288,16 @@ dev.off()
 
 rm_11.degree <- sna::degree(rm_11_net, gmode="graph")
 rm_11.closeness <- sna::closeness(rm_11_net, gmode="graph")
-rm_11.betweenness <- sna::closeness(rm_11_net, gmode="graph")
+rm_11.betweenness <- sna::betweenness(rm_11_net, gmode="graph")
+
+rm_11_all <- data.frame(network.vertex.names(rm_11_net),rm_11.degree,rm_11.closeness,rm_11.betweenness)
+colnames(rm_11_all) <- c("tagname","degree","closeness","betweenness")
+rm_11_all <- merge(rm_11_act_class_quart[,c(1,3)],rm_11_all)
+
+(rm_11_all.low <- summary(rm_11_all[rm_11_all$activity == "low",][,c(3:5)]))
+(rm_11_all.med <-summary(rm_11_all[rm_11_all$activity == "medium",][,c(3:5)]))
+(rm_11_all.high <-summary(rm_11_all[rm_11_all$activity == "high",][,c(3:5)]))
+(rm_11_all.overall <- summary(rm_11_all[,c(3:5)]))
 
 png("../figures/all_day/rm_11_graph_characteristics.png")
 {par(mfrow=c(1,3))
