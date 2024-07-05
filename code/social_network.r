@@ -265,6 +265,8 @@ m4 <- aov(degree ~ activity, rm_3_all)
 summary(m4)
 m4.res <- resid(m4)
 
+(tukey_hsd(m4))
+
 # generate and save residual plot of model to check assumptions
 
 png("../figures/all_day/model_diag/rm3_deg_mean_resid.png")
@@ -286,6 +288,8 @@ actMeans = ~activity))
 m5 <- aov(closeness ~ activity, rm_3_all)
 summary(m5)
 m5.res <- resid(m5)
+
+(tukey_hsd(m5))
 
 # generate and save residual plot of model to check assumptions
 
@@ -478,14 +482,14 @@ dev.off()
 m9.rm8.means <- emmeans(m9, specs=list(
 actMeans = ~activity))
 
-#(m7.krusk <- kruskal.test(degree ~ activity, rm_8_all))
-#(m8.krusk <- kruskal.test(closeness ~ activity, rm_8_all))
-(m9.krusk <- kruskal.test(betweenness ~ activity, rm_8_all))
+(m7.krusk <- kruskal.test(degree ~ activity, rm_8_all))
+(m8.krusk <- kruskal.test(closeness ~ activity, rm_8_all))
+#(m9.krusk <- kruskal.test(betweenness ~ activity, rm_8_all))
 
 
-#(dunn_test(rm_8_all, degree ~ activity))
-#(dunn_test(rm_8_all, closeness ~ activity))
-(dunn_test(rm_8_all,betweenness ~ activity))
+(dunn_test(rm_8_all, degree ~ activity))
+(dunn_test(rm_8_all, closeness ~ activity))
+#(dunn_test(rm_8_all,betweenness ~ activity))
 
 png("../figures/all_day/rm_8_graph_characteristics.png")
 {par(mfrow=c(1,3))
