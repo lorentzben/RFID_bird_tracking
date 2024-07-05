@@ -100,6 +100,38 @@ rm_2_all <- merge(rm_2_act_class_quart[,c(1,3)],rm_2_all)
 (rm_2_all.high <-summary(rm_2_all[rm_2_all$activity == "high",][,c(3:5)]))
 (rm_2_all.overall <- summary(rm_2_all[,c(3:5)]))
 
+# # TODO implement ANVOA/Stats for centrality measurements 
+
+# m1.bottom.means <- emmeans(m1, specs=list(weekMeans = ~weekFac,
+# actMeans = ~activity,
+# jointMeans=~weekFac:activity))
+
+ 
+# # interaction plot of week on x
+# png("../figures/all_day/model_diag/bottom_interaction_act_week.png")
+# emmip(m1.bottom.means$jointMeans, activity~weekFac) + 
+# xlab("Age (Weeks)") + ylab("Predicted Proportion of Time in Zone") + 
+# scale_x_discrete(labels=c("10" = "34", 
+#                           "11" = "35",
+#                           "12" = "36",
+#                           "13" = "37",
+#                           "14" = "38",
+#                           "15" = "39",
+#                           "16" = "40",
+#                           "17" = "41",
+#                           "18" = "42")) +
+# scale_color_manual("Activity Level",
+#   values=c("low" ="#F8766D","medium"="#00BA38","high"="#619CFF"),
+#   breaks=c("low","medium","high"),
+#   labels=c("Low","Medium","High")) +
+# labs(title="Estimated Prop. Time Spent in Bottom Zone by Activity Level")
+# dev.off()
+
+# # interaction plot of activity on x
+# png("../figures/all_day/model_diag/bottom_interaction_week_act.png")
+# emmip(m1.bottom.means$jointMeans, weekFac~activity)
+# dev.off()
+
 png("../figures/all_day/rm_2_graph_characteristics.png")
 {par(mfrow=c(1,3))
   hist(rm_2.degree, main="Room 2 degree",xlab=NA,ylab=NA)
