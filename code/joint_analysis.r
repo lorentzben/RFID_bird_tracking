@@ -2319,7 +2319,7 @@ hab <- ggplot(data=high_act_bird_long, aes(x=d_start, y=value, group=name)) +
   geom_point() + 
   xlab("Age (Weeks)") + ylab("Average Number of transitions into zone") + 
   scale_x_continuous(breaks=high_breaks$d_start, 
-                          labels=as.numeric(high_breaks$w_start)+33) +
+                          labels=as.numeric(high_breaks$w_start)+24) +
   geom_line(aes(color=name))+
   geom_point(aes(color=name))+
   scale_color_manual("Transition into zone",
