@@ -1,6 +1,6 @@
 #### All Room: 2,3,8,11 Social Network Analysis ####
 
-source("./rfid_functions.R")
+#source("./rfid_functions.R")
 
 # Generate Transition tables from Room 11
 library(xts)
@@ -100,13 +100,96 @@ rm_2_all <- merge(rm_2_act_class_quart[,c(1,3)],rm_2_all)
 (rm_2_all.high <-summary(rm_2_all[rm_2_all$activity == "high",][,c(3:5)]))
 (rm_2_all.overall <- summary(rm_2_all[,c(3:5)]))
 
-png("../figures/all_day/rm_2_graph_characteristics.png")
-{par(mfrow=c(1,3))
-  hist(rm_2.degree, main="Room 2 degree",xlab=NA,ylab=NA)
-  hist(rm_2.closeness,main="Room 2 closeness", xlab=NA, ylab=NA)
-  hist(rm_2.betweenness, main="Room 2 betweenness", xlab=NA, ylab=NA)
-}
+library(emmeans)
+library(lme4)
+library(lmerTest)
+library(rstatix)
+
+# check for normality H0 is Normal
+(shapiro.test(rm_2_all$degree))
+(shapiro.test(rm_2_all$closeness))
+(shapiro.test(rm_2_all$betweenness)) 
+
+# check for equal variance H0 equal varianace
+(bartlett.test(degree ~ activity, data=rm_2_all))
+(bartlett.test(closeness ~ activity, data=rm_2_all))
+(bartlett.test(betweenness ~ activity, data=rm_2_all))
+
+# Statistical analysis of Nodes measurement of closeness
+m1 <- aov(degree ~ activity, rm_2_all)
+summary(m1)
+m1.res <- resid(m1)
+
+# generate and save residual plot of model to check assumptions
+
+png("../figures/all_day/model_diag/rm2_deg_mean_resid.png")
+plot(fitted(m1),m1.res)
+abline(0,0)
 dev.off()
+
+# generate and save Q-Q normal plot to check assumptions
+
+png("../figures/all_day/model_diag/rm2_deg_mean_qq.png")
+qqnorm(m1.res)
+qqline(m1.res)
+dev.off()
+
+m1.rm2.means <- emmeans(m1, specs=list(
+actMeans = ~activity))
+
+# Statistical analysis of Nodes measurement of closeness
+m2 <- aov(closeness ~ activity, rm_2_all)
+summary(m2)
+m2.res <- resid(m2)
+
+# generate and save residual plot of model to check assumptions
+
+png("../figures/all_day/model_diag/rm2_clo_mean_resid.png")
+plot(fitted(m2),m2.res)
+abline(0,0)
+dev.off()
+
+# generate and save Q-Q normal plot to check assumptions
+
+png("../figures/all_day/model_diag/rm2_clo_mean_qq.png")
+qqnorm(m2.res)
+qqline(m2.res)
+dev.off()
+
+m2.rm2.means <- emmeans(m2, specs=list(
+actMeans = ~activity))
+
+# Statistical analysis of Nodes measurement of closeness
+m3 <- aov(betweenness ~ activity, rm_2_all)
+summary(m3)
+m3.res <- resid(m3)
+
+# generate and save residual plot of model to check assumptions
+
+png("../figures/all_day/model_diag/rm2_bet_mean_resid.png")
+plot(fitted(m3),m3.res)
+abline(0,0)
+dev.off()
+
+# generate and save Q-Q normal plot to check assumptions
+
+png("../figures/all_day/model_diag/rm2_bet_mean_qq.png")
+qqnorm(m3.res)
+qqline(m3.res)
+dev.off()
+
+m3.rm2.means <- emmeans(m3, specs=list(
+actMeans = ~activity))
+
+(m1.krusk <- kruskal.test(degree ~ activity, rm_2_all))
+(m2.krusk <- kruskal.test(closeness ~ activity, rm_2_all))
+(m3.krusk <- kruskal.test(betweenness ~ activity, rm_2_all))
+
+
+(dunn_test(rm_2_all, degree ~ activity))
+(dunn_test(rm_2_all, closeness ~ activity))
+(dunn_test(rm_2_all,betweenness ~ activity))
+
 
 # read in room 3 tables
 
@@ -165,6 +248,96 @@ rm_3_all <- merge(rm_3_act_class_quart[,c(1,3)],rm_3_all)
 (rm_3_all.med <-summary(rm_3_all[rm_3_all$activity == "medium",][,c(3:5)]))
 (rm_3_all.high <-summary(rm_3_all[rm_3_all$activity == "high",][,c(3:5)]))
 (rm_3_all.overall <- summary(rm_3_all[,c(3:5)]))
+
+
+# check for normality H0 is Normal
+(shapiro.test(rm_3_all$degree))
+(shapiro.test(rm_3_all$closeness))
+(shapiro.test(rm_3_all$betweenness)) 
+
+# check for equal variance H0 equal varianace
+(bartlett.test(degree ~ activity, data=rm_3_all))
+(bartlett.test(closeness ~ activity, data=rm_3_all))
+(bartlett.test(betweenness ~ activity, data=rm_3_all))
+
+# Statistical analysis of Nodes measurement of closeness
+m4 <- aov(degree ~ activity, rm_3_all)
+summary(m4)
+m4.res <- resid(m4)
+
+(tukey_hsd(m4))
+
+# generate and save residual plot of model to check assumptions
+
+png("../figures/all_day/model_diag/rm3_deg_mean_resid.png")
+plot(fitted(m4),m4.res)
+abline(0,0)
+dev.off()
+
+# generate and save Q-Q normal plot to check assumptions
+
+png("../figures/all_day/model_diag/rm3_deg_mean_qq.png")
+qqnorm(m4.res)
+qqline(m4.res)
+dev.off()
+
+m4.rm3.means <- emmeans(m4, specs=list(
+actMeans = ~activity))
+
+# Statistical analysis of Nodes measurement of closeness
+m5 <- aov(closeness ~ activity, rm_3_all)
+summary(m5)
+m5.res <- resid(m5)
+
+(tukey_hsd(m5))
+
+# generate and save residual plot of model to check assumptions
+
+png("../figures/all_day/model_diag/rm3_clo_mean_resid.png")
+plot(fitted(m5),m5.res)
+abline(0,0)
+dev.off()
+
+# generate and save Q-Q normal plot to check assumptions
+
+png("../figures/all_day/model_diag/rm3_clo_mean_qq.png")
+qqnorm(m5.res)
+qqline(m5.res)
+dev.off()
+
+m5.rm3.means <- emmeans(m5, specs=list(
+actMeans = ~activity))
+
+# Statistical analysis of Nodes measurement of closeness
+m6 <- aov(betweenness ~ activity, rm_3_all)
+summary(m6)
+m6.res <- resid(m6)
+
+# generate and save residual plot of model to check assumptions
+
+png("../figures/all_day/model_diag/rm3_bet_mean_resid.png")
+plot(fitted(m6),m6.res)
+abline(0,0)
+dev.off()
+
+# generate and save Q-Q normal plot to check assumptions
+
+png("../figures/all_day/model_diag/rm3_bet_mean_qq.png")
+qqnorm(m6.res)
+qqline(m6.res)
+dev.off()
+
+m6.rm3.means <- emmeans(m6, specs=list(
+actMeans = ~activity))
+
+#(m4.krusk <- kruskal.test(degree ~ activity, rm_3_all))
+#(m5.krusk <- kruskal.test(closeness ~ activity, rm_3_all))
+(m6.krusk <- kruskal.test(betweenness ~ activity, rm_3_all))
+
+
+#(dunn_test(rm_3_all, degree ~ activity))
+#(dunn_test(rm_3_all, closeness ~ activity))
+(dunn_test(rm_3_all,betweenness ~ activity))
 
 png("../figures/all_day/rm_3_graph_characteristics.png")
 {par(mfrow=c(1,3))
@@ -232,6 +405,92 @@ rm_8_all <- merge(rm_8_act_class_quart[,c(1,3)],rm_8_all)
 (rm_8_all.high <-summary(rm_8_all[rm_8_all$activity == "high",][,c(3:5)]))
 (rm_8_all.overall <- summary(rm_8_all[,c(3:5)]))
 
+
+# check for normality H0 is Normal
+(shapiro.test(rm_8_all$degree))
+(shapiro.test(rm_8_all$closeness))
+(shapiro.test(rm_8_all$betweenness)) 
+
+# check for equal variance H0 equal varianace
+(bartlett.test(degree ~ activity, data=rm_8_all))
+(bartlett.test(closeness ~ activity, data=rm_8_all))
+(bartlett.test(betweenness ~ activity, data=rm_8_all))
+
+# Statistical analysis of Nodes measurement of closeness
+m7 <- aov(degree ~ activity, rm_8_all)
+summary(m7)
+m7.res <- resid(m7)
+
+# generate and save residual plot of model to check assumptions
+
+png("../figures/all_day/model_diag/rm8_deg_mean_resid.png")
+plot(fitted(m7),m7.res)
+abline(0,0)
+dev.off()
+
+# generate and save Q-Q normal plot to check assumptions
+
+png("../figures/all_day/model_diag/rm8_deg_mean_qq.png")
+qqnorm(m7.res)
+qqline(m7.res)
+dev.off()
+
+m7.rm8.means <- emmeans(m7, specs=list(
+actMeans = ~activity))
+
+# Statistical analysis of Nodes measurement of closeness
+m8 <- aov(closeness ~ activity, rm_8_all)
+summary(m8)
+m8.res <- resid(m8)
+
+# generate and save residual plot of model to check assumptions
+
+png("../figures/all_day/model_diag/rm8_clo_mean_resid.png")
+plot(fitted(m8),m8.res)
+abline(0,0)
+dev.off()
+
+# generate and save Q-Q normal plot to check assumptions
+
+png("../figures/all_day/model_diag/rm8_clo_mean_qq.png")
+qqnorm(m8.res)
+qqline(m8.res)
+dev.off()
+
+m8.rm8.means <- emmeans(m8, specs=list(
+actMeans = ~activity))
+
+# Statistical analysis of Nodes measurement of closeness
+m9 <- aov(betweenness ~ activity, rm_8_all)
+summary(m9)
+m9.res <- resid(m9)
+
+# generate and save residual plot of model to check assumptions
+
+png("../figures/all_day/model_diag/rm8_bet_mean_resid.png")
+plot(fitted(m9),m9.res)
+abline(0,0)
+dev.off()
+
+# generate and save Q-Q normal plot to check assumptions
+
+png("../figures/all_day/model_diag/rm8_bet_mean_qq.png")
+qqnorm(m9.res)
+qqline(m9.res)
+dev.off()
+
+m9.rm8.means <- emmeans(m9, specs=list(
+actMeans = ~activity))
+
+(m7.krusk <- kruskal.test(degree ~ activity, rm_8_all))
+(m8.krusk <- kruskal.test(closeness ~ activity, rm_8_all))
+#(m9.krusk <- kruskal.test(betweenness ~ activity, rm_8_all))
+
+
+(dunn_test(rm_8_all, degree ~ activity))
+(dunn_test(rm_8_all, closeness ~ activity))
+#(dunn_test(rm_8_all,betweenness ~ activity))
+
 png("../figures/all_day/rm_8_graph_characteristics.png")
 {par(mfrow=c(1,3))
   hist(rm_8.degree, main="Room 8 degree",xlab=NA,ylab=NA)
@@ -298,6 +557,92 @@ rm_11_all <- merge(rm_11_act_class_quart[,c(1,3)],rm_11_all)
 (rm_11_all.med <-summary(rm_11_all[rm_11_all$activity == "medium",][,c(3:5)]))
 (rm_11_all.high <-summary(rm_11_all[rm_11_all$activity == "high",][,c(3:5)]))
 (rm_11_all.overall <- summary(rm_11_all[,c(3:5)]))
+
+# check for normality H0 is Normal
+(shapiro.test(rm_11_all$degree))
+(shapiro.test(rm_11_all$closeness))
+(shapiro.test(rm_11_all$betweenness)) 
+
+# check for equal variance H0 equal varianace
+(bartlett.test(degree ~ activity, data=rm_11_all))
+(bartlett.test(closeness ~ activity, data=rm_11_all))
+(bartlett.test(betweenness ~ activity, data=rm_11_all))
+
+# Statistical analysis of Nodes measurement of closeness
+m10 <- aov(degree ~ activity, rm_11_all)
+summary(m10)
+m10.res <- resid(m10)
+
+# generate and save residual plot of model to check assumptions
+
+png("../figures/all_day/model_diag/rm11_deg_mean_resid.png")
+plot(fitted(m10),m10.res)
+abline(0,0)
+dev.off()
+
+# generate and save Q-Q normal plot to check assumptions
+
+png("../figures/all_day/model_diag/rm11_deg_mean_qq.png")
+qqnorm(m10.res)
+qqline(m10.res)
+dev.off()
+
+m10.rm11.means <- emmeans(m10, specs=list(
+actMeans = ~activity))
+
+# Statistical analysis of Nodes measurement of closeness
+m11 <- aov(closeness ~ activity, rm_11_all)
+summary(m11)
+m11.res <- resid(m11)
+
+# generate and save residual plot of model to check assumptions
+
+png("../figures/all_day/model_diag/rm11_clo_mean_resid.png")
+plot(fitted(m11),m11.res)
+abline(0,0)
+dev.off()
+
+# generate and save Q-Q normal plot to check assumptions
+
+png("../figures/all_day/model_diag/rm11_clo_mean_qq.png")
+qqnorm(m11.res)
+qqline(m11.res)
+dev.off()
+
+m11.rm11.means <- emmeans(m11, specs=list(
+actMeans = ~activity))
+
+# Statistical analysis of Nodes measurement of closeness
+m12 <- aov(betweenness ~ activity, rm_11_all)
+summary(m12)
+m12.res <- resid(m12)
+
+# generate and save residual plot of model to check assumptions
+
+png("../figures/all_day/model_diag/rm11_bet_mean_resid.png")
+plot(fitted(m12),m12.res)
+abline(0,0)
+dev.off()
+
+# generate and save Q-Q normal plot to check assumptions
+
+png("../figures/all_day/model_diag/rm11_bet_mean_qq.png")
+qqnorm(m12.res)
+qqline(m12.res)
+dev.off()
+
+m12.rm11.means <- emmeans(m12, specs=list(
+actMeans = ~activity))
+
+(m10.krusk <- kruskal.test(degree ~ activity, rm_11_all))
+#(m11.krusk <- kruskal.test(closeness ~ activity, rm_11_all))
+(m12.krusk <- kruskal.test(betweenness ~ activity, rm_11_all))
+
+
+(dunn_test(rm_11_all, degree ~ activity))
+#(dunn_test(rm_11_all, closeness ~ activity))
+(dunn_test(rm_11_all,betweenness ~ activity))
+
 
 png("../figures/all_day/rm_11_graph_characteristics.png")
 {par(mfrow=c(1,3))
