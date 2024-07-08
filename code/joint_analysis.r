@@ -2266,6 +2266,7 @@ low_breaks <- rbind(low_act_bird_long[1,],low_act_bird_long[which(low_act_bird_l
 lab <- ggplot(data=low_act_bird_long, aes(x=d_start, y=value, group=name)) +
   geom_line()+
   geom_point() + 
+  theme_bw() + 
   xlab("Age (Weeks)") + ylab("Number of Average transitions into zone") + 
   scale_x_continuous(breaks=low_breaks$d_start, 
                           labels=as.numeric(low_breaks$w_start)+24) +
@@ -2291,6 +2292,7 @@ med_breaks <- rbind(med_act_bird_long[1,],med_act_bird_long[which(med_act_bird_l
 mab <- ggplot(data=med_act_bird_long, aes(x=d_start, y=value, group=name)) +
   geom_line()+
   geom_point() + 
+  theme_bw() + 
   xlab("Age (Weeks)") + ylab("Average Number of transitions into zone") + 
   scale_x_continuous(breaks=med_breaks$d_start, 
                           labels=as.numeric(med_breaks$w_start)+24) +
@@ -2316,7 +2318,8 @@ high_breaks <- rbind(high_act_bird_long[1,],high_act_bird_long[which(high_act_bi
 
 hab <- ggplot(data=high_act_bird_long, aes(x=d_start, y=value, group=name)) +
   geom_line()+
-  geom_point() + 
+  geom_point() +
+  theme_bw() +  
   xlab("Age (Weeks)") + ylab("Average Number of transitions into zone") + 
   scale_x_continuous(breaks=high_breaks$d_start, 
                           labels=as.numeric(high_breaks$w_start)+24) +
