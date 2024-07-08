@@ -2283,7 +2283,7 @@ lab <- ggplot(data=low_act_bird_long, aes(x=d_start, y=value, group=name)) +
   ylim(0,25)
 
 
-ggsave(paste0("../figures/all_day/transition_plots/least_active_birds_average_trans_per_day",".png"), lab)
+ggsave(paste0("../figures/all_day/transition_plots/least_active_birds_average_trans_per_day",".png"), lab, width = 5, height = 3, units = "in")
 
 
 med_breaks <- rbind(med_act_bird_long[1,],med_act_bird_long[which(med_act_bird_long$w_start != dplyr::lag(med_act_bird_long$w_start)),])
@@ -2309,7 +2309,7 @@ mab <- ggplot(data=med_act_bird_long, aes(x=d_start, y=value, group=name)) +
   ylim(0,25)
 
 
-ggsave(paste0("../figures/all_day/transition_plots/medium_active_birds_average_trans_per_day",".png"), mab)
+ggsave(paste0("../figures/all_day/transition_plots/medium_active_birds_average_trans_per_day",".png"), mab, width = 5, height = 3, units = "in")
 
 
 high_breaks <- rbind(high_act_bird_long[1,],high_act_bird_long[which(high_act_bird_long$w_start != dplyr::lag(high_act_bird_long$w_start)),])
@@ -2336,6 +2336,6 @@ hab <- ggplot(data=high_act_bird_long, aes(x=d_start, y=value, group=name)) +
   ylim(0,25)
 
 
-ggsave(paste0("../figures/all_day/transition_plots/most_active_birds_average_trans_per_day",".png"), hab)
+ggsave(paste0("../figures/all_day/transition_plots/most_active_birds_average_trans_per_day",".png"), hab, width = 5, height = 3, units = "in")
 
 ### END make daily plots ###
