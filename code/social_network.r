@@ -82,7 +82,7 @@ rm_2_act_class_quart$color <- ifelse(rm_2_act_class_quart$activity=="low","#F876
 png("../figures/all_day/rm_2_median_netmap_quart.png")
 plot(rm_2_net, main="Room 2 Social Network Quartile", displaylabels=tagnames, vertex.col=rm_2_act_class_quart$color)
 legend("topleft",
-       legend = c("low","medium","high"),
+       legend = c("Lo","Me","Hi"),
        fill = c("#F8766D","#00BA38","#619CFF"),       # Color of the squares
        border = "black") # Color of the border of the squares
 dev.off()
@@ -231,7 +231,7 @@ rm_3_act_class_quart$color <- ifelse(rm_3_act_class_quart$activity=="low","#F876
 png("../figures/all_day/rm_3_median_netmap_quart.png")
 plot(rm_3_net, main="Room 3 Social Network Quartile", displaylabels=tagnames, vertex.col=rm_3_act_class_quart$color)
 legend("topleft",
-       legend = c("low","medium","high"),
+       legend = c("Lo","Me","Hi"),
        fill = c("#F8766D","#00BA38","#619CFF"),       # Color of the squares
        border = "black") # Color of the border of the squares
 dev.off()
@@ -387,7 +387,7 @@ rm_8_act_class_quart$color <- ifelse(rm_8_act_class_quart$activity=="low","#F876
 png("../figures/all_day/rm_8_median_netmap_quart.png")
 plot(rm_8_net, main="Room 8 Social Network Quartile", displaylabels=tagnames, vertex.col=rm_8_act_class_quart$color)
 legend("topleft",
-       legend = c("low","medium","high"),
+       legend = c("Lo","Me","Hi"),
        fill = c("#F8766D","#00BA38","#619CFF"),       # Color of the squares
        border = "black") # Color of the border of the squares
 dev.off()
@@ -540,7 +540,7 @@ rm_11_act_class_quart$color <- ifelse(rm_11_act_class_quart$activity=="low","#F8
 png("../figures/all_day/rm_11_median_netmap_quart.png")
 plot(rm_11_net, main="Room 11 Social Network Quartile", displaylabels=tagnames, vertex.col=rm_11_act_class_quart$color)
 legend("topleft",
-       legend = c("low","medium","high"),
+       legend = c("Lo","Me","Hi"),
        fill = c("#F8766D","#00BA38","#619CFF"),       # Color of the squares
        border = "black") # Color of the border of the squares
 dev.off()
