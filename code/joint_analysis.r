@@ -958,8 +958,8 @@ jointMeans=~weekFac:activity))
 
  
 # interaction plot of week on x
-png("../figures/all_day/model_diag/bottom_interaction_act_week.png")
-emmip(m1.bottom.means$jointMeans, activity~weekFac) + 
+#png("../figures/all_day/model_diag/bottom_interaction_act_week.png")
+bottom_act_week <- emmip(m1.bottom.means$jointMeans, activity~weekFac) + 
 theme_bw() + 
 xlab("Age (Weeks)") + ylab("Predicted Proportion of Time in Zone") + 
 scale_x_discrete(labels=c("10" = "34", 
@@ -976,14 +976,30 @@ scale_color_manual("Activity Class",
   breaks=c("high","medium","low"),
   labels=c("Lo","Me","Hi")) +
 labs(title="Estimated Prop. Time Spent in Bottom Zone by Activity Class")
-dev.off()
+ggsave("../figures/all_day/model_diag/bottom_interaction_act_week.png",bottom_act_week, width = 8, height = 5, units = "in")
+#dev.off()
 
 # interaction plot of activity on x
-png("../figures/all_day/model_diag/bottom_interaction_week_act.png")
-emmip(m1.bottom.means$jointMeans, weekFac~activity)
-dev.off()
+#png("../figures/all_day/model_diag/bottom_interaction_week_act.png")
+bottom_week_act <- emmip(m1.bottom.means$jointMeans, weekFac~activity)+ 
+theme_bw() + 
+xlab("Activity Class") + ylab("Predicted Proportion of Time in Zone") + 
+scale_color_discrete(labels=c("10" = "34", 
+                          "11" = "35",
+                          "12" = "36",
+                          "13" = "37",
+                          "14" = "38",
+                          "15" = "39",
+                          "16" = "40",
+                          "17" = "41",
+                          "18" = "42"))+
+scale_x_discrete(labels=c("Lo","Me","Hi")) + 
+labs(title="Estimated Prop. Time Spent in Bottom Zone by Week",color="Week of Life")
+ggsave("../figures/all_day/model_diag/bottom_interaction_week_act.png",bottom_week_act, width = 8, height = 5, units = "in")
+#dev.off()
 
 # Insufficient evidence of interaction 
+
 
 # does the mean time spent in the bottom zone differ between bird activity levels?
 contrast(m1.bottom.means$actMean, method=list(
