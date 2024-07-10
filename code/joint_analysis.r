@@ -2370,7 +2370,7 @@ ave_act_plot <- ggplot(data=act_long, aes(x=d_start, y=value, group=name)) +
   geom_line()+
   geom_point() +
   theme_bw() +  
-  xlab("Age (Weeks)") + ylab("Average Number of Transitions") + 
+  xlab("Age (Weeks)") + ylab("Average Daily Number of Transitions") + 
   scale_x_continuous(breaks=act_breaks$d_start, 
                           labels=as.numeric(act_breaks$w_start)+24) +
   geom_line(aes(color=name))+
@@ -2392,7 +2392,7 @@ ave_act_plot_nt <- ggplot(data=act_long, aes(x=d_start, y=value, group=name)) +
   geom_line()+
   geom_point() +
   theme_bw() +  
-  xlab("Age (Weeks)") + ylab("Average Number of Transitions") + 
+  xlab("Age (Weeks)") + ylab("Average Daily Number of Transitions") + 
   scale_x_continuous(breaks=act_breaks$d_start, 
                           labels=as.numeric(act_breaks$w_start)+24) +
   geom_line(aes(color=name))+
