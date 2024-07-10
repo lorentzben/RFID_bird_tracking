@@ -2382,7 +2382,7 @@ ave_act_plot <- ggplot(data=act_long, aes(x=d_start, y=value, group=name)) +
   scale_fill_discrete("Activity Class",
                       breaks=c("Hi","Me","Lo"), 
                       labels=c("Hi","Me","Lo"))+
-  labs(title=paste("Average Daily Transitions (n=",(length(high_bird_ids)+length(low_bird_ids)+length(med_bird_ids)),")"))+
+  labs(title=paste("Average Daily Transitions (n= ",(length(high_bird_ids)+length(low_bird_ids)+length(med_bird_ids)),")"))+
   ylim(0,50)
 
 
