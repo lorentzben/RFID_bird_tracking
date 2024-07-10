@@ -2339,3 +2339,72 @@ hab <- ggplot(data=high_act_bird_long, aes(x=d_start, y=value, group=name)) +
 ggsave(paste0("../figures/all_day/transition_plots/most_active_birds_average_trans_per_day",".png"), hab, width = 8, height = 5, units = "in")
 
 ### END make daily plots ###
+
+### Start make combinded daily plots ### 
+
+low_act <- cbind(rowSums(low_act_bird_ave[,1:3]),low_act_bird_ave[,4:5])
+colnames(low_act) <- c('Lo','d_start', 'w_start')
+
+med_act <- cbind(rowSums(med_act_bird_ave[,1:3]),med_act_bird_ave[,4:5])
+colnames(med_act) <- c('Me','d_start', 'w_start')
+
+high_act <- cbind(rowSums(high_act_bird_ave[,1:3]),high_act_bird_ave[,4:5])
+colnames(high_act) <- c('Hi','d_start', 'w_start')
+
+act_short <- merge(merge(low_act,med_act),high_act)
+
+act_long <- pivot_longer(act_short,col=c("Lo","Me","Hi"))
+
+act_long$d_start <- as.numeric(high_act_bird_long$d_start)
+act_long$w_start <- as.numeric(high_act_bird_long$w_start)
+act_long$name <- factor(act_long$name, levels=c("Lo","Me","Hi"))
+
+print("Average of Average daily transitions")
+(act <- aggregate(act_long$value, list(act_long$name), FUN=mean) )
+print("and median of average daily transitions")
+(med_act <- aggregate(act_long$value, list(act_long$name), FUN=median))
+
+act_breaks <- rbind(act_long[1,],act_long[which(act_long$w_start != dplyr::lag(act_long$w_start)),])
+
+ave_act_plot <- ggplot(data=act_long, aes(x=d_start, y=value, group=name)) +
+  geom_line()+
+  geom_point() +
+  theme_bw() +  
+  xlab("Age (Weeks)") + ylab("Average Number of transitions into zone") + 
+  scale_x_continuous(breaks=act_breaks$d_start, 
+                          labels=as.numeric(act_breaks$w_start)+24) +
+  geom_line(aes(color=name))+
+  geom_point(aes(color=name))+
+  scale_color_manual("Transition into zone",
+                      values=c("Lo" ="#F8766D","Me"="#00BA38","Hi"="#619CFF"),
+                      breaks=c("Lo","Me","Hi"), 
+                      labels=c("Lo","Me","Hi"))+
+  scale_fill_discrete("Transition into zone",
+                      breaks=c("Lo","Me","Hi"), 
+                      labels=c("Lo","Me","Hi"))+
+  labs(title=paste("Average Daily Transitions (n=",length(high_bird_ids)+length(low_bird_ids)+length(med_bird_ids),")"))+
+  ylim(0,50)
+
+
+ggsave(paste0("../figures/all_day/transition_plots/average_trans_per_day_title",".png"), ave_act_plot, width = 8, height = 5, units = "in")
+
+ave_act_plot_nt <- ggplot(data=act_long, aes(x=d_start, y=value, group=name)) +
+  geom_line()+
+  geom_point() +
+  theme_bw() +  
+  xlab("Age (Weeks)") + ylab("Average Number of transitions into zone") + 
+  scale_x_continuous(breaks=act_breaks$d_start, 
+                          labels=as.numeric(act_breaks$w_start)+24) +
+  geom_line(aes(color=name))+
+  geom_point(aes(color=name))+
+  scale_color_manual("Transition into zone",
+                      values=c("Lo" ="#F8766D","Me"="#00BA38","Hi"="#619CFF"),
+                      breaks=c("Lo","Me","Hi"), 
+                      labels=c("Lo","Me","Hi"))+
+  scale_fill_discrete("Transition into zone",
+                      breaks=c("Lo","Me","Hi"), 
+                      labels=c("Lo","Me","Hi"))+
+  ylim(0,50)
+
+
+ggsave(paste0("../figures/all_day/transition_plots/average_trans_per_day",".png"), ave_act_plot_nt, width = 8, height = 5, units = "in")
