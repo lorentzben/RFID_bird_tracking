@@ -2370,19 +2370,19 @@ ave_act_plot <- ggplot(data=act_long, aes(x=d_start, y=value, group=name)) +
   geom_line()+
   geom_point() +
   theme_bw() +  
-  xlab("Age (Weeks)") + ylab("Average Number of transitions into zone") + 
+  xlab("Age (Weeks)") + ylab("Average Number of Transitions") + 
   scale_x_continuous(breaks=act_breaks$d_start, 
                           labels=as.numeric(act_breaks$w_start)+24) +
   geom_line(aes(color=name))+
   geom_point(aes(color=name))+
-  scale_color_manual("Transition into zone",
+  scale_color_manual("Activity Class",
                       values=c("Lo" ="#F8766D","Me"="#00BA38","Hi"="#619CFF"),
-                      breaks=c("Lo","Me","Hi"), 
-                      labels=c("Lo","Me","Hi"))+
-  scale_fill_discrete("Transition into zone",
-                      breaks=c("Lo","Me","Hi"), 
-                      labels=c("Lo","Me","Hi"))+
-  labs(title=paste("Average Daily Transitions (n=",length(high_bird_ids)+length(low_bird_ids)+length(med_bird_ids),")"))+
+                      breaks=c("Hi","Me","Lo"), 
+                      labels=c("Hi","Me","Lo"))+
+  scale_fill_discrete("Activity Class",
+                      breaks=c("Hi","Me","Lo"), 
+                      labels=c("Hi","Me","Lo"))+
+  labs(title=paste("Average Daily Transitions (n=",(length(high_bird_ids)+length(low_bird_ids)+length(med_bird_ids)),")"))+
   ylim(0,50)
 
 
@@ -2392,18 +2392,18 @@ ave_act_plot_nt <- ggplot(data=act_long, aes(x=d_start, y=value, group=name)) +
   geom_line()+
   geom_point() +
   theme_bw() +  
-  xlab("Age (Weeks)") + ylab("Average Number of transitions into zone") + 
+  xlab("Age (Weeks)") + ylab("Average Number of Transitions") + 
   scale_x_continuous(breaks=act_breaks$d_start, 
                           labels=as.numeric(act_breaks$w_start)+24) +
   geom_line(aes(color=name))+
   geom_point(aes(color=name))+
-  scale_color_manual("Transition into zone",
+  scale_color_manual("Activity Class",
                       values=c("Lo" ="#F8766D","Me"="#00BA38","Hi"="#619CFF"),
-                      breaks=c("Lo","Me","Hi"), 
-                      labels=c("Lo","Me","Hi"))+
-  scale_fill_discrete("Transition into zone",
-                      breaks=c("Lo","Me","Hi"), 
-                      labels=c("Lo","Me","Hi"))+
+                      breaks=c("Hi","Me","Lo"), 
+                      labels=c("Hi","Me","Lo"))+
+  scale_fill_discrete("Activity Class",
+                      breaks=c("Hi","Me","Lo"), 
+                      labels=c("Hi","Me","Lo"))+
   ylim(0,50)
 
 
