@@ -970,11 +970,12 @@ scale_x_discrete(labels=c("10" = "34",
                           "16" = "40",
                           "17" = "41",
                           "18" = "42")) +
-scale_color_manual("Activity Level",
+theme_bw() + 
+scale_color_manual("Activity Class",
   values=c("low" ="#F8766D","medium"="#00BA38","high"="#619CFF"),
-  breaks=c("low","medium","high"),
-  labels=c("Low","Medium","High")) +
-labs(title="Estimated Prop. Time Spent in Bottom Zone by Activity Level")
+  breaks=c("high","medium","low"),
+  labels=c("Lo","Me","Hi")) +
+labs(title="Estimated Prop. Time Spent in Bottom Zone by Activity Class")
 dev.off()
 
 # interaction plot of activity on x
@@ -2408,3 +2409,5 @@ ave_act_plot_nt <- ggplot(data=act_long, aes(x=d_start, y=value, group=name)) +
 
 
 ggsave(paste0("../figures/all_day/transition_plots/average_trans_per_day",".png"), ave_act_plot_nt, width = 8, height = 5, units = "in")
+
+### END make combinded daily plots ### 
