@@ -960,6 +960,7 @@ jointMeans=~weekFac:activity))
 # interaction plot of week on x
 png("../figures/all_day/model_diag/bottom_interaction_act_week.png")
 emmip(m1.bottom.means$jointMeans, activity~weekFac) + 
+theme_bw() + 
 xlab("Age (Weeks)") + ylab("Predicted Proportion of Time in Zone") + 
 scale_x_discrete(labels=c("10" = "34", 
                           "11" = "35",
@@ -970,7 +971,6 @@ scale_x_discrete(labels=c("10" = "34",
                           "16" = "40",
                           "17" = "41",
                           "18" = "42")) +
-theme_bw() + 
 scale_color_manual("Activity Class",
   values=c("low" ="#F8766D","medium"="#00BA38","high"="#619CFF"),
   breaks=c("high","medium","low"),
