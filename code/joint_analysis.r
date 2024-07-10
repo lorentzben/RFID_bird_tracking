@@ -1053,9 +1053,6 @@ m2.middle.means <- emmeans(m2, specs=list(weekMeans = ~weekFac,
 actMeans = ~activity,
 jointMeans=~weekFac:activity))
 
-bottom_act_week <- emmip(m1.bottom.means$jointMeans, activity~weekFac) + 
-
-
 
 # interaction plot of week on x
 
@@ -1079,7 +1076,7 @@ labs(title="Estimated Prop. Time Spent in Middle Zone by Activity Class")
 ggsave("../figures/all_day/model_diag/middle_interaction_act_week.png",middle_act_week, width = 8, height = 5, units = "in")
 
 # interaction plot of activity on x
-middle_act_week <- emmip(m2.middle.means$jointMeans, weekFac~activity)
+middle_act_week <- emmip(m2.middle.means$jointMeans, weekFac~activity) +
 theme_bw() + 
 xlab("Activity Class") + ylab("Predicted Proportion of Time in Zone") + 
 scale_color_discrete(labels=c("10" = "34", 
