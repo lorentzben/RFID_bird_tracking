@@ -1053,10 +1053,14 @@ m2.middle.means <- emmeans(m2, specs=list(weekMeans = ~weekFac,
 actMeans = ~activity,
 jointMeans=~weekFac:activity))
 
- 
+bottom_act_week <- emmip(m1.bottom.means$jointMeans, activity~weekFac) + 
+
+
+
 # interaction plot of week on x
-png("../figures/all_day/model_diag/middle_interaction_act_week.png")
-emmip(m2.middle.means$jointMeans, activity~weekFac) + 
+
+middle_act_week <- emmip(m2.middle.means$jointMeans, activity~weekFac) + 
+theme_bw() + 
 xlab("Age (Weeks)") + ylab("Predicted Proportion of Time in Zone") + 
 scale_x_discrete(labels=c("10" = "34", 
                           "11" = "35",
@@ -1067,17 +1071,30 @@ scale_x_discrete(labels=c("10" = "34",
                           "16" = "40",
                           "17" = "41",
                           "18" = "42")) +
-scale_color_manual("Activity Level",
-                  values=c("low" ="#F8766D","medium"="#00BA38","high"="#619CFF"),
-                  breaks=c("low","medium","high"),
-                  labels=c("Low","Medium","High")) +
-labs(title="Estimated Prop. Time Spent in Middle Zone by Activity Level")
-dev.off()
+scale_color_manual("Activity Class",
+  values=c("low" ="#F8766D","medium"="#00BA38","high"="#619CFF"),
+  breaks=c("high","medium","low"),
+  labels=c("Lo","Me","Hi")) +
+labs(title="Estimated Prop. Time Spent in Middle Zone by Activity Class")
+ggsave("../figures/all_day/model_diag/middle_interaction_act_week.png",middle_act_week, width = 8, height = 5, units = "in")
 
 # interaction plot of activity on x
-png("../figures/all_day/model_diag/middle_interaction_week_act.png")
-emmip(m2.middle.means$jointMeans, weekFac~activity)
-dev.off()
+middle_act_week <- emmip(m2.middle.means$jointMeans, weekFac~activity)
+theme_bw() + 
+xlab("Activity Class") + ylab("Predicted Proportion of Time in Zone") + 
+scale_color_discrete(labels=c("10" = "34", 
+                          "11" = "35",
+                          "12" = "36",
+                          "13" = "37",
+                          "14" = "38",
+                          "15" = "39",
+                          "16" = "40",
+                          "17" = "41",
+                          "18" = "42"))+
+scale_x_discrete(labels=c("Lo","Me","Hi")) + 
+labs(title="Estimated Prop. Time Spent in Middle Zone by Week",color="Week of Life")
+ggsave("../figures/all_day/model_diag/middle_interaction_week_act.png",middle_week_act, width = 8, height = 5, units = "in")
+
 
 
 # I don't really see evidence of interaction so we could use marginal means
@@ -1136,8 +1153,9 @@ jointMeans=~weekFac:activity))
 
  
 # interaction plot of week on x
-png("../figures/all_day/model_diag/top_interaction_act_week.png")
-emmip(m3.top.means$jointMeans, activity~weekFac)+ 
+
+top_act_week <- emmip(m3.top.means$jointMeans, activity~weekFac)+ 
+theme_bw() + 
 xlab("Age (Weeks)") + ylab("Predicted Proportion of Time in Zone") + 
 scale_x_discrete(labels=c("10" = "34", 
                           "11" = "35",
@@ -1148,16 +1166,33 @@ scale_x_discrete(labels=c("10" = "34",
                           "16" = "40",
                           "17" = "41",
                           "18" = "42")) +
-scale_color_manual("Activity Level",
+scale_color_manual("Activity Class",
   values=c("low" ="#F8766D","medium"="#00BA38","high"="#619CFF"),
-  breaks=c("low","medium","high"),
-  labels=c("Low","Medium","High")) +
-labs(title="Estimated Prop. Time Spent in Top Zone by Activity Level")
-dev.off()
+  breaks=c("high","medium","low"),
+  labels=c("Lo","Me","Hi")) +
+labs(title="Estimated Prop. Time Spent in Top Zone by Activity Class")
+ggsave("../figures/all_day/model_diag/top_interaction_act_week.png",top_act_week, width = 8, height = 5, units = "in")
+
 
 # interaction plot of activity on x
 png("../figures/all_day/model_diag/top_interaction_week_act.png")
-emmip(m3.top.means$jointMeans, weekFac~activity)
+top_week_act <- emmip(m3.top.means$jointMeans, weekFac~activity) +
+theme_bw() + 
+xlab("Activity Class") + ylab("Predicted Proportion of Time in Zone") + 
+scale_color_discrete(labels=c("10" = "34", 
+                          "11" = "35",
+                          "12" = "36",
+                          "13" = "37",
+                          "14" = "38",
+                          "15" = "39",
+                          "16" = "40",
+                          "17" = "41",
+                          "18" = "42"))+
+scale_x_discrete(labels=c("Lo","Me","Hi")) + 
+labs(title="Estimated Prop. Time Spent in Top Zone by Week",color="Week of Life")
+ggsave("../figures/all_day/model_diag/top_interaction_week_act.png",top_week_act, width = 8, height = 5, units = "in")
+
+
 dev.off()
 
 
