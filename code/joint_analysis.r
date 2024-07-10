@@ -974,7 +974,7 @@ scale_x_discrete(labels=c("10" = "34",
 scale_color_manual("Activity Class",
   values=c("low" ="#F8766D","medium"="#00BA38","high"="#619CFF"),
   breaks=c("high","medium","low"),
-  labels=c("Lo","Me","Hi")) +
+  labels=c("Hi","Me","Lo")) +
 labs(title="Estimated Prop. Time Spent in Bottom Zone by Activity Class")
 ggsave("../figures/all_day/model_diag/bottom_interaction_act_week.png",bottom_act_week, width = 8, height = 5, units = "in")
 #dev.off()
@@ -1071,7 +1071,7 @@ scale_x_discrete(labels=c("10" = "34",
 scale_color_manual("Activity Class",
   values=c("low" ="#F8766D","medium"="#00BA38","high"="#619CFF"),
   breaks=c("high","medium","low"),
-  labels=c("Lo","Me","Hi")) +
+  labels=c("Hi","Me","Lo")) +
 labs(title="Estimated Prop. Time Spent in Middle Zone by Activity Class")
 ggsave("../figures/all_day/model_diag/middle_interaction_act_week.png",middle_act_week, width = 8, height = 5, units = "in")
 
@@ -1166,7 +1166,7 @@ scale_x_discrete(labels=c("10" = "34",
 scale_color_manual("Activity Class",
   values=c("low" ="#F8766D","medium"="#00BA38","high"="#619CFF"),
   breaks=c("high","medium","low"),
-  labels=c("Lo","Me","Hi")) +
+  labels=c("Hi","Me","Lo")) +
 labs(title="Estimated Prop. Time Spent in Top Zone by Activity Class")
 ggsave("../figures/all_day/model_diag/top_interaction_act_week.png",top_act_week, width = 8, height = 5, units = "in")
 
