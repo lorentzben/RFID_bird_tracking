@@ -994,7 +994,7 @@ scale_color_discrete(labels=c("10" = "34",
                           "17" = "41",
                           "18" = "42"))+
 scale_x_discrete(labels=c("Lo","Me","Hi")) + 
-labs(title="Estimated Prop. Time Spent in Bottom Zone by Week",color="Week of Life")
+labs(title="Estimated Prop. Time Spent in Bottom Zone by Week",color="Age (Weeks)")
 ggsave("../figures/all_day/model_diag/bottom_interaction_week_act.png",bottom_week_act, width = 8, height = 5, units = "in")
 #dev.off()
 
@@ -1089,7 +1089,7 @@ scale_color_discrete(labels=c("10" = "34",
                           "17" = "41",
                           "18" = "42"))+
 scale_x_discrete(labels=c("Lo","Me","Hi")) + 
-labs(title="Estimated Prop. Time Spent in Middle Zone by Week",color="Week of Life")
+labs(title="Estimated Prop. Time Spent in Middle Zone by Week",color="Age (Weeks)")
 ggsave("../figures/all_day/model_diag/middle_interaction_week_act.png",middle_week_act, width = 8, height = 5, units = "in")
 
 
@@ -1186,7 +1186,7 @@ scale_color_discrete(labels=c("10" = "34",
                           "17" = "41",
                           "18" = "42"))+
 scale_x_discrete(labels=c("Lo","Me","Hi")) + 
-labs(title="Estimated Prop. Time Spent in Top Zone by Week",color="Week of Life")
+labs(title="Estimated Prop. Time Spent in Top Zone by Week",color="Age (Weeks)")
 ggsave("../figures/all_day/model_diag/top_interaction_week_act.png",top_week_act, width = 8, height = 5, units = "in")
 
 
