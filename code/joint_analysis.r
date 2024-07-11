@@ -641,9 +641,13 @@ low_night <- colMeans(low_act_tb_night[,3:5])
 med_night <- colMeans(med_act_tb_night[,3:5])
 high_night <- colMeans(high_act_tb_night[,3:5])
 
-low_day <- colMeans(low_act_tb_day[,3:5])
-med_day <- colMeans(med_act_tb_day[,3:5])
-high_day <- colMeans(high_act_tb_day[,3:5])
+(low_day <- colMeans(low_act_tb_day[,3:5]))
+(med_day <- colMeans(med_act_tb_day[,3:5]))
+(high_day <- colMeans(high_act_tb_day[,3:5]))
+
+day_tab <- round(rbind(low_day,med_day,high_day)*100,2)
+write.csv(day_tab, "../output/day_table_prop_time.csv", row.names=T)
+
 
 ### END find prop time spent in zone over whole study ###
 
@@ -2459,3 +2463,4 @@ ave_act_plot_nt <- ggplot(data=act_long, aes(x=d_start, y=value, group=name)) +
 ggsave(paste0("../figures/all_day/transition_plots/average_trans_per_day",".png"), ave_act_plot_nt, width = 8, height = 5, units = "in")
 
 ### END make combinded daily plots ### 
+
