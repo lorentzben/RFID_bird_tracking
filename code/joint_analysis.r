@@ -965,7 +965,8 @@ jointMeans=~weekFac:activity))
 #png("../figures/all_day/model_diag/bottom_interaction_act_week.png")
 bottom_act_week <- emmip(m1.bottom.means$jointMeans, activity~weekFac) + 
 theme_bw(base_size=24, base_family='Times New Roman') + 
-#xlab("Age (Weeks)") + ylab("Predicted Proportion of Time in Zone") + 
+#xlab("Age (Weeks)") + ylab("Predicted Proportion of Time in Zone") +
+xlab("") + ylab("") + 
 scale_x_discrete(labels=c("10" = "34", 
                           "11" = "35",
                           "12" = "36",
@@ -988,7 +989,8 @@ ggsave("../figures/all_day/model_diag/bottom_interaction_act_week.png",bottom_ac
 #png("../figures/all_day/model_diag/bottom_interaction_week_act.png")
 bottom_week_act <- emmip(m1.bottom.means$jointMeans, weekFac~activity)+ 
 theme_bw(base_size=24, base_family='Times New Roman') + 
-#xlab("Activity Class") + ylab("Predicted Proportion of Time in Zone") + 
+#xlab("Activity Class") + ylab("Predicted Proportion of Time in Zone") +
+xlab("") + ylab("") + 
 scale_color_discrete(labels=c("10" = "34", 
                           "11" = "35",
                           "12" = "36",
@@ -1064,6 +1066,7 @@ jointMeans=~weekFac:activity))
 middle_act_week <- emmip(m2.middle.means$jointMeans, activity~weekFac) + 
 theme_bw(base_size=24, base_family='Times New Roman') + 
 #xlab("Age (Weeks)") + ylab("Predicted Proportion of Time in Zone") + 
+xlab("") + ylab("") +
 scale_x_discrete(labels=c("10" = "34", 
                           "11" = "35",
                           "12" = "36",
@@ -1083,7 +1086,8 @@ ggsave("../figures/all_day/model_diag/middle_interaction_act_week.png",middle_ac
 # interaction plot of activity on x
 middle_week_act <- emmip(m2.middle.means$jointMeans, weekFac~activity) +
 theme_bw(base_size=24, base_family='Times New Roman') + 
-#xlab("Activity Class") + ylab("Predicted Proportion of Time in Zone") + 
+#xlab("Activity Class") + ylab("Predicted Proportion of Time in Zone") +
+xlab("") + ylab("") + 
 scale_color_discrete(labels=c("10" = "34", 
                           "11" = "35",
                           "12" = "36",
@@ -1159,6 +1163,7 @@ jointMeans=~weekFac:activity))
 top_act_week <- emmip(m3.top.means$jointMeans, activity~weekFac)+ 
 theme_bw(base_size=24, base_family='Times New Roman') + 
 #xlab("Age (Weeks)") + ylab("Predicted Proportion of Time in Zone") + 
+xlab("") + ylab("") +
 scale_x_discrete(labels=c("10" = "34", 
                           "11" = "35",
                           "12" = "36",
@@ -1180,7 +1185,8 @@ ggsave("../figures/all_day/model_diag/top_interaction_act_week.png",top_act_week
 png("../figures/all_day/model_diag/top_interaction_week_act.png")
 top_week_act <- emmip(m3.top.means$jointMeans, weekFac~activity) +
 theme_bw(base_size=24, base_family='Times New Roman') + 
-#xlab("Activity Class") + ylab("Predicted Proportion of Time in Zone") + 
+#xlab("Activity Class") + ylab("Predicted Proportion of Time in Zone") +
+xlab("") + ylab("") + 
 scale_color_discrete(labels=c("10" = "34", 
                           "11" = "35",
                           "12" = "36",
@@ -1340,6 +1346,7 @@ geom_bar(stat="identity") +
 theme_bw(base_size=24, base_family='Times New Roman') +  
 #xlab("Day of Study") + 
 #ylab("Prop. of Time Spent in Zone") +
+xlab("") + ylab("") +
 scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
 theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
 #ggtitle("Daily Time Budget for Each Day for Low Activity Birds (n=10)") + 
@@ -1381,6 +1388,7 @@ geom_bar(stat="identity") +
 theme_bw(base_size=24, base_family='Times New Roman') +  
 #xlab("Day of Study") + 
 #ylab("Prop. of Time Spent in Zone") +
+xlab("") + ylab("") +
 scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
 theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
 #ggtitle("Daily Time Budget for Each Day for Medium Activity Birds (n=18)") + 
@@ -1422,6 +1430,7 @@ geom_bar(stat="identity") +
 theme_bw(base_size=24, base_family='Times New Roman') +  
 #xlab("Day of Study") + 
 #ylab("Prop. of Time Spent in Zone") +
+xlab("") + ylab("") +
 scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
 theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
 #ggtitle("Daily Time Budget for Each Day for High Activity Birds (n=9)") + 
@@ -1471,6 +1480,7 @@ geom_bar(stat="identity") +
 theme_bw(base_size=24, base_family='Times New Roman') +  
 #xlab("Night of Study") + 
 #ylab("Prop. of Time Spent in Zone") +
+xlab("") + ylab("") +
 scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
 theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
 #ggtitle("Daily Time Budget for Each Night for Low Activity Birds (n=10)") + 
@@ -1518,6 +1528,7 @@ geom_bar(stat="identity") +
 theme_bw(base_size=24, base_family='Times New Roman') +  
 #xlab("Night of Study") + 
 #ylab("Prop. of Time Spent in Zone") +
+xlab("") + ylab("") +
 scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
 theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
 #ggtitle("Daily Time Budget for Each Night for Medium Activity Birds (n=18)") + 
@@ -1558,6 +1569,7 @@ geom_bar(stat="identity") +
 theme_bw(base_size=24, base_family='Times New Roman') +  
 #xlab("Night of Study") + 
 #ylab("Prop. of Time Spent in Zone") +
+xlab("") + ylab("") +
 scale_x_date(breaks= datebreaks, minor_breaks=all_datebreak) + 
 theme(axis.text.x = element_text(angle = 45, hjust = 1)) + 
 #ggtitle("Daily Time Budget for Each Night for High Activity Birds (n=9)") + 
@@ -1638,6 +1650,7 @@ hb_1 <- ggplot(data=high_bird_1_long, aes(x=w_start, y=value, group=name)) +
   geom_line()+
   geom_point() + 
   #xlab("Age (Weeks)") + ylab("Number of transitions into zone") + 
+  xlab("") + ylab("") +
   scale_x_discrete(labels=c("10" = "34", 
                           "11" = "35",
                           "12" = "36",
@@ -1685,6 +1698,7 @@ hb_2 <- ggplot(data=high_bird_2_long, aes(x=w_start, y=value, group=name)) +
   geom_point() + 
   theme_bw(base_size=24, base_family='Times New Roman')+
   #xlab("Age (Weeks)") + ylab("Number of transitions into zone") + 
+  xlab("") + ylab("") +
   scale_x_discrete(labels=c("10" = "34", 
                           "11" = "35",
                           "12" = "36",
@@ -1741,6 +1755,7 @@ lb <- ggplot(data=low_bird_long, aes(x=w_start, y=value, group=name)) +
   geom_point() +
   theme_bw(base_size=24, base_family='Times New Roman') +
   #xlab("Age (Weeks)") + ylab("Number of transitions into zone") + 
+  xlab("") + ylab("") +
   scale_x_discrete(labels=c("10" = "34", 
                           "11" = "35",
                           "12" = "36",
@@ -1804,6 +1819,7 @@ lab <- ggplot(data=low_act_bird_long, aes(x=w_start, y=value, group=name)) +
   geom_point() +
   theme_bw(base_size=24, base_family='Times New Roman')+ 
   #xlab("Age (Weeks)") + ylab("Number of transitions into zone") + 
+  xlab("") + ylab("") +
   scale_x_discrete(labels=c("10" = "34", 
                           "11" = "35",
                           "12" = "36",
@@ -1869,6 +1885,7 @@ mab <- ggplot(data=med_act_bird_long, aes(x=w_start, y=value, group=name)) +
   geom_point() + 
   theme_bw(base_size=24, base_family='Times New Roman')+
   #xlab("Age (Weeks)") + ylab("Number of transitions into zone") + 
+  xlab("") + ylab("") +
   scale_x_discrete(labels=c("10" = "34", 
                           "11" = "35",
                           "12" = "36",
@@ -1934,6 +1951,7 @@ hab <- ggplot(data=high_act_bird_long, aes(x=w_start, y=value, group=name)) +
   geom_point() + 
   theme_bw(base_size=24, base_family='Times New Roman')+
   #xlab("Age (Weeks)") + ylab("Number of transitions into zone") + 
+  xlab("") + ylab("") +
   scale_x_discrete(labels=c("10" = "34", 
                           "11" = "35",
                           "12" = "36",
@@ -2003,6 +2021,7 @@ lab <- ggplot(data=low_act_bird_long, aes(x=w_start, y=value, group=name)) +
   geom_point() + 
   theme_bw(base_size=24, base_family='Times New Roman')+
   #xlab("Age (Weeks)") + ylab("Number of Average transitions into zone") + 
+  xlab("") + ylab("") +
   scale_x_discrete(labels=c("10" = "34", 
                           "11" = "35",
                           "12" = "36",
@@ -2073,6 +2092,7 @@ mab <- ggplot(data=med_act_bird_long, aes(x=w_start, y=value, group=name)) +
   geom_point() +
   theme_bw(base_size=24, base_family='Times New Roman')+ 
   #xlab("Age (Weeks)") + ylab("Average Number of transitions into zone") + 
+  xlab("") + ylab("") +
   scale_x_discrete(labels=c("10" = "34", 
                           "11" = "35",
                           "12" = "36",
@@ -2141,6 +2161,7 @@ hab <- ggplot(data=high_act_bird_long, aes(x=w_start, y=value, group=name)) +
   geom_point() + 
   theme_bw(base_size=24, base_family='Times New Roman')+
   #xlab("Age (Weeks)") + ylab("Average Number of transitions into zone") + 
+  xlab("") + ylab("") +
   scale_x_discrete(labels=c("10" = "34", 
                           "11" = "35",
                           "12" = "36",
@@ -2331,6 +2352,7 @@ lab <- ggplot(data=low_act_bird_long, aes(x=d_start, y=value, group=name)) +
   geom_point() + 
   theme_bw(base_size=24, base_family='Times New Roman') + 
   #xlab("Age (Weeks)") + ylab("Number of Average transitions into zone") + 
+  xlab("") + ylab("") +
   scale_x_continuous(breaks=low_breaks$d_start, 
                           labels=as.numeric(low_breaks$w_start)+24) +
   geom_line(aes(color=name))+
@@ -2357,6 +2379,7 @@ mab <- ggplot(data=med_act_bird_long, aes(x=d_start, y=value, group=name)) +
   geom_point() + 
   theme_bw(base_size=24, base_family='Times New Roman') + 
   #xlab("Age (Weeks)") + ylab("Average Number of transitions into zone") + 
+  xlab("") + ylab("") +
   scale_x_continuous(breaks=med_breaks$d_start, 
                           labels=as.numeric(med_breaks$w_start)+24) +
   geom_line(aes(color=name))+
@@ -2384,6 +2407,7 @@ hab <- ggplot(data=high_act_bird_long, aes(x=d_start, y=value, group=name)) +
   geom_point() +
   theme_bw(base_size=24, base_family='Times New Roman') +  
   #xlab("Age (Weeks)") + ylab("Average Number of transitions into zone") + 
+  xlab("") + ylab("") +
   scale_x_continuous(breaks=high_breaks$d_start, 
                           labels=as.numeric(high_breaks$w_start)+24) +
   geom_line(aes(color=name))+
@@ -2434,6 +2458,7 @@ ave_act_plot <- ggplot(data=act_long, aes(x=d_start, y=value, group=name)) +
   geom_point() +
   theme_bw(base_size=24, base_family='Times New Roman') +  
   #xlab("Age (Weeks)") + ylab("Average Daily Number of Transitions") + 
+  xlab("") + ylab("") + 
   scale_x_continuous(breaks=act_breaks$d_start, 
                           labels=as.numeric(act_breaks$w_start)+24) +
   geom_line(aes(color=name))+
@@ -2455,7 +2480,8 @@ ave_act_plot_nt <- ggplot(data=act_long, aes(x=d_start, y=value, group=name)) +
   geom_line()+
   geom_point() +
   theme_bw(base_size=24, base_family='Times New Roman') +  
-  #xlab("Age (Weeks)") + ylab("Average Daily Number of Transitions") + 
+  #xlab("Age (Weeks)") + ylab("Average Daily Number of Transitions") +
+  xlab("") + ylab("") +  
   scale_x_continuous(breaks=act_breaks$d_start, 
                           labels=as.numeric(act_breaks$w_start)+24) +
   geom_line(aes(color=name))+
