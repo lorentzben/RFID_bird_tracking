@@ -1802,7 +1802,7 @@ low_act_bird_long$name <- as.factor(low_act_bird_long$name)
 lab <- ggplot(data=low_act_bird_long, aes(x=w_start, y=value, group=name)) +
   geom_line()+
   geom_point() +
-  theme+bw(base_size=24, base_family='Times New Roman')+ 
+  theme_bw(base_size=24, base_family='Times New Roman')+ 
   #xlab("Age (Weeks)") + ylab("Number of transitions into zone") + 
   scale_x_discrete(labels=c("10" = "34", 
                           "11" = "35",
