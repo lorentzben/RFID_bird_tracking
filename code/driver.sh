@@ -73,7 +73,7 @@ fi
 
 # # Run All Room Joint Analysis
 
-singularity run docker://lorentzb/rfid:2.2 Rscript joint_analysis.r > ../logs/"$TS"_joint.log
+# singularity run docker://lorentzb/rfid:2.2 Rscript joint_analysis.r > ../logs/"$TS"_joint.log
 
 # Run Social Network Analysis
 
