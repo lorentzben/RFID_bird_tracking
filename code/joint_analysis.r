@@ -988,7 +988,7 @@ ggsave("../figures/all_day/model_diag/bottom_interaction_act_week.png",bottom_ac
 #png("../figures/all_day/model_diag/bottom_interaction_week_act.png")
 bottom_week_act <- emmip(m1.bottom.means$jointMeans, weekFac~activity)+ 
 theme_bw(base_size=24, base_family='Times New Roman') + 
-xlab("Activity Class") + ylab("Predicted Proportion of Time in Zone") + 
+#xlab("Activity Class") + ylab("Predicted Proportion of Time in Zone") + 
 scale_color_discrete(labels=c("10" = "34", 
                           "11" = "35",
                           "12" = "36",
@@ -998,8 +998,8 @@ scale_color_discrete(labels=c("10" = "34",
                           "16" = "40",
                           "17" = "41",
                           "18" = "42"))+
-scale_x_discrete(labels=c("Lo","Me","Hi")) + 
-labs(title="Estimated Prop. Time Spent in Bottom Zone by Week",color="Age (Weeks)")
+scale_x_discrete(labels=c("Lo","Me","Hi")) #+ 
+#labs(title="Estimated Prop. Time Spent in Bottom Zone by Week",color="Age (Weeks)")
 ggsave("../figures/all_day/model_diag/bottom_interaction_week_act.png",bottom_week_act, width = 8, height = 5, units = "in")
 #dev.off()
 
@@ -1073,11 +1073,11 @@ scale_x_discrete(labels=c("10" = "34",
                           "16" = "40",
                           "17" = "41",
                           "18" = "42")) +
-scale_color_manual("Activity Class",
+scale_color_manual("",#"Activity Class",
   values=c("low" ="#F8766D","medium"="#00BA38","high"="#619CFF"),
   breaks=c("high","medium","low"),
-  labels=c("Hi","Me","Lo")) +
-labs(title="Estimated Prop. Time Spent in Middle Zone by Activity Class")
+  labels=c("Hi","Me","Lo")) #+
+#labs(title="Estimated Prop. Time Spent in Middle Zone by Activity Class")
 ggsave("../figures/all_day/model_diag/middle_interaction_act_week.png",middle_act_week, width = 8, height = 5, units = "in",dpi=300)
 
 # interaction plot of activity on x
@@ -1093,8 +1093,8 @@ scale_color_discrete(labels=c("10" = "34",
                           "16" = "40",
                           "17" = "41",
                           "18" = "42"))+
-scale_x_discrete(labels=c("Lo","Me","Hi")) + 
-labs(title="Estimated Prop. Time Spent in Middle Zone by Week",color="Age (Weeks)")
+scale_x_discrete(labels=c("Lo","Me","Hi")) #+ 
+#labs(title="Estimated Prop. Time Spent in Middle Zone by Week",color="Age (Weeks)")
 ggsave("../figures/all_day/model_diag/middle_interaction_week_act.png",middle_week_act, width = 8, height = 5, units = "in",dpi=300)
 
 
@@ -1168,11 +1168,11 @@ scale_x_discrete(labels=c("10" = "34",
                           "16" = "40",
                           "17" = "41",
                           "18" = "42")) +
-scale_color_manual("Activity Class",
+scale_color_manual("",#"Activity Class",
   values=c("low" ="#F8766D","medium"="#00BA38","high"="#619CFF"),
   breaks=c("high","medium","low"),
-  labels=c("Hi","Me","Lo")) +
-labs(title="Estimated Prop. Time Spent in Top Zone by Activity Class")
+  labels=c("Hi","Me","Lo")) #+
+#labs(title="Estimated Prop. Time Spent in Top Zone by Activity Class")
 ggsave("../figures/all_day/model_diag/top_interaction_act_week.png",top_act_week, width = 8, height = 5, units = "in",dpi=300)
 
 
@@ -1190,8 +1190,8 @@ scale_color_discrete(labels=c("10" = "34",
                           "16" = "40",
                           "17" = "41",
                           "18" = "42"))+
-scale_x_discrete(labels=c("Lo","Me","Hi")) + 
-labs(title="Estimated Prop. Time Spent in Top Zone by Week",color="Age (Weeks)")
+scale_x_discrete(labels=c("Lo","Me","Hi")) #+ 
+#labs(title="Estimated Prop. Time Spent in Top Zone by Week",color="Age (Weeks)")
 ggsave("../figures/all_day/model_diag/top_interaction_week_act.png",top_week_act, width = 8, height = 5, units = "in",dpi=300)
 
 
@@ -1649,11 +1649,11 @@ hb_1 <- ggplot(data=high_bird_1_long, aes(x=w_start, y=value, group=name)) +
                           "18" = "42")) +
   geom_line(aes(color=name))+
   geom_point(aes(color=name))+
-  scale_color_manual("Transition into zone",
+  scale_color_manual("",#"Transition into zone",
                       values=c("nbot" ="#F8766D","nmid"="#00BA38","ntop"="#619CFF"),
                       breaks=c("ntop","nmid","nbot"), 
                       labels=c("Top","Middle","Bottom"))+
-  scale_fill_discrete("Transition into zone",
+  scale_fill_discrete("",#"Transition into zone",
                       breaks=c("ntop","nmid","nbot"), 
                       labels=c("Top","Middle","Bottom"))#+
   #labs(title="Number of Transitions Most Active (6905, n=1)")
@@ -1696,11 +1696,11 @@ hb_2 <- ggplot(data=high_bird_2_long, aes(x=w_start, y=value, group=name)) +
                           "18" = "42")) +
   geom_line(aes(color=name))+
   geom_point(aes(color=name))+
-  scale_color_manual("Transition into zone",
+  scale_color_manual("",#"Transition into zone",
                       values=c("nbot" ="#F8766D","nmid"="#00BA38","ntop"="#619CFF"),
                       breaks=c("ntop","nmid","nbot"), 
                       labels=c("Top","Middle","Bottom"))+
-  scale_fill_discrete("Transition into zone",
+  scale_fill_discrete("",#"Transition into zone",
                       breaks=c("ntop","nmid","nbot"), 
                       labels=c("Top","Middle","Bottom"))#+
   #labs(title="Number of Transitions Most Active (6998, n=1)")
@@ -1752,11 +1752,11 @@ lb <- ggplot(data=low_bird_long, aes(x=w_start, y=value, group=name)) +
                           "18" = "42")) +
   geom_line(aes(color=name))+
   geom_point(aes(color=name))+
-  scale_color_manual("Transition into zone",
+  scale_color_manual("",#"Transition into zone",
                       values=c("nbot" ="#F8766D","nmid"="#00BA38","ntop"="#619CFF"),
                       breaks=c("ntop","nmid","nbot"), 
                       labels=c("Top","Middle","Bottom"))+
-  scale_fill_discrete("Transition into zone",
+  scale_fill_discrete("",#"Transition into zone",
                       breaks=c("ntop","nmid","nbot"), 
                       labels=c("Top","Middle","Bottom"))#+
   #labs(title="Number of Transitions Least Active (6929, n=1)")
@@ -1815,11 +1815,11 @@ lab <- ggplot(data=low_act_bird_long, aes(x=w_start, y=value, group=name)) +
                           "18" = "42")) +
   geom_line(aes(color=name))+
   geom_point(aes(color=name))+
-  scale_color_manual("Transition into zone",
+  scale_color_manual("",#"Transition into zone",
                       values=c("nbot" ="#F8766D","nmid"="#00BA38","ntop"="#619CFF"),
                       breaks=c("ntop","nmid","nbot"), 
                       labels=c("Top","Middle","Bottom"))+
-  scale_fill_discrete("Transition into zone",
+  scale_fill_discrete("",#"Transition into zone",
                       breaks=c("ntop","nmid","nbot"), 
                       labels=c("Top","Middle","Bottom"))+
   #labs(title="Number of Transitions Least Active Birds (n=32)") +
@@ -1880,11 +1880,11 @@ mab <- ggplot(data=med_act_bird_long, aes(x=w_start, y=value, group=name)) +
                           "18" = "42")) +
   geom_line(aes(color=name))+
   geom_point(aes(color=name))+
-  scale_color_manual("Transition into zone",
+  scale_color_manual("",#"Transition into zone",
                       values=c("nbot" ="#F8766D","nmid"="#00BA38","ntop"="#619CFF"),
                       breaks=c("ntop","nmid","nbot"), 
                       labels=c("Top","Middle","Bottom"))+
-  scale_fill_discrete("Transition into zone",
+  scale_fill_discrete("",#"Transition into zone",
                       breaks=c("ntop","nmid","nbot"), 
                       labels=c("Top","Middle","Bottom"))+
   #labs(title="Number of Transitions Medium Active Birds (n=62)")+
@@ -1945,11 +1945,11 @@ hab <- ggplot(data=high_act_bird_long, aes(x=w_start, y=value, group=name)) +
                           "18" = "42")) +
   geom_line(aes(color=name))+
   geom_point(aes(color=name))+
-  scale_color_manual("Transition into zone",
+  scale_color_manual("",#"Transition into zone",
                       values=c("nbot" ="#F8766D","nmid"="#00BA38","ntop"="#619CFF"),
                       breaks=c("ntop","nmid","nbot"), 
                       labels=c("Top","Middle","Bottom"))+
-  scale_fill_discrete("Transition into zone",
+  scale_fill_discrete("",#"Transition into zone",
                       breaks=c("ntop","nmid","nbot"), 
                       labels=c("Top","Middle","Bottom"))+
   #labs(title="Number of Transitions Most Active Birds (n=31)")+
@@ -2014,11 +2014,11 @@ lab <- ggplot(data=low_act_bird_long, aes(x=w_start, y=value, group=name)) +
                           "18" = "42")) +
   geom_line(aes(color=name))+
   geom_point(aes(color=name))+
-  scale_color_manual("Transition into zone",
+  scale_color_manual("",#"Transition into zone",
                       values=c("nbot" ="#F8766D","nmid"="#00BA38","ntop"="#619CFF"),
                       breaks=c("ntop","nmid","nbot"), 
                       labels=c("Top","Middle","Bottom"))+
-  scale_fill_discrete("Transition into zone",
+  scale_fill_discrete("",#"Transition into zone",
                       breaks=c("ntop","nmid","nbot"), 
                       labels=c("Top","Middle","Bottom"))+
   #labs(title=paste("Number of Transitions Least Active Birds (n=",length(low_bird_ids) ,")")) +
@@ -2084,11 +2084,11 @@ mab <- ggplot(data=med_act_bird_long, aes(x=w_start, y=value, group=name)) +
                           "18" = "42")) +
   geom_line(aes(color=name))+
   geom_point(aes(color=name))+
-  scale_color_manual("Transition into zone",
+  scale_color_manual("",#"Transition into zone",
                       values=c("nbot" ="#F8766D","nmid"="#00BA38","ntop"="#619CFF"),
                       breaks=c("ntop","nmid","nbot"), 
                       labels=c("Top","Middle","Bottom"))+
-  scale_fill_discrete("Transition into zone",
+  scale_fill_discrete("",#"Transition into zone",
                       breaks=c("ntop","nmid","nbot"), 
                       labels=c("Top","Middle","Bottom"))+
   #labs(title=paste("Number of Transitions Medium Active Birds (n=",length(med_bird_ids),")"))+
@@ -2152,11 +2152,11 @@ hab <- ggplot(data=high_act_bird_long, aes(x=w_start, y=value, group=name)) +
                           "18" = "42")) +
   geom_line(aes(color=name))+
   geom_point(aes(color=name))+
-  scale_color_manual("Transition into zone",
+  scale_color_manual("",#"Transition into zone",
                       values=c("nbot" ="#F8766D","nmid"="#00BA38","ntop"="#619CFF"),
                       breaks=c("ntop","nmid","nbot"), 
                       labels=c("Top","Middle","Bottom"))+
-  scale_fill_discrete("Transition into zone",
+  scale_fill_discrete("",#"Transition into zone",
                       breaks=c("ntop","nmid","nbot"), 
                       labels=c("Top","Middle","Bottom"))+
   #labs(title=paste("Number of Transitions Most Active Birds (n=",length(high_bird_ids),")"))+
