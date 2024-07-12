@@ -991,7 +991,7 @@ bottom_week_act <- emmip(m1.bottom.means$jointMeans, weekFac~activity)+
 theme_bw(base_size=24, base_family='Times New Roman') + 
 #xlab("Activity Class") + ylab("Predicted Proportion of Time in Zone") +
 xlab("") + ylab("") + 
-scale_color_discrete(labels=c("10" = "34", 
+scale_color_discrete("",labels=c("10" = "34", 
                           "11" = "35",
                           "12" = "36",
                           "13" = "37",

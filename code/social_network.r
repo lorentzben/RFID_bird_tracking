@@ -79,8 +79,8 @@ rm_2_act_class_quart <- rm_2_act_class_quart[match(colnames(rm_2_hr), rm_2_act_c
 rm_2_act_class_quart$color <- ifelse(rm_2_act_class_quart$activity=="low","#F8766D", ifelse(rm_2_act_class_quart$activity=="medium","#00BA38","#619CFF"))
 #rm_2_act_class_quart$color <- ifelse(rm_2_act_class_quart$activity=="low","red", ifelse(rm_2_act_class_quart$activity=="medium","green","blue"))
 
-png("../figures/all_day/rm_2_median_netmap_quart.png")
-plot(rm_2_net, main="Room 2 Social Network Quartile", displaylabels=tagnames, vertex.col=rm_2_act_class_quart$color)
+png("../figures/all_day/rm_2_median_netmap_quart.png",pointsize=12,width = 8, height = 5, units = "in",res=300)
+plot(rm_2_net, displaylabels=tagnames, vertex.col=rm_2_act_class_quart$color, main="")#Room 2 Social Network Quartile")
 legend("topleft",
        legend = c("Lo","Me","Hi"),
        fill = c("#F8766D","#00BA38","#619CFF"),       # Color of the squares
@@ -228,8 +228,8 @@ rm_3_act_class_quart <- rm_3_act_class_quart[match(colnames(rm_3_hr), rm_3_act_c
 rm_3_act_class_quart$color <- ifelse(rm_3_act_class_quart$activity=="low","#F8766D", ifelse(rm_3_act_class_quart$activity=="medium","#00BA38","#619CFF"))
 #rm_3_act_class_quart$color <- ifelse(rm_3_act_class_quart$activity=="low","red", ifelse(rm_3_act_class_quart$activity=="medium","green","blue"))
 
-png("../figures/all_day/rm_3_median_netmap_quart.png")
-plot(rm_3_net, main="Room 3 Social Network Quartile", displaylabels=tagnames, vertex.col=rm_3_act_class_quart$color)
+png("../figures/all_day/rm_3_median_netmap_quart.png",pointsize=12,width = 8, height = 5, units = "in",res=300)
+plot(rm_3_net, displaylabels=tagnames, vertex.col=rm_3_act_class_quart$color, main="")#Room 3 Social Network Quartile")
 legend("topleft",
        legend = c("Lo","Me","Hi"),
        fill = c("#F8766D","#00BA38","#619CFF"),       # Color of the squares
@@ -537,8 +537,8 @@ rm_11_act_class_quart <- rm_11_act_class_quart[match(colnames(rm_11_hr), rm_11_a
 rm_11_act_class_quart$color <- ifelse(rm_11_act_class_quart$activity=="low","#F8766D", ifelse(rm_11_act_class_quart$activity=="medium","#00BA38","#619CFF"))
 #rm_11_act_class_quart$color <- ifelse(rm_11_act_class_quart$activity=="low","red", ifelse(rm_11_act_class_quart$activity=="medium","green","blue"))
 
-png("../figures/all_day/rm_11_median_netmap_quart.png")
-plot(rm_11_net, main="Room 11 Social Network Quartile", displaylabels=tagnames, vertex.col=rm_11_act_class_quart$color)
+png("../figures/all_day/rm_11_median_netmap_quart.png",pointsize=12,width = 8, height = 5, units = "in",res=300)
+plot(rm_11_net, displaylabels=tagnames, vertex.col=rm_11_act_class_quart$color, main="")#Room 11 Social Network Quartile")
 legend("topleft",
        legend = c("Lo","Me","Hi"),
        fill = c("#F8766D","#00BA38","#619CFF"),       # Color of the squares
