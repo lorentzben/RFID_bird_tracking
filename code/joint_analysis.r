@@ -975,11 +975,11 @@ scale_x_discrete(labels=c("10" = "34",
                           "16" = "40",
                           "17" = "41",
                           "18" = "42")) +
-scale_color_manual("Activity Class",
+scale_color_manual("",#"Activity Class",
   values=c("low" ="#F8766D","medium"="#00BA38","high"="#619CFF"),
   breaks=c("high","medium","low"),
-  labels=c("Hi","Me","Lo")) +
-labs(title="Estimated Prop. Time Spent in Bottom Zone by Activity Class")
+  labels=c("Hi","Me","Lo")) #+
+#labs(title="Estimated Prop. Time Spent in Bottom Zone by Activity Class")
 ggsave("../figures/all_day/model_diag/bottom_interaction_act_week.png",bottom_act_week, width = 8, height = 5, units = "in",dpi=300)
 
 #dev.off()
@@ -987,7 +987,7 @@ ggsave("../figures/all_day/model_diag/bottom_interaction_act_week.png",bottom_ac
 # interaction plot of activity on x
 #png("../figures/all_day/model_diag/bottom_interaction_week_act.png")
 bottom_week_act <- emmip(m1.bottom.means$jointMeans, weekFac~activity)+ 
-theme_bw() + 
+theme_bw(base_size=24, base_family='Times New Roman') + 
 xlab("Activity Class") + ylab("Predicted Proportion of Time in Zone") + 
 scale_color_discrete(labels=c("10" = "34", 
                           "11" = "35",
