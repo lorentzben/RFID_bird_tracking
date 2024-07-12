@@ -981,6 +981,8 @@ scale_color_manual("Activity Class",
   labels=c("Hi","Me","Lo")) +
 labs(title="Estimated Prop. Time Spent in Bottom Zone by Activity Class")
 ggsave("../figures/all_day/model_diag/bottom_interaction_act_week.png",bottom_act_week, width = 8, height = 5, units = "in")
+ggsave("../figures/all_day/model_diag/bottom_interaction_act_week_5.png",bottom_act_week, width = 4, height = 2.5, units = "in")
+ggsave("../figures/all_day/model_diag/bottom_interaction_act_week_75.png",bottom_act_week, width = 6, height = 3.75, units = "in")
 #dev.off()
 
 # interaction plot of activity on x
