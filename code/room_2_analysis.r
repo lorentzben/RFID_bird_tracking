@@ -20,7 +20,7 @@ room_2 <- read.csv("../data/set_2/DK20-03-RFID-R2-febmay-080423.csv")
 bird_ids_room_2 <- unique(room_2$tagname)
 bird_ids_room_2 <- na.trim(sort(bird_ids_room_2))
 
-room_2["DateTime"] <- as.POSIXct(room_2$access, origin="1970-01-01", tz="GMT")
+room_2["DateTime"] <- as.POSIXct(room_2$access, origin="1970-01-01", tz="UTC")
 
 
 print("what makes up subzone col")
@@ -195,7 +195,7 @@ for(i in 1:length(room_2_all_room_time_budget$tagname)){
     colnames(current_day_tb_df) <- columns
 
     current_day_tb_df$tagname <- rep(current_tag, length(current_day_tb_df$interval1))
-
+# This is the object we need to fix
     write.csv(current_day_tb_df, paste0("../intermediate/all_rooms/room_2_day_time_budget_",current_tag,".csv"),row.names=F)
 
     current_night_tb <- room_2_all_room_time_budget |>
@@ -272,7 +272,7 @@ all_datebreak <- seq(as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(head(unique(s
 
 #ggsave(paste0("../figures/all_day/day_daily_time_budget_line_for_", nest_day_tbs[i,1],".png"), day_3_plot_line)
 
-day_3_sb_plot <- ggplot(data = sb_data, aes(x = as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(interval1),origin="1970-01-01"))), y=values, fill=ind)) + 
+day_3_sb_plot <- ggplot(data = sb_data, aes(x = as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(interval1),origin="1970-01-01",tz="UTC"))), y=values, fill=ind)) + 
 geom_bar(stat="identity") +
 theme_bw() +  
 xlab("Day of Study") + 
@@ -326,7 +326,7 @@ all_datebreak <- seq(as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(head(unique(s
 
 #ggsave(paste0("../figures/all_day/night_daily_time_budget_line_for_", nest_day_tbs[i,1],".png"), day_3_plot_line)
 
-day_3_sb_plot <- ggplot(data = sb_data, aes(x =as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(interval1),origin="1970-01-01"))), y=values, fill=ind)) + 
+day_3_sb_plot <- ggplot(data = sb_data, aes(x =as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(interval1),origin="1970-01-01",tz='UTC'))), y=values, fill=ind)) + 
 geom_bar(stat="identity") +
 theme_bw() +  
 xlab("Day of Study") + 
@@ -355,7 +355,7 @@ all_datebreak <- seq(ymd_hms(as.POSIXct.numeric(as.numeric(head(unique(day_flat$
 
 y_lim <- length(unique(day_flat$tagname))+.001
 
-day_flat$date <- as.Date(ymd_hms(as.POSIXct(day_flat$interval1,origin="1970-01-01")))
+day_flat$date <- as.Date(ymd_hms(as.POSIXct(day_flat$interval1,origin="1970-01-01",tz="UTC")))
 
 # TODO  Still having a problem
 room_2_sb_plot <- ggplot(data = day_flat, aes(x = date, y=values, fill=ind)) + 
@@ -391,7 +391,7 @@ datebreaks <- c(datebreaks, as.Date(ymd_hms(as.POSIXct(tail(night_flat$interval1
 all_datebreak <- seq(ymd_hms(as.POSIXct.numeric(as.numeric(head(unique(night_flat$interval1),n=1)),origin="1970-01-01",tz="UTC")), ymd_hms(as.POSIXct.numeric(as.numeric(tail(unique(night_flat$interval1),n=1)),origin="1970-01-01",tz="UTC")), by="1 days")
 
 # TODO  Still having a problem
-room_2_sb_night_plot <- ggplot(data = night_flat, aes(x = as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(interval1),origin="1970-01-01"))), y=values, fill=ind)) + 
+room_2_sb_night_plot <- ggplot(data = night_flat, aes(x = as.Date(ymd_hms(as.POSIXct.numeric(as.numeric(interval1),origin="1970-01-01",tz="UTC"))), y=values, fill=ind)) + 
 geom_bar(stat="identity") +
 theme_bw() +  
 xlab("Day of Study") + 

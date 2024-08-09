@@ -908,7 +908,7 @@ library(lmerTest)
 
 id_lookup <- unique(overall_org_table[,c(1,3)])
 
-day_tb_df$week <- week(as.POSIXct(day_tb_df$interval1,origin="1970-01-01"))
+day_tb_df$week <- week(as.POSIXct(day_tb_df$interval1,origin="1970-01-01", tz="UTC"))
 
 day_bottom_sum <- day_tb_df |>
   group_by(tagname,week) |>
@@ -1332,16 +1332,16 @@ day_flat <- cbind(low_day_df[c(1:2,6)], stack(low_day_df[3:5]))
 
 day_flat$ind <- factor(day_flat$ind, levels=c("Top","Middle","Bottom"))
 
-datebreaks <- seq(as.Date(as.POSIXct.numeric(head(unique(day_flat$interval1),n=1),origin="1970-01-01")),
-as.Date(as.POSIXct.numeric(tail(unique(day_flat$interval1),n=1),origin="1970-01-01")), by="7 days")
+datebreaks <- seq(as.Date(as.POSIXct.numeric(head(unique(day_flat$interval1),n=1),origin="1970-01-01", tz="UTC")),
+as.Date(as.POSIXct.numeric(tail(unique(day_flat$interval1),n=1),origin="1970-01-01", tz="UTC")), by="7 days")
 
-datebreaks <- c(datebreaks, as.Date(as.POSIXct.numeric(tail(unique(day_flat$interval1),n=1),origin="1970-01-01")))
+datebreaks <- c(datebreaks, as.Date(as.POSIXct.numeric(tail(unique(day_flat$interval1),n=1),origin="1970-01-01", tz="UTC")))
 
-all_datebreak <- seq(as.Date(as.POSIXct.numeric(head(unique(day_flat$interval1),n=1),origin="1970-01-01")), as.Date(as.POSIXct.numeric(tail(unique(day_flat$interval1),n=1),origin="1970-01-01")), by="1 days")
+all_datebreak <- seq(as.Date(as.POSIXct.numeric(head(unique(day_flat$interval1),n=1),origin="1970-01-01", tz="UTC")), as.Date(as.POSIXct.numeric(tail(unique(day_flat$interval1),n=1),origin="1970-01-01", tz="UTC")), by="1 days")
 
 y_lim <- length(unique(day_flat$tagname))+.001
 
-low_day_sb_plot <- ggplot(data = day_flat, aes(x = as.Date(as.POSIXct.numeric(as.numeric(interval1),origin="1970-01-01")), y=values, fill=ind)) + 
+low_day_sb_plot <- ggplot(data = day_flat, aes(x = as.Date(as.POSIXct.numeric(as.numeric(interval1),origin="1970-01-01", tz="UTC")), y=values, fill=ind)) + 
 geom_bar(stat="identity") +
 theme_bw(base_size=24, base_family='Times New Roman') +  
 #xlab("Day of Study") + 
@@ -1374,16 +1374,16 @@ day_flat <- cbind(med_day_df[c(1:2,6)], stack(med_day_df[3:5]))
 
 day_flat$ind <- factor(day_flat$ind, levels=c("Top","Middle","Bottom"))
 
-datebreaks <- seq(as.Date(as.POSIXct.numeric(head(unique(day_flat$interval1),n=1),origin="1970-01-01")),
-as.Date(as.POSIXct.numeric(tail(unique(day_flat$interval1),n=1),origin="1970-01-01")), by="7 days")
+datebreaks <- seq(as.Date(as.POSIXct.numeric(head(unique(day_flat$interval1),n=1),origin="1970-01-01", tz="UTC")),
+as.Date(as.POSIXct.numeric(tail(unique(day_flat$interval1),n=1),origin="1970-01-01", tz="UTC")), by="7 days")
 
-datebreaks <- c(datebreaks, as.Date(as.POSIXct.numeric(tail(unique(day_flat$interval1),n=1),origin="1970-01-01")))
+datebreaks <- c(datebreaks, as.Date(as.POSIXct.numeric(tail(unique(day_flat$interval1),n=1),origin="1970-01-01", tz="UTC")))
 
-all_datebreak <- seq(as.Date(as.POSIXct.numeric(head(unique(day_flat$interval1),n=1),origin="1970-01-01")), as.Date(as.POSIXct.numeric(tail(unique(day_flat$interval1),n=1),origin="1970-01-01")), by="1 days")
+all_datebreak <- seq(as.Date(as.POSIXct.numeric(head(unique(day_flat$interval1),n=1),origin="1970-01-01", tz="UTC")), as.Date(as.POSIXct.numeric(tail(unique(day_flat$interval1),n=1),origin="1970-01-01", tz="UTC")), by="1 days")
 
 y_lim <- length(unique(day_flat$tagname))+.001
 
-med_day_sb_plot <- ggplot(data = day_flat, aes(x = as.Date(as.POSIXct.numeric(as.numeric(interval1),origin="1970-01-01")), y=values, fill=ind)) + 
+med_day_sb_plot <- ggplot(data = day_flat, aes(x = as.Date(as.POSIXct.numeric(as.numeric(interval1),origin="1970-01-01", tz="UTC")), y=values, fill=ind)) + 
 geom_bar(stat="identity") +
 theme_bw(base_size=24, base_family='Times New Roman') +  
 #xlab("Day of Study") + 
@@ -1416,16 +1416,16 @@ day_flat <- cbind(high_day_df[c(1:2,6)], stack(high_day_df[3:5]))
 
 day_flat$ind <- factor(day_flat$ind, levels=c("Top","Middle","Bottom"))
 
-datebreaks <- seq(as.Date(as.POSIXct.numeric(head(unique(day_flat$interval1),n=1),origin="1970-01-01")),
-as.Date(as.POSIXct.numeric(tail(unique(day_flat$interval1),n=1),origin="1970-01-01")), by="7 days")
+datebreaks <- seq(as.Date(as.POSIXct.numeric(head(unique(day_flat$interval1),n=1),origin="1970-01-01", tz="UTC")),
+as.Date(as.POSIXct.numeric(tail(unique(day_flat$interval1),n=1),origin="1970-01-01", tz="UTC")), by="7 days")
 
-datebreaks <- c(datebreaks, as.Date(as.POSIXct.numeric(tail(unique(day_flat$interval1),n=1),origin="1970-01-01")))
+datebreaks <- c(datebreaks, as.Date(as.POSIXct.numeric(tail(unique(day_flat$interval1),n=1),origin="1970-01-01", tz="UTC")))
 
-all_datebreak <- seq(as.Date(as.POSIXct.numeric(head(unique(day_flat$interval1),n=1),origin="1970-01-01")), as.Date(as.POSIXct.numeric(tail(unique(day_flat$interval1),n=1),origin="1970-01-01")), by="1 days")
+all_datebreak <- seq(as.Date(as.POSIXct.numeric(head(unique(day_flat$interval1),n=1),origin="1970-01-01", tz="UTC")), as.Date(as.POSIXct.numeric(tail(unique(day_flat$interval1),n=1),origin="1970-01-01", tz="UTC")), by="1 days")
 
 y_lim <- length(unique(day_flat$tagname))+.001
 
-high_day_sb_plot <- ggplot(data = day_flat, aes(x = as.Date(as.POSIXct.numeric(as.numeric(interval1),origin="1970-01-01")), y=values, fill=ind)) + 
+high_day_sb_plot <- ggplot(data = day_flat, aes(x = as.Date(as.POSIXct.numeric(as.numeric(interval1),origin="1970-01-01", tz="UTC")), y=values, fill=ind)) + 
 geom_bar(stat="identity") +
 theme_bw(base_size=24, base_family='Times New Roman') +  
 #xlab("Day of Study") + 
@@ -1467,15 +1467,15 @@ night_flat <- cbind(low_night_df[c(1:2,6)], stack(low_night_df[3:5]))
 
 night_flat$ind <- factor(night_flat$ind, levels=c("Top","Middle","Bottom"))
 
-datebreaks <- seq(as.Date(as.POSIXct.numeric(head(unique(night_flat$interval1),n=1),origin="1970-01-01")), as.Date(as.POSIXct.numeric(tail(unique(night_flat$interval1),n=1),origin="1970-01-01")), by="7 days")
+datebreaks <- seq(as.Date(as.POSIXct.numeric(head(unique(night_flat$interval1),n=1),origin="1970-01-01", tz="UTC")), as.Date(as.POSIXct.numeric(tail(unique(night_flat$interval1),n=1),origin="1970-01-01", tz="UTC")), by="7 days")
 
-datebreaks <- c(datebreaks, as.Date(as.POSIXct.numeric(tail(unique(night_flat$interval1),n=1),origin="1970-01-01")))
+datebreaks <- c(datebreaks, as.Date(as.POSIXct.numeric(tail(unique(night_flat$interval1),n=1),origin="1970-01-01", tz="UTC")))
 
-all_datebreak <- seq(as.Date(as.POSIXct.numeric(head(unique(night_flat$interval1),n=1),origin="1970-01-01")), as.Date(as.POSIXct.numeric(tail(unique(night_flat$interval1),n=1),origin="1970-01-01")), by="1 days")
+all_datebreak <- seq(as.Date(as.POSIXct.numeric(head(unique(night_flat$interval1),n=1),origin="1970-01-01", tz="UTC")), as.Date(as.POSIXct.numeric(tail(unique(night_flat$interval1),n=1),origin="1970-01-01", tz="UTC")), by="1 days")
 
 y_lim <- length(unique(night_flat$tagname))+.001
 
-low_night_sb_plot <- ggplot(data = night_flat, aes(x = as.Date(as.POSIXct.numeric(as.numeric(interval1),origin="1970-01-01")), y=values, fill=ind)) + 
+low_night_sb_plot <- ggplot(data = night_flat, aes(x = as.Date(as.POSIXct.numeric(as.numeric(interval1),origin="1970-01-01", tz="UTC")), y=values, fill=ind)) + 
 geom_bar(stat="identity") +
 theme_bw(base_size=24, base_family='Times New Roman') +  
 #xlab("Night of Study") + 
@@ -1515,15 +1515,15 @@ night_flat$ind <- factor(night_flat$ind, levels=c("Top","Middle","Bottom"))
 # all_datebreak <- seq(as.Date(ymd_hms(head(unique(night_flat$interval1),n=1))), as.Date(ymd_hms(tail(unique(night_flat$interval1),n=1))), by="1 days")
 
 
-datebreaks <- seq(as.Date(as.POSIXct.numeric(head(unique(night_flat$interval1),n=1),origin="1970-01-01")), as.Date(as.POSIXct.numeric(tail(unique(night_flat$interval1),n=1),origin="1970-01-01")), by="7 days")
+datebreaks <- seq(as.Date(as.POSIXct.numeric(head(unique(night_flat$interval1),n=1),origin="1970-01-01", tz="UTC")), as.Date(as.POSIXct.numeric(tail(unique(night_flat$interval1),n=1),origin="1970-01-01", tz="UTC")), by="7 days")
 
-datebreaks <- c(datebreaks, as.Date(as.POSIXct.numeric(tail(unique(night_flat$interval1),n=1),origin="1970-01-01")))
+datebreaks <- c(datebreaks, as.Date(as.POSIXct.numeric(tail(unique(night_flat$interval1),n=1),origin="1970-01-01", tz="UTC")))
 
-all_datebreak <- seq(as.Date(as.POSIXct.numeric(head(unique(night_flat$interval1),n=1),origin="1970-01-01")), as.Date(as.POSIXct.numeric(tail(unique(night_flat$interval1),n=1),origin="1970-01-01")), by="1 days")
+all_datebreak <- seq(as.Date(as.POSIXct.numeric(head(unique(night_flat$interval1),n=1),origin="1970-01-01", tz="UTC")), as.Date(as.POSIXct.numeric(tail(unique(night_flat$interval1),n=1),origin="1970-01-01", tz="UTC")), by="1 days")
 
 y_lim <- length(unique(night_flat$tagname))+.001
 
-med_night_sb_plot <- ggplot(data = night_flat, aes(x = as.Date(as.POSIXct.numeric(as.numeric(interval1),origin="1970-01-01")), y=values, fill=ind)) + 
+med_night_sb_plot <- ggplot(data = night_flat, aes(x = as.Date(as.POSIXct.numeric(as.numeric(interval1),origin="1970-01-01", tz="UTC")), y=values, fill=ind)) + 
 geom_bar(stat="identity") +
 theme_bw(base_size=24, base_family='Times New Roman') +  
 #xlab("Night of Study") + 
@@ -1556,15 +1556,15 @@ night_flat <- cbind(high_night_df[c(1:2,6)], stack(high_night_df[3:5]))
 
 night_flat$ind <- factor(night_flat$ind, levels=c("Top","Middle","Bottom"))
 
-datebreaks <- seq(as.Date(as.POSIXct.numeric(head(unique(night_flat$interval1),n=1),origin="1970-01-01")), as.Date(as.POSIXct.numeric(tail(unique(night_flat$interval1),n=1),origin="1970-01-01")), by="7 days")
+datebreaks <- seq(as.Date(as.POSIXct.numeric(head(unique(night_flat$interval1),n=1),origin="1970-01-01", tz="UTC")), as.Date(as.POSIXct.numeric(tail(unique(night_flat$interval1),n=1),origin="1970-01-01", tz="UTC")), by="7 days")
 
-datebreaks <- c(datebreaks, as.Date(as.POSIXct.numeric(tail(unique(night_flat$interval1),n=1),origin="1970-01-01")))
+datebreaks <- c(datebreaks, as.Date(as.POSIXct.numeric(tail(unique(night_flat$interval1),n=1),origin="1970-01-01", tz="UTC")))
 
-all_datebreak <- seq(as.Date(as.POSIXct.numeric(head(unique(night_flat$interval1),n=1),origin="1970-01-01")), as.Date(as.POSIXct.numeric(tail(unique(night_flat$interval1),n=1),origin="1970-01-01")), by="1 days")
+all_datebreak <- seq(as.Date(as.POSIXct.numeric(head(unique(night_flat$interval1),n=1),origin="1970-01-01", tz="UTC")), as.Date(as.POSIXct.numeric(tail(unique(night_flat$interval1),n=1),origin="1970-01-01", tz="UTC")), by="1 days")
 
 y_lim <- length(unique(night_flat$tagname))+.001
 
-high_night_sb_plot <- ggplot(data = night_flat, aes(x = as.Date(as.POSIXct.numeric(as.numeric(interval1),origin="1970-01-01")), y=values, fill=ind)) + 
+high_night_sb_plot <- ggplot(data = night_flat, aes(x = as.Date(as.POSIXct.numeric(as.numeric(interval1),origin="1970-01-01", tz="UTC")), y=values, fill=ind)) + 
 geom_bar(stat="identity") +
 theme_bw(base_size=24, base_family='Times New Roman') +  
 #xlab("Night of Study") + 
@@ -1629,7 +1629,7 @@ overall_table[order(overall_table$ntrans, decreasing=T),]
 #6905 | 3
 
 high_bird_1 <- rm_3_day_int_df[rm_3_day_int_df$tagname == "6905",]
-high_bird_1$w_start <- week(as.POSIXct(high_bird_1$t1,origin="1970-01-01"))
+high_bird_1$w_start <- week(as.POSIXct(high_bird_1$t1,origin="1970-01-01", tz="UTC"))
 
 # turn into weeks, and then calculate ntrans per week
 
@@ -1677,7 +1677,7 @@ ggsave(paste0("../figures/all_day/transition_plots/6905_most_active_trans_per_we
 
 #6998 | 3
 high_bird_2 <- rm_3_day_int_df[rm_3_day_int_df$tagname == "6998",]
-high_bird_2$w_start <- week(as.POSIXct(high_bird_2$t1,origin="1970-01-01"))
+high_bird_2$w_start <- week(as.POSIXct(high_bird_2$t1,origin="1970-01-01", tz="UTC"))
 
 # turn into weeks, and then calculate ntrans per week
 
@@ -1734,7 +1734,7 @@ overall_table[order(overall_table$ntrans, decreasing=F),]
 #6929 | 8 
 
 low_bird <- rm_8_day_int_df[rm_8_day_int_df$tagname == "6929",]
-low_bird$w_start <- week(as.POSIXct(low_bird$t1,origin="1970-01-01"))
+low_bird$w_start <- week(as.POSIXct(low_bird$t1,origin="1970-01-01", tz="UTC"))
 
 # turn into weeks, and then calculate ntrans per week
 
@@ -1799,7 +1799,7 @@ low_act_bird <- rbind(low_act_bird, rm_8_day_int_df[rm_8_day_int_df$tagname %in%
 low_act_bird <- rbind(low_act_bird, rm_11_day_int_df[rm_11_day_int_df$tagname %in% low_bird_ids,])
 
 # turn into weekly tables and calc num trans
-low_act_bird$w_start <- week(as.POSIXct(low_act_bird$t1,origin="1970-01-01"))
+low_act_bird$w_start <- week(as.POSIXct(low_act_bird$t1,origin="1970-01-01", tz="UTC"))
 
 
 low_act_bird_sum <- low_act_bird |> nest(data = -w_start) |>
@@ -1865,7 +1865,7 @@ med_act_bird <- rbind(med_act_bird, rm_8_day_int_df[rm_8_day_int_df$tagname %in%
 med_act_bird <- rbind(med_act_bird, rm_11_day_int_df[rm_11_day_int_df$tagname %in% med_bird_ids,])
 
 # turn into weekly tables and calc num trans
-med_act_bird$w_start <- week(as.POSIXct(med_act_bird$t1,origin="1970-01-01"))
+med_act_bird$w_start <- week(as.POSIXct(med_act_bird$t1,origin="1970-01-01", tz="UTC"))
 
 
 med_act_bird_sum <- med_act_bird |> nest(data = -w_start) |>
@@ -1931,7 +1931,7 @@ high_act_bird <- rbind(high_act_bird, rm_8_day_int_df[rm_8_day_int_df$tagname %i
 high_act_bird <- rbind(high_act_bird, rm_11_day_int_df[rm_11_day_int_df$tagname %in% high_bird_ids,])
 
 # turn into weekly tables and calc num trans
-high_act_bird$w_start <- week(as.POSIXct(high_act_bird$t1,origin="1970-01-01"))
+high_act_bird$w_start <- week(as.POSIXct(high_act_bird$t1,origin="1970-01-01", tz="UTC"))
 
 
 high_act_bird_sum <- high_act_bird |> nest(data = -w_start) |>
@@ -1998,7 +1998,7 @@ low_act_bird <- rbind(low_act_bird, rm_8_day_int_df[rm_8_day_int_df$tagname %in%
 low_act_bird <- rbind(low_act_bird, rm_11_day_int_df[rm_11_day_int_df$tagname %in% low_bird_ids,])
 
 # turn into weekly tables and calc num trans
-low_act_bird$w_start <- week(as.POSIXct(low_act_bird$t1,origin="1970-01-01"))
+low_act_bird$w_start <- week(as.POSIXct(low_act_bird$t1,origin="1970-01-01", tz="UTC"))
 
 
 low_act_bird_sum <- low_act_bird |> nest(data = -w_start) |>
@@ -2067,7 +2067,7 @@ med_act_bird <- rbind(med_act_bird, rm_8_day_int_df[rm_8_day_int_df$tagname %in%
 med_act_bird <- rbind(med_act_bird, rm_11_day_int_df[rm_11_day_int_df$tagname %in% med_bird_ids,])
 
 # turn into weekly tables and calc num trans
-med_act_bird$w_start <- week(as.POSIXct(med_act_bird$t1,origin="1970-01-01"))
+med_act_bird$w_start <- week(as.POSIXct(med_act_bird$t1,origin="1970-01-01", tz="UTC"))
 
 
 med_act_bird_sum <- med_act_bird |> nest(data = -w_start) |>
@@ -2138,7 +2138,7 @@ high_act_bird <- rbind(high_act_bird, rm_8_day_int_df[rm_8_day_int_df$tagname %i
 high_act_bird <- rbind(high_act_bird, rm_11_day_int_df[rm_11_day_int_df$tagname %in% high_bird_ids,])
 
 # turn into weekly tables and calc num trans
-high_act_bird$w_start <- week(as.POSIXct(high_act_bird$t1,origin="1970-01-01"))
+high_act_bird$w_start <- week(as.POSIXct(high_act_bird$t1,origin="1970-01-01", tz="UTC"))
 
 
 high_act_bird_sum <- high_act_bird |> nest(data = -w_start) |>
@@ -2206,10 +2206,10 @@ low_act_bird <- rbind(low_act_bird, rm_8_day_int_df[rm_8_day_int_df$tagname %in%
 low_act_bird <- rbind(low_act_bird, rm_11_day_int_df[rm_11_day_int_df$tagname %in% low_bird_ids,])
 
 # turn into daily tables and calc num trans
-date_to_day <- data.frame(cbind(unique(date(as.POSIXct(low_act_bird$t1,origin="1970-01-01"))),1:length(unique(date(as.POSIXct(low_act_bird$t1,origin=origin))))))
+date_to_day <- data.frame(cbind(unique(date(as.POSIXct(low_act_bird$t1,origin="1970-01-01", tz="UTC"))),1:length(unique(date(as.POSIXct(low_act_bird$t1,origin=origin, tz="UTC"))))))
 colnames(date_to_day) <- c("date","day")
-low_act_bird$w_start <- week(as.POSIXct(low_act_bird$t1,origin="1970-01-01"))
-low_act_bird$date <- date(as.POSIXct(low_act_bird$t1,origin="1970-01-01"))
+low_act_bird$w_start <- week(as.POSIXct(low_act_bird$t1,origin="1970-01-01", tz="UTC"))
+low_act_bird$date <- date(as.POSIXct(low_act_bird$t1,origin="1970-01-01", tz="UTC"))
 low_act_bird <- data.frame(merge(low_act_bird,date_to_day, by.x="date",by.y="date"))
 
 overall_day_summary <- data.frame(merge(overall_day_summary,overall_org_table[,c(1,4)], by="tagname"))
@@ -2254,8 +2254,8 @@ med_act_bird <- rbind(med_act_bird, rm_8_day_int_df[rm_8_day_int_df$tagname %in%
 med_act_bird <- rbind(med_act_bird, rm_11_day_int_df[rm_11_day_int_df$tagname %in% med_bird_ids,])
 
 # turn into daily tables and calc num trans
-med_act_bird$date <- date(as.POSIXct(med_act_bird$t1,origin="1970-01-01"))
-med_act_bird$w_start <- week(as.POSIXct(med_act_bird$t1,origin="1970-01-01"))
+med_act_bird$date <- date(as.POSIXct(med_act_bird$t1,origin="1970-01-01", tz="UTC"))
+med_act_bird$w_start <- week(as.POSIXct(med_act_bird$t1,origin="1970-01-01", tz="UTC"))
 med_act_bird <- data.frame(merge(med_act_bird,date_to_day, by.x="date",by.y="date"))
 
 
@@ -2300,8 +2300,8 @@ high_act_bird <- rbind(high_act_bird, rm_8_day_int_df[rm_8_day_int_df$tagname %i
 high_act_bird <- rbind(high_act_bird, rm_11_day_int_df[rm_11_day_int_df$tagname %in% high_bird_ids,])
 
 # turn into daily tables and calc num trans
-high_act_bird$date <- date(as.POSIXct(high_act_bird$t1,origin="1970-01-01"))
-high_act_bird$w_start <- week(as.POSIXct(high_act_bird$t1,origin="1970-01-01"))
+high_act_bird$date <- date(as.POSIXct(high_act_bird$t1,origin="1970-01-01", tz="UTC"))
+high_act_bird$w_start <- week(as.POSIXct(high_act_bird$t1,origin="1970-01-01", tz="UTC"))
 high_act_bird <- data.frame(merge(high_act_bird,date_to_day, by.x="date",by.y="date"))
 
 high_act_bird_sum <- high_act_bird |> nest(data = -c(day,w_start)) |>
