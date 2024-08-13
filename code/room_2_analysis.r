@@ -369,8 +369,8 @@ ggtitle("Daily Time Budget for Each Day for Room 2") +
 labs(fill = "Zone") +
 scale_y_continuous(limits=c(0, y_lim))
 
-ggsave(paste0("../figures/all_day/room2/day_daily_time_budget_stack_bar_for_room_2",".png"), room_2_sb_plot)
-
+#ggsave(paste0("../figures/all_day/room2/day_daily_time_budget_stack_bar_for_room_2",".png"), room_2_sb_plot)
+ggsave(paste0("../figures/all_day/room2/day_daily_time_budget_stack_bar_for_room_2",".png"), room_2_sb_plot,width = 5, height = 3, units = "in")
 
 # room_2_bp <- ggplot(day_flat, aes(x = factor(as.Date(interval1)), y=values, fill=ind)) + 
 #   geom_boxplot()
@@ -402,7 +402,8 @@ ggtitle("Daily Time Budget for Each Night for Room 2") +
 labs(fill = "Zone") +
 scale_y_continuous(limits=c(0, y_lim))
 
-ggsave(paste0("../figures/all_day/room2/night_daily_time_budget_stack_bar_for_room_2",".png"), room_2_sb_night_plot)
+ggsave(paste0("../figures/all_day/room2/night_daily_time_budget_stack_bar_for_room_2",".png"), room_2_sb_night_plot,width = 5, height = 3, units = "in")
+
 
 ### Save Overall Interval, Daily Interval and Nightly Interval to disk ###
 

@@ -899,7 +899,6 @@ print("Where do the low activity birds nest at night: ")
 ### END Activity Class for each room ### 
 
 
-
 ### does the weekly time budget differ from feb to april ### 
 
 library(emmeans)
@@ -1221,6 +1220,8 @@ contrast(m3.top.means$weekMeans, method=list(
   fhalf.vs.lhalf = c(-1,-1,-1,-1,0,1,1,1,1)), adjust="bonferroni")
 
 
+# Does the mean time spent in the top zone have a linear effect?
+contrast(m3.top.means$weekMeans,"poly")[1]
 # Does the mean time spent in the top zone have a linear effect?
 contrast(m3.top.means$weekMeans,"poly")[1]
 
