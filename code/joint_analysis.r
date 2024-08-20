@@ -1285,6 +1285,117 @@ dev.off()
 
 kruskal.test(keel_score ~ activity, overall_day_summary_w_keel)
 
+### KEEL RM 2 ###
+rm_2_summary_w_keel <- data.frame(merge(rm_2_org_overall,keel_score, by.x="tagname",by.y="tag"))
+
+rm2_keel <- unique(rm_2_summary_w_keel %>% select(c(tagname,activity,keelScore)))
+rm2_keel$tagname <- factor(rm2_keel$tagname,levels=rm2_keel$tagname)
+rm2_keel$tag <- as.numeric(rm2_keel$tagname)
+
+
+
+m_rm2 <- aov(keelScore ~ activity , rm2_keel)
+summary(m_rm2)
+anova(m_rm2)
+
+m_rm2_means <- emmeans(m_rm2, specs=list( actMean = ~activity))
+
+c1 <- c(-1,.5,.5)
+c2 <- c(0,-1,1)
+
+contrast(m_rm2_means, method=list(low.vs.medHigh = c1,
+med.vs.high = c2),adjust="bonferroni")
+
+png("../figures/all_day/model_diag/keel_score_mean_m_rm2.png",width=5,height=3, units='in',res=300)
+plot(m_rm2_means, horizontal = F,comparisons=T)
+dev.off()
+
+kruskal.test(keelScore ~ activity, rm_2_summary_w_keel)
+
+
+### KEEL RM 3 ###
+
+rm_3_summary_w_keel <- data.frame(merge(rm_3_org_overall,keel_score, by.x="tagname",by.y="tag"))
+
+rm3_keel <- unique(rm_3_summary_w_keel %>% select(c(tagname,activity,keelScore)))
+rm3_keel$tagname <- factor(rm3_keel$tagname,levels=rm3_keel$tagname)
+rm3_keel$tag <- as.numeric(rm3_keel$tagname)
+
+
+
+m_rm3 <- aov(keelScore ~ activity , rm3_keel)
+summary(m_rm3)
+anova(m_rm3)
+
+m_rm3_means <- emmeans(m_rm3, specs=list( actMean = ~activity))
+
+c1 <- c(-1,.5,.5)
+c2 <- c(0,-1,1)
+
+contrast(m_rm3_means, method=list(low.vs.medHigh = c1,
+med.vs.high = c2),adjust="bonferroni")
+
+png("../figures/all_day/model_diag/keel_score_mean_m_rm3.png",width=5,height=3, units='in',res=300)
+plot(m_rm3_means, horizontal = F,comparisons=T)
+dev.off()
+
+kruskal.test(keelScore ~ activity, rm_3_summary_w_keel)
+
+### KEEL RM 8 ###
+rm_8_summary_w_keel <- data.frame(merge(rm_8_org_overall,keel_score, by.x="tagname",by.y="tag"))
+
+rm8_keel <- unique(rm_8_summary_w_keel %>% select(c(tagname,activity,keelScore)))
+rm8_keel$tagname <- factor(rm8_keel$tagname,levels=rm8_keel$tagname)
+rm8_keel$tag <- as.numeric(rm8_keel$tagname)
+
+
+
+m_rm8 <- aov(keelScore ~ activity , rm8_keel)
+summary(m_rm8)
+anova(m_rm8)
+
+m_rm8_means <- emmeans(m_rm8, specs=list( actMean = ~activity))
+
+c1 <- c(-1,.5,.5)
+c2 <- c(0,-1,1)
+
+contrast(m_rm8_means, method=list(low.vs.medHigh = c1,
+med.vs.high = c2),adjust="bonferroni")
+
+png("../figures/all_day/model_diag/keel_score_mean_m_rm8.png",width=5,height=3, units='in',res=300)
+plot(m_rm8_means, horizontal = F,comparisons=T)
+dev.off()
+
+kruskal.test(keelScore ~ activity, rm_8_summary_w_keel)
+
+### KEEL RM 11 ### 
+
+rm_11_summary_w_keel <- data.frame(merge(rm_11_org_overall,keel_score, by.x="tagname",by.y="tag"))
+
+rm11_keel <- unique(rm_11_summary_w_keel %>% select(c(tagname,activity,keelScore)))
+rm11_keel$tagname <- factor(rm11_keel$tagname,levels=rm11_keel$tagname)
+rm11_keel$tag <- as.numeric(rm11_keel$tagname)
+
+
+
+m_rm11 <- aov(keelScore ~ activity , rm11_keel)
+summary(m_rm11)
+anova(m_rm11)
+
+m_rm11_means <- emmeans(m_rm11, specs=list( actMean = ~activity))
+
+c1 <- c(-1,.5,.5)
+c2 <- c(0,-1,1)
+
+contrast(m_rm11_means, method=list(low.vs.medHigh = c1,
+med.vs.high = c2),adjust="bonferroni")
+
+png("../figures/all_day/model_diag/keel_score_mean_m_rm11.png",width=5,height=3, units='in',res=300)
+plot(m_rm11_means, horizontal = F,comparisons=T)
+dev.off()
+
+kruskal.test(keelScore ~ activity, rm_11_summary_w_keel)
+
 m5 <- aov(keel_score ~ activity, overall_day_summary_w_keel)
 summary(m5)
 m5.res <- resid(m5)
